@@ -279,9 +279,9 @@ int main(int argc, char** argv) {
 			switch (event.type)
 			{
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then q=1  so that ending the loop
+				if (event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
 					g.quit = 1;
-				else if (event.key.keysym.sym == SDLK_n)//if n pressed
+				else if (event.key.keysym.sym == SDLK_n)
 				{
 					g.worldTime = 0;
 					setPlayerConst();
