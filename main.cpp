@@ -8,7 +8,7 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
 
-//GET RID OF MAGIC NUMBERS !!!
+//REMEMBER: GET RID OF MAGIC NUMBERS !!!
 
 #define SCREEN_WIDTH	720
 #define SCREEN_HEIGHT	520
@@ -35,10 +35,9 @@ struct GameInfo
 	int t1, t2;
 	double worldTime, deltaTime;
 	int quit;
+	int err;
 }g;
 
-// narysowanie napisu txt na powierzchni screen, zaczynajπc od punktu (x, y)
-// charset to bitmapa 128x128 zawierajπca znaki
 // draw a text txt on surface screen, starting from the point (x, y)
 // charset is a 128x128 bitmap containing character images
 void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface* charset)
@@ -128,7 +127,7 @@ void setPlayerConst()
 	p.yCord = playerY;
 }
 
-void playerMove() //ZrobiÊ jakoú
+void playerMove() //Zrobiƒá jako≈õ
 {
 	
 }
@@ -154,14 +153,26 @@ void timeCounting()
 	g.worldTime += g.deltaTime;
 }
 
+bool playerOnLadder() //na razie nie korzystam
+{
+	return true;
+}
+
+bool playerOnPlatform() //na razie nie korzystam
+{
+	return true;
+}
+
+void whereIsPLayer() //na razie nie korzystam
+{
+
+}
 // main
 #ifdef __cplusplus
 extern "C"
 #endif
 
-int main(int argc, char** argv) {
-	int frames, err, distance;
-	double fpsTimer, fps;
+int main(int argc, char** argv) {		
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
 	SDL_Surface* eti;
@@ -172,9 +183,9 @@ int main(int argc, char** argv) {
 	// Create a window with specified size
 	// Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 
-	err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+	g.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&window, &renderer);
-	if (err != 0)
+	if (g.err != 0)
 	{
 		SDL_Quit();
 		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
@@ -194,11 +205,9 @@ int main(int argc, char** argv) {
 		SDL_TEXTUREACCESS_STREAMING,
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
-	// wy≥πczenie widocznoúci kursora myszy
+	// wy≈ÇƒÖczenie widoczno≈õci kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
 
-	// wczytanie obrazka cs8x8.bmp
 	charset = SDL_LoadBMP("./cs8x8.bmp");
 	eti = SDL_LoadBMP("./eti.bmp");
 	if (charset == NULL)
@@ -222,10 +231,6 @@ int main(int argc, char** argv) {
 
 	g.t1 = SDL_GetTicks();
 
-	frames = 0;
-	fpsTimer = 0;
-	fps = 0;
-
 	setPlayerConst();
 	setGameConst();
 
@@ -236,14 +241,7 @@ int main(int argc, char** argv) {
 		timeCounting();
 
 		SDL_FillRect(screen, NULL, black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-
-		fpsTimer += g.deltaTime;
-		if (fpsTimer > SECONDS_BETWEEN_REFRESH)
-		{
-			fps = frames * REFRESH_RATE;
-			frames = 0;
-			fpsTimer -= SECONDS_BETWEEN_REFRESH;
-		}
+		
 		DrawSurface(screen, eti, p.xCord, p.yCord);
 		// info text
 		DrawRectangle(screen, X, Y, SCREEN_WIDTH, 70, white, black);
@@ -273,7 +271,7 @@ int main(int argc, char** argv) {
 		SDL_RenderCopy(renderer, scrtex, NULL, NULL);
 		SDL_RenderPresent(renderer);
 
-		// obs≥uga zdarzeÒ (o ile jakieú zasz≥y) / handling of events (if there were any)
+		// obs≈Çuga zdarze≈Ñ (o ile jakie≈õ zasz≈Çy) / handling of events (if there were any)
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -304,7 +302,6 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
-		frames++;
 	}
 
 	// zwolnienie powierzchni / freeing all surfaces
