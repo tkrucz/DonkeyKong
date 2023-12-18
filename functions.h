@@ -25,7 +25,13 @@ void printWindow();
 
 void createColor();
 
-void playerMove(); //Zrobić!!
+void playerWalking();
+
+void playerClimbing();
+
+void playerJumping();
+
+void playerMove(); 
 
 void addPoints();
 
