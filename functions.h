@@ -21,7 +21,9 @@ void basicSetting();
 
 void createWindow();
 
-void initializeColors();
+void printWindow();
+
+void createColor();
 
 void playerMove(); //Zrobić!!
 
