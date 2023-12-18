@@ -38,6 +38,13 @@ struct GameInfo
 	int err;
 }g;
 
+struct Score 
+{
+	int jumpOverBarrel = 500;
+	int getTrophy = 1000;
+	int endTheStage = 10000;
+}s;
+
 // draw a text txt on surface screen, starting from the point (x, y)
 // charset is a 128x128 bitmap containing character images
 void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface* charset)
@@ -114,17 +121,14 @@ void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outli
 
 //My functions
 
-void setGameConst()
-{
-	g.quit = 0;
-}
-
-void setPlayerConst()
+void basicSetting()
 {
 	p.score = 0;
 	p.lives = 3;
 	p.xCord = playerX;
 	p.yCord = playerY;
+	g.quit = 0;
+	g.worldTime = 0;
 }
 
 void playerMove() //Zrobić jakoś
@@ -135,6 +139,28 @@ void playerMove() //Zrobić jakoś
 void addPoints()
 {
 	p.score += 10;
+}
+
+void jumpOverBarrel()
+{
+	p.score += s.jumpOverBarrel;
+}
+
+void endTheStage()
+{
+	p.score += s.endTheStage;
+}
+
+void getTrophy()
+{
+	p.score += s.getTrophy;
+}
+
+void addScore()
+{
+	jumpOverBarrel();
+	getTrophy();
+	endTheStage();
 }
 
 void loseLive()
@@ -231,8 +257,7 @@ int main(int argc, char** argv) {
 
 	g.t1 = SDL_GetTicks();
 
-	setPlayerConst();
-	setGameConst();
+	basicSetting();
 
 	while (!g.quit)
 	{
@@ -280,10 +305,7 @@ int main(int argc, char** argv) {
 				if (event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
 					g.quit = 1;
 				else if (event.key.keysym.sym == SDLK_n)
-				{
-					g.worldTime = 0;
-					setPlayerConst();
-				}
+					basicSetting();
 				else if (event.key.keysym.sym == SDLK_p)
 					addPoints();
 				else if (event.key.keysym.sym == SDLK_l)
