@@ -156,6 +156,10 @@ void createColor()
 	c.blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
 	c.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);	
 	c.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
+	c.pink = SDL_MapRGB(SDL.screen->format, 214, 136, 150);
+	c.indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
+	c.lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
+	c.grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
 }
 
 void playerWalking()
