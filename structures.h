@@ -7,7 +7,7 @@ struct PlayerInfo
 {
 	int score;
 	int lives;
-	int xCord, yCord;//coordinates
+	int xCord,yCord;//coordinates	
 }p;
 
 struct GameInfo
@@ -16,6 +16,7 @@ struct GameInfo
 	double gameTime, deltaTime;
 	int quit;
 	int err;
+	char text[128];
 }g;
 
 struct Score
@@ -42,5 +43,4 @@ struct Colors
 	int green;
 	int red;
 	int blue;
-	int purple;
 }c;
