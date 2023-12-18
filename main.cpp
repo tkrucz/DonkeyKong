@@ -8,7 +8,7 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
 
-//GET RID OF MAGIC NUMBERS !!!
+//REMEMBER: GET RID OF MAGIC NUMBERS !!!
 
 #define SCREEN_WIDTH	720
 #define SCREEN_HEIGHT	520
@@ -35,10 +35,16 @@ struct GameInfo
 	int t1, t2;
 	double worldTime, deltaTime;
 	int quit;
+	int err;
 }g;
 
-// narysowanie napisu txt na powierzchni screen, zaczynaj¹c od punktu (x, y)
-// charset to bitmapa 128x128 zawieraj¹ca znaki
+struct Score 
+{
+	int jumpOverBarrel = 500;
+	int getTrophy = 1000;
+	int endTheStage = 10000;
+}s;
+
 // draw a text txt on surface screen, starting from the point (x, y)
 // charset is a 128x128 bitmap containing character images
 void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface* charset)
@@ -115,17 +121,14 @@ void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outli
 
 //My functions
 
-void setGameConst()
-{
-	g.quit = 0;
-}
-
-void setPlayerConst()
+void basicSetting()
 {
 	p.score = 0;
 	p.lives = 3;
 	p.xCord = playerX;
 	p.yCord = playerY;
+	g.quit = 0;
+	g.worldTime = 0;
 }
 
 void playerMove() //Zrobiæ jakoœ
@@ -136,6 +139,28 @@ void playerMove() //Zrobiæ jakoœ
 void addPoints()
 {
 	p.score += 10;
+}
+
+void jumpOverBarrel()
+{
+	p.score += s.jumpOverBarrel;
+}
+
+void endTheStage()
+{
+	p.score += s.endTheStage;
+}
+
+void getTrophy()
+{
+	p.score += s.getTrophy;
+}
+
+void addScore()
+{
+	jumpOverBarrel();
+	getTrophy();
+	endTheStage();
 }
 
 void loseLive()
@@ -154,14 +179,26 @@ void timeCounting()
 	g.worldTime += g.deltaTime;
 }
 
+bool playerOnLadder() //na razie nie korzystam
+{
+	return true;
+}
+
+bool playerOnPlatform() //na razie nie korzystam
+{
+	return true;
+}
+
+void whereIsPLayer() //na razie nie korzystam
+{
+
+}
 // main
 #ifdef __cplusplus
 extern "C"
 #endif
 
-int main(int argc, char** argv) {
-	int frames, err, distance;
-	double fpsTimer, fps;
+int main(int argc, char** argv) {		
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
 	SDL_Surface* eti;
@@ -172,9 +209,9 @@ int main(int argc, char** argv) {
 	// Create a window with specified size
 	// Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 
-	err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+	g.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&window, &renderer);
-	if (err != 0)
+	if (g.err != 0)
 	{
 		SDL_Quit();
 		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
@@ -194,11 +231,9 @@ int main(int argc, char** argv) {
 		SDL_TEXTUREACCESS_STREAMING,
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
 	// wy³¹czenie widocznoœci kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
 
-	// wczytanie obrazka cs8x8.bmp
 	charset = SDL_LoadBMP("./cs8x8.bmp");
 	eti = SDL_LoadBMP("./eti.bmp");
 	if (charset == NULL)
@@ -222,12 +257,7 @@ int main(int argc, char** argv) {
 
 	g.t1 = SDL_GetTicks();
 
-	frames = 0;
-	fpsTimer = 0;
-	fps = 0;
-
-	setPlayerConst();
-	setGameConst();
+	basicSetting();
 
 	while (!g.quit)
 	{
@@ -236,14 +266,7 @@ int main(int argc, char** argv) {
 		timeCounting();
 
 		SDL_FillRect(screen, NULL, black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-
-		fpsTimer += g.deltaTime;
-		if (fpsTimer > SECONDS_BETWEEN_REFRESH)
-		{
-			fps = frames * REFRESH_RATE;
-			frames = 0;
-			fpsTimer -= SECONDS_BETWEEN_REFRESH;
-		}
+		
 		DrawSurface(screen, eti, p.xCord, p.yCord);
 		// info text
 		DrawRectangle(screen, X, Y, SCREEN_WIDTH, 70, white, black);
@@ -282,10 +305,7 @@ int main(int argc, char** argv) {
 				if (event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
 					g.quit = 1;
 				else if (event.key.keysym.sym == SDLK_n)
-				{
-					g.worldTime = 0;
-					setPlayerConst();
-				}
+					basicSetting();
 				else if (event.key.keysym.sym == SDLK_p)
 					addPoints();
 				else if (event.key.keysym.sym == SDLK_l)
@@ -304,7 +324,6 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
-		frames++;
 	}
 
 	// zwolnienie powierzchni / freeing all surfaces
