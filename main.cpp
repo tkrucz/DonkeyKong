@@ -45,6 +45,16 @@ struct Score
 	int endTheStage = 10000;
 }s;
 
+struct SDLConst
+{
+	SDL_Event event;
+	SDL_Surface* screen, * charset;
+	SDL_Surface* eti;
+	SDL_Texture* scrtex;
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+}SDL;
+
 // draw a text txt on surface screen, starting from the point (x, y)
 // charset is a 128x128 bitmap containing character images
 void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface* charset)
@@ -131,6 +141,30 @@ void basicSetting()
 	g.worldTime = 0;
 }
 
+void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
+{
+	g.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+		&SDL.window, &SDL.renderer);
+	if (g.err != 0)
+	{
+		SDL_Quit();
+		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());	
+	}
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	SDL_RenderSetLogicalSize(SDL.renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SDL_SetRenderDrawColor(SDL.renderer, 0, 0, 0, 255);
+
+	SDL_SetWindowTitle(SDL.window, "Tomasz Kruczalak 198049");
+
+	SDL.screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
+		0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+
+	SDL.scrtex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888,
+		SDL_TEXTUREACCESS_STREAMING,
+		SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
 void playerMove() //Zrobić jakoś
 {
 	
@@ -193,67 +227,47 @@ void whereIsPLayer() //na razie nie korzystam
 {
 
 }
+
+void freeSpace()
+{
+	SDL_FreeSurface(SDL.charset);
+	SDL_FreeSurface(SDL.screen);
+	SDL_DestroyTexture(SDL.scrtex);
+	SDL_DestroyRenderer(SDL.renderer);
+	SDL_DestroyWindow(SDL.window);
+}
 // main
 #ifdef __cplusplus
 extern "C"
 #endif
 
-int main(int argc, char** argv) {		
-	SDL_Event event;
-	SDL_Surface* screen, * charset;
-	SDL_Surface* eti;
-	SDL_Texture* scrtex;
-	SDL_Window* window;
-	SDL_Renderer* renderer;
+int main(int argc, char** argv) {	
 
-	// Create a window with specified size
-	// Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
-
-	g.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
-		&window, &renderer);
-	if (g.err != 0)
-	{
-		SDL_Quit();
-		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
-		return 1;
-	}
-
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-	SDL_SetWindowTitle(window, "Tomasz Kruczalak 198049");
-
-	screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
-		0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-
-	scrtex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-		SDL_TEXTUREACCESS_STREAMING,
-		SCREEN_WIDTH, SCREEN_HEIGHT);
+	createWindow();
 
 	// wyłączenie widoczności kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
 
-	charset = SDL_LoadBMP("./cs8x8.bmp");
-	eti = SDL_LoadBMP("./eti.bmp");
-	if (charset == NULL)
+	SDL.charset = SDL_LoadBMP("./cs8x8.bmp");
+	SDL.eti = SDL_LoadBMP("./eti.bmp");
+	if (SDL.charset == NULL)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
-		SDL_FreeSurface(screen);
-		SDL_DestroyTexture(scrtex);
-		SDL_DestroyWindow(window);
-		SDL_DestroyRenderer(renderer);
+		SDL_FreeSurface(SDL.screen);
+		SDL_DestroyTexture(SDL.scrtex);
+		SDL_DestroyWindow(SDL.window);
+		SDL_DestroyRenderer(SDL.renderer);
 		SDL_Quit();
 		return 1;
 	}	
 	
 	char text[128];
-	int black = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
-	int white = SDL_MapRGB(screen->format, 255, 255, 255);
-	int green = SDL_MapRGB(screen->format, 0x00, 0xFF, 0x00);
-	int red = SDL_MapRGB(screen->format, 0xFF, 0x00, 0x00);
-	int blue = SDL_MapRGB(screen->format, 0x11, 0x11, 0xCC);
-	int purple = SDL_MapRGB(screen->format, 154, 169, 217);
+	int black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
+	int white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
+	int green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
+	int red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
+	int blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
+	int purple = SDL_MapRGB(SDL.screen->format, 154, 169, 217);
 
 	g.t1 = SDL_GetTicks();
 
@@ -265,58 +279,58 @@ int main(int argc, char** argv) {
 
 		timeCounting();
 
-		SDL_FillRect(screen, NULL, black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+		SDL_FillRect(SDL.screen, NULL, black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 		
-		DrawSurface(screen, eti, p.xCord, p.yCord);
+		DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord);
 		// info text
-		DrawRectangle(screen, X, Y, SCREEN_WIDTH, 70, white, black);
+		DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, white, black);
 		sprintf(text, "King Donkey");
-		DrawString(screen, screen->w / 2 - strlen(text) * 8 / 2, 8, text, charset);
+		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 8, text, SDL.charset);
 		sprintf(text, "Time from beginning: %.1lf s", g.worldTime); //"...1lf s, % .0lf klatek / s", worldTime, fps);
-		DrawString(screen, screen->w / 2 - strlen(text) * 8 / 2, 25, text, charset);
+		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 25, text, SDL.charset);
 		sprintf(text, "Esc - quit, n - new game ");
-		DrawString(screen, screen->w / 2 - strlen(text) * 8 / 2, 40, text, charset);
+		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 40, text, SDL.charset);
 		sprintf(text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
-		DrawString(screen, screen->w / 2 - strlen(text) * 8 / 2, 55, text, charset);
+		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 55, text, SDL.charset);
 		sprintf(text, "Author: Tomasz Kruczalak 198049");
-		DrawString(screen, X, END_OF_SCREEN_HEIGHT, text, charset);
+		DrawString(SDL.screen, X, END_OF_SCREEN_HEIGHT, text, SDL.charset);
 
 		//game info
-		DrawRectangle(screen, X, 70, 120, 36, white, black);
+		DrawRectangle(SDL.screen, X, 70, 120, 36, white, black);
 		sprintf(text, "Score: %.6d", p.score);
-		DrawString(screen, TEN_ROW, 75, text, charset);
+		DrawString(SDL.screen, TEN_ROW, 75, text, SDL.charset);
 		sprintf(text, "Lives: %d", p.lives);
-		DrawString(screen, TEN_ROW, 90, text, charset);
+		DrawString(SDL.screen, TEN_ROW, 90, text, SDL.charset);
 
 		//draw line
-		DrawLine(screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, white);
+		DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, white);
 
-		SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
+		SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
 		//  	  SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, scrtex, NULL, NULL);
-		SDL_RenderPresent(renderer);
+		SDL_RenderCopy(SDL.renderer, SDL.scrtex, NULL, NULL);
+		SDL_RenderPresent(SDL.renderer);
 
 		// obsługa zdarzeń (o ile jakieś zaszły) / handling of events (if there were any)
-		while (SDL_PollEvent(&event))
+		while (SDL_PollEvent(&SDL.event))
 		{
-			switch (event.type)
+			switch (SDL.event.type)
 			{
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
+				if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
 					g.quit = 1;
-				else if (event.key.keysym.sym == SDLK_n)
+				else if (SDL.event.key.keysym.sym == SDLK_n)
 					basicSetting();
-				else if (event.key.keysym.sym == SDLK_p)
+				else if (SDL.event.key.keysym.sym == SDLK_p)
 					addPoints();
-				else if (event.key.keysym.sym == SDLK_l)
+				else if (SDL.event.key.keysym.sym == SDLK_l)
 					loseLive();
-				else if (event.key.keysym.sym == SDLK_LEFT)
+				else if (SDL.event.key.keysym.sym == SDLK_LEFT)
 					p.xCord -= 1;
-				else if (event.key.keysym.sym == SDLK_RIGHT)
+				else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
 					p.xCord += 1;
-				else if (event.key.keysym.sym == SDLK_UP)
+				else if (SDL.event.key.keysym.sym == SDLK_UP)
 					p.yCord -= 1;
-				else if (event.key.keysym.sym == SDLK_DOWN)
+				else if (SDL.event.key.keysym.sym == SDLK_DOWN)
 					p.yCord += 1;
 				break;
 			case SDL_QUIT: //X button in right up corner
@@ -327,12 +341,7 @@ int main(int argc, char** argv) {
 	}
 
 	// zwolnienie powierzchni / freeing all surfaces
-	SDL_FreeSurface(charset);
-	SDL_FreeSurface(screen);
-	SDL_DestroyTexture(scrtex);
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-
+	freeSpace();
 	SDL_Quit();
 	return 0;
 }
