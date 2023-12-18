@@ -33,7 +33,7 @@ struct PlayerInfo
 struct GameInfo
 {
 	int t1, t2;
-	double worldTime, deltaTime;
+	double gameTime, deltaTime;
 	int quit;
 	int err;
 }g;
@@ -54,6 +54,16 @@ struct SDLConst
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 }SDL;
+
+struct Colors
+{
+	int black;
+	int white;
+	int green;
+	int red;
+	int blue;
+	int purple;
+}c;
 
 // draw a text txt on surface screen, starting from the point (x, y)
 // charset is a 128x128 bitmap containing character images
@@ -138,7 +148,7 @@ void basicSetting()
 	p.xCord = playerX;
 	p.yCord = playerY;
 	g.quit = 0;
-	g.worldTime = 0;
+	g.gameTime = 0;
 }
 
 void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
@@ -163,6 +173,16 @@ void createWindow() // Create a window with specified size. Also create renderer
 	SDL.scrtex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888,
 		SDL_TEXTUREACCESS_STREAMING,
 		SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+void initializeColors()
+{
+	c.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
+	c.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
+	c.blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
+	c.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
+	c.purple = SDL_MapRGB(SDL.screen->format, 154, 169, 217);
+	c.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
 }
 
 void playerMove() //Zrobić jakoś
@@ -206,11 +226,11 @@ void loseLive()
 	}
 }
 
-void timeCounting()
+void timeCounting() //counting the game time
 {
 	g.deltaTime = (g.t2 - g.t1) * 0.001;
 	g.t1 = g.t2;
-	g.worldTime += g.deltaTime;
+	g.gameTime += g.deltaTime;
 }
 
 bool playerOnLadder() //na razie nie korzystam
@@ -228,7 +248,7 @@ void whereIsPLayer() //na razie nie korzystam
 
 }
 
-void freeSpace()
+void freeSpace() 	//freeing all surfaces
 {
 	SDL_FreeSurface(SDL.charset);
 	SDL_FreeSurface(SDL.screen);
@@ -244,6 +264,7 @@ extern "C"
 int main(int argc, char** argv) {	
 
 	createWindow();
+	initializeColors();
 
 	// wyłączenie widoczności kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
@@ -262,13 +283,6 @@ int main(int argc, char** argv) {
 	}	
 	
 	char text[128];
-	int black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
-	int white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
-	int green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
-	int red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
-	int blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
-	int purple = SDL_MapRGB(SDL.screen->format, 154, 169, 217);
-
 	g.t1 = SDL_GetTicks();
 
 	basicSetting();
@@ -279,14 +293,14 @@ int main(int argc, char** argv) {
 
 		timeCounting();
 
-		SDL_FillRect(SDL.screen, NULL, black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+		SDL_FillRect(SDL.screen, NULL, c.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 		
 		DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord);
 		// info text
-		DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, white, black);
+		DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, c.white, c.black);
 		sprintf(text, "King Donkey");
 		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 8, text, SDL.charset);
-		sprintf(text, "Time from beginning: %.1lf s", g.worldTime); //"...1lf s, % .0lf klatek / s", worldTime, fps);
+		sprintf(text, "Time from beginning: %.1lf s", g.gameTime); //"...1lf s, % .0lf klatek / s", worldTime, fps);
 		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 25, text, SDL.charset);
 		sprintf(text, "Esc - quit, n - new game ");
 		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 40, text, SDL.charset);
@@ -296,14 +310,14 @@ int main(int argc, char** argv) {
 		DrawString(SDL.screen, X, END_OF_SCREEN_HEIGHT, text, SDL.charset);
 
 		//game info
-		DrawRectangle(SDL.screen, X, 70, 120, 36, white, black);
+		DrawRectangle(SDL.screen, X, 70, 120, 36, c.white, c.black);
 		sprintf(text, "Score: %.6d", p.score);
 		DrawString(SDL.screen, TEN_ROW, 75, text, SDL.charset);
 		sprintf(text, "Lives: %d", p.lives);
 		DrawString(SDL.screen, TEN_ROW, 90, text, SDL.charset);
 
 		//draw line
-		DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, white);
+		DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, c.white);
 
 		SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
 		//  	  SDL_RenderClear(renderer);
@@ -340,7 +354,6 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	// zwolnienie powierzchni / freeing all surfaces
 	freeSpace();
 	SDL_Quit();
 	return 0;
