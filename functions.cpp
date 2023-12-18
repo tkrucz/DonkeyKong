@@ -158,9 +158,39 @@ void createColor()
 	c.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
 }
 
-void playerMove() //Zrobić!!
+void playerWalking()
 {
+	if(SDL.event.key.keysym.sym == SDLK_LEFT)
+		p.xCord -= WalkingSpeed;
+	else if(SDL.event.key.keysym.sym == SDLK_RIGHT)
+	p.xCord += WalkingSpeed;
+}
 
+void playerClimbing()
+{
+	if (SDL.event.key.keysym.sym == SDLK_UP)
+		p.yCord -= ClimbingSpeed;
+	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
+	p.yCord += ClimbingSpeed;
+}
+
+void playerJumping()  
+{
+	if (SDL.event.key.keysym.sym == SDLK_SPACE)
+	{
+		j.beginning = SDL_GetTicks();
+		j.duration = j.beginning;
+		while(p.yCord<GROUND_HEIGHT)
+		{
+			p.yCord -= j.velocity - (j.g*j.duration);		
+		}
+	}		
+}
+
+void playerMove() 
+{
+	playerWalking();
+	playerClimbing();
 }
 
 void addPoints()
@@ -206,12 +236,12 @@ void timeCounting() //counting the game time
 	g.gameTime += g.deltaTime;
 }
 
-bool playerOnLadder() //na razie nie korzystam
+bool playerOnLadder() //flaga-na razie nie korzystam
 {
 	return true;
 }
 
-bool playerOnPlatform() //na razie nie korzystam
+bool playerOnPlatform() //flaga-na razie nie korzystam
 {
 	return true;
 }
