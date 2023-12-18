@@ -19,7 +19,7 @@ extern "C"
 int main(int argc, char** argv) {	
 
 	createWindow();
-	initializeColors();
+	createColor();
 
 	// wy³¹czenie widocznoœci kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
@@ -36,8 +36,6 @@ int main(int argc, char** argv) {
 		SDL_Quit();
 		return 1;
 	}	
-	
-	char text[128];
 	g.t1 = SDL_GetTicks();
 
 	basicSetting();
@@ -47,32 +45,7 @@ int main(int argc, char** argv) {
 		g.t2 = SDL_GetTicks();
 
 		timeCounting();
-
-		SDL_FillRect(SDL.screen, NULL, c.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-		
-		DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord);
-		// info text
-		DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, c.white, c.black);
-		sprintf(text, "King Donkey");
-		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 8, text, SDL.charset);
-		sprintf(text, "Time from beginning: %.1lf s", g.gameTime); //"...1lf s, % .0lf klatek / s", worldTime, fps);
-		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 25, text, SDL.charset);
-		sprintf(text, "Esc - quit, n - new game ");
-		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 40, text, SDL.charset);
-		sprintf(text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
-		DrawString(SDL.screen, SDL.screen->w / 2 - strlen(text) * 8 / 2, 55, text, SDL.charset);
-		sprintf(text, "Author: Tomasz Kruczalak 198049");
-		DrawString(SDL.screen, X, END_OF_SCREEN_HEIGHT, text, SDL.charset);
-
-		//game info
-		DrawRectangle(SDL.screen, X, 70, 120, 36, c.white, c.black);
-		sprintf(text, "Score: %.6d", p.score);
-		DrawString(SDL.screen, TEN_ROW, 75, text, SDL.charset);
-		sprintf(text, "Lives: %d", p.lives);
-		DrawString(SDL.screen, TEN_ROW, 90, text, SDL.charset);
-
-		//draw line
-		DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, c.white);
+		printWindow();	
 
 		SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
 		//  	  SDL_RenderClear(renderer);
@@ -93,14 +66,12 @@ int main(int argc, char** argv) {
 					addPoints();
 				else if (SDL.event.key.keysym.sym == SDLK_l)
 					loseLive();
-				else if (SDL.event.key.keysym.sym == SDLK_LEFT)
-					p.xCord -= 1;
-				else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
-					p.xCord += 1;
-				else if (SDL.event.key.keysym.sym == SDLK_UP)
-					p.yCord -= 1;
-				else if (SDL.event.key.keysym.sym == SDLK_DOWN)
-					p.yCord += 1;
+				else if (SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT)
+					playerWalking();
+				else if (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN)
+					playerClimbing();
+				else if (SDL.event.key.keysym.sym == SDLK_SPACE)
+					playerJumping();
 				break;
 			case SDL_QUIT: //X button in right up corner
 				g.quit = 1;

@@ -120,19 +120,77 @@ void createWindow() // Create a window with specified size. Also create renderer
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void initializeColors()
+void printWindow()
+{
+	SDL_FillRect(SDL.screen, NULL, c.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+
+	DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord);
+	// info text
+	DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, c.white, c.black);
+	sprintf(g.text, "King Donkey");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 8, g.text, SDL.charset);
+	sprintf(g.text, "Time from beginning: %.1lf s", g.gameTime); //"...1lf s, % .0lf klatek / s", worldTime, fps);
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 25, g.text, SDL.charset);
+	sprintf(g.text, "Esc - quit, n - new game ");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 40, g.text, SDL.charset);
+	sprintf(g.text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 55, g.text, SDL.charset);
+	sprintf(g.text, "Author: Tomasz Kruczalak 198049");
+	DrawString(SDL.screen, X, END_OF_SCREEN_HEIGHT, g.text, SDL.charset);
+
+	//game info
+	DrawRectangle(SDL.screen, X, 70, 120, 36, c.white, c.black);
+	sprintf(g.text, "Score: %.6d", p.score);
+	DrawString(SDL.screen, TEN_ROW, 75, g.text, SDL.charset);
+	sprintf(g.text, "Lives: %d", p.lives);
+	DrawString(SDL.screen, TEN_ROW, 90, g.text, SDL.charset);
+
+	//draw gorund
+	DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, c.white);
+}
+
+void createColor()
 {
 	c.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
 	c.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
 	c.blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
-	c.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
-	c.purple = SDL_MapRGB(SDL.screen->format, 154, 169, 217);
+	c.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);	
 	c.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
 }
 
-void playerMove() //Zrobiæ!!
+void playerWalking()
 {
+	if(SDL.event.key.keysym.sym == SDLK_LEFT)
+		p.xCord -= WalkingSpeed;
+	else if(SDL.event.key.keysym.sym == SDLK_RIGHT)
+	p.xCord += WalkingSpeed;
+}
 
+void playerClimbing()
+{
+	if (SDL.event.key.keysym.sym == SDLK_UP)
+		p.yCord -= ClimbingSpeed;
+	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
+	p.yCord += ClimbingSpeed;
+}
+
+void playerJumping()  
+{
+	if (SDL.event.key.keysym.sym == SDLK_SPACE)
+	{
+		j.beginning = SDL_GetTicks();
+		j.duration = j.beginning;
+		while(p.yCord<GROUND_HEIGHT)
+		{
+			p.yCord -= j.velocity - (j.g*j.duration);		
+		}
+	}		
+}
+
+void playerMove() 
+{
+	playerWalking();
+	playerClimbing();
 }
 
 void addPoints()
@@ -178,12 +236,12 @@ void timeCounting() //counting the game time
 	g.gameTime += g.deltaTime;
 }
 
-bool playerOnLadder() //na razie nie korzystam
+bool playerOnLadder() //flaga-na razie nie korzystam
 {
 	return true;
 }
 
-bool playerOnPlatform() //na razie nie korzystam
+bool playerOnPlatform() //flaga-na razie nie korzystam
 {
 	return true;
 }

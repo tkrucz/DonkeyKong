@@ -13,3 +13,8 @@
 #define TEN_ROW 10
 #define END_OF_SCREEN_HEIGHT SCREEN_HEIGHT - 12
 #define GROUND_HEIGHT SCREEN_HEIGHT - 20
+
+#define GravitySpeed 0.1
+#define JumpingSpeed 5
+#define WalkingSpeed 2
+#define ClimbingSpeed 2

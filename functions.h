@@ -21,9 +21,17 @@ void basicSetting();
 
 void createWindow();
 
-void initializeColors();
+void printWindow();
 
-void playerMove(); //Zrobiæ!!
+void createColor();
+
+void playerWalking();
+
+void playerClimbing();
+
+void playerJumping();
+
+void playerMove(); 
 
 void addPoints();
 

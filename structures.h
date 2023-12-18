@@ -3,11 +3,13 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL.h"
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
+#include "define.h"
+
 struct PlayerInfo
 {
 	int score;
 	int lives;
-	int xCord, yCord;//coordinates
+	int xCord,yCord;//coordinates	
 }p;
 
 struct GameInfo
@@ -16,6 +18,7 @@ struct GameInfo
 	double gameTime, deltaTime;
 	int quit;
 	int err;
+	char text[128];
 }g;
 
 struct Score
@@ -42,5 +45,11 @@ struct Colors
 	int green;
 	int red;
 	int blue;
-	int purple;
 }c;
+
+struct Jumping
+{
+	double g = GravitySpeed;
+	double velocity = JumpingSpeed;	
+	double beginning, duration; // beginning of jump, time duration of jump
+}j;
