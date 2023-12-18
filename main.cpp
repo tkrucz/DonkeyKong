@@ -66,14 +66,12 @@ int main(int argc, char** argv) {
 					addPoints();
 				else if (SDL.event.key.keysym.sym == SDLK_l)
 					loseLive();
-				else if (SDL.event.key.keysym.sym == SDLK_LEFT)
-					p.xCord -= 1;
-				else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
-					p.xCord += 1;
-				else if (SDL.event.key.keysym.sym == SDLK_UP)
-					p.yCord -= 1;
-				else if (SDL.event.key.keysym.sym == SDLK_DOWN)
-					p.yCord += 1;
+				else if (SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT)
+					playerWalking();
+				else if (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN)
+					playerClimbing();
+				else if (SDL.event.key.keysym.sym == SDLK_SPACE)
+					playerJumping();
 				break;
 			case SDL_QUIT: //X button in right up corner
 				g.quit = 1;
