@@ -42,9 +42,9 @@ struct Colors
 {
 	int black;
 	int white;
-	int green; 
+	int green;
 	int red;
-	int blue;  
+	int blue;
 	int pink; //for 1st stage platforms
 	int indygo; //for 2nd stage platforms
 	int lime; //for 3th stage platforms	
@@ -57,3 +57,31 @@ struct Jumping
 	double velocity = JumpingSpeed;	
 	double beginning, duration; // beginning of jump, time duration of jump
 }j;
+
+struct PlatformTable
+{
+	int x1; //x1,y1-left upper corner of platform
+	int y1; 
+	int w; //width
+	int h; //height
+	int x2; //x2,y2-right low corner of platform
+	int y2; 
+};
+
+struct Platform
+{
+	PlatformTable platformTable[6] = {};
+};
+
+struct LadderTable
+{
+	int x1; //x1,y1-left upper corner of platform
+	int y1;
+	int w=LadderWidth; //width
+	int h=LadderHeight; //height
+};
+
+struct Ladder
+{
+	LadderTable ladderTable[4] = {};
+};
