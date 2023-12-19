@@ -115,6 +115,7 @@ void printWindow()
 	printGameInfo();
 	printPlayerInfo();
 	printGround();
+	createPlatforms();
 }
 
 void printGameInfo()
@@ -250,14 +251,10 @@ void timeCounting() //counting the game time
 	g.gameTime += g.deltaTime;
 }
 
-void createPlatforms()
+void createPlatforms() 
 {
-	Platform p1 = { 1,2,3,4,5,6 };
-}
-
-void printPlatforms()
-{
-
+	Platform platorm1 = { 50,100,30,40 };	
+	DrawRectangle(SDL.screen, platorm1.x, platorm1.y, platorm1.w, platorm1.h, c.black, c.pink);
 }
 
 void createLadders()
@@ -265,10 +262,6 @@ void createLadders()
 
 }
 
-void printLadders()
-{
-
-}
 
 bool playerOnLadder() //flaga-na razie nie korzystam
 {
