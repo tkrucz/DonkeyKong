@@ -14,6 +14,12 @@
 #define END_OF_SCREEN_HEIGHT SCREEN_HEIGHT - 12
 #define GROUND_HEIGHT SCREEN_HEIGHT - 20
 
+
+#define NumberOfPlatforms 12
+#define NumberOfLadders 8
+#define LadderWidth 10
+#define LadderHeight 60
+
 #define GravitySpeed 0.1
 #define JumpingSpeed 5
 #define WalkingSpeed 2
