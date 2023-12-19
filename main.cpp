@@ -36,13 +36,13 @@ int main(int argc, char** argv) {
 		SDL_Quit();
 		return 1;
 	}	
-	g.t1 = SDL_GetTicks();
+	gameInfo.t1 = SDL_GetTicks();
 
 	basicSetting();
 
-	while (!g.quit)
+	while (!gameInfo.quit)
 	{
-		g.t2 = SDL_GetTicks();
+		gameInfo.t2 = SDL_GetTicks();
 
 		timeCounting();
 		printWindow();	
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 			{
 			case SDL_KEYDOWN:
 				if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
-					g.quit = 1;
+					gameInfo.quit = 1;
 				else if (SDL.event.key.keysym.sym == SDLK_n)
 					basicSetting();
 				else if (SDL.event.key.keysym.sym == SDLK_p)
@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
 					playerJumping();
 				break;
 			case SDL_QUIT: //X button in right up corner
-				g.quit = 1;
+				gameInfo.quit = 1;
 				break;
 			}
 		}
