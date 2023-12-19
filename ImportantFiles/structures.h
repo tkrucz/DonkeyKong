@@ -9,8 +9,8 @@ struct PlayerInfo
 {
 	int score;
 	int lives;
-	int xCord,yCord;//coordinates	
-}p;
+	int xCord, yCord;//coordinates of player	
+}playerInfo;
 
 struct GameInfo
 {
@@ -19,14 +19,14 @@ struct GameInfo
 	int quit;
 	int err;
 	char text[128];
-}g;
+}gameInfo;
 
 struct Score
 {
 	int jumpOverBarrel = 500;
 	int getTrophy = 1000;
 	int endTheStage = 10000;
-}s;
+}score;
 
 struct SDLConst
 {
@@ -45,11 +45,31 @@ struct Colors
 	int green;
 	int red;
 	int blue;
-}c;
+	int pink; //for 1st stage platforms
+	int indygo; //for 2nd stage platforms
+	int lime; //for 3th stage platforms	
+	int grey; //for ladders
+}colors;
 
 struct Jumping
 {
 	double g = GravitySpeed;
-	double velocity = JumpingSpeed;	
+	double velocity = JumpingSpeed;
 	double beginning, duration; // beginning of jump, time duration of jump
-}j;
+}jumping;
+
+struct Platform //Arguemnts: x,y (upper corners), l-length, w-width is const=PlatformWidth
+{
+	int x; 
+	int y;
+	int l; 
+	int w=PlatformWidth; 
+};
+
+struct Ladder //Arguemnts: x,y (upper corners), w-width is const=LadderWidth, h-height is const=LadderHeight
+{
+	int x; 
+	int y;
+	int w = LadderWidth; 
+	int h = LadderHeight; 
+};

@@ -2,10 +2,10 @@
 #include<math.h>
 #include<stdio.h>
 #include<string.h>
-#include "structures.h"
-#include "define.h"
-#include "functions.h"
-#include "functions.cpp"
+#include "ImportantFiles/define.h"
+#include"ImportantFiles/functions.h"
+#include "ImportantFiles/functions.cpp"
+#include "ImportantFiles/structures.h"
 
 extern "C" {
 #include"./SDL2-2.0.10/include/SDL.h"
@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 	// wy³¹czenie widocznoœci kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
 
-	SDL.charset = SDL_LoadBMP("./cs8x8.bmp");
-	SDL.eti = SDL_LoadBMP("./eti.bmp");
+	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
+	SDL.eti = SDL_LoadBMP("./BMP/eti.bmp");
 	if (SDL.charset == NULL)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
@@ -36,13 +36,13 @@ int main(int argc, char** argv) {
 		SDL_Quit();
 		return 1;
 	}	
-	g.t1 = SDL_GetTicks();
+	gameInfo.t1 = SDL_GetTicks();
 
 	basicSetting();
 
-	while (!g.quit)
+	while (!gameInfo.quit)
 	{
-		g.t2 = SDL_GetTicks();
+		gameInfo.t2 = SDL_GetTicks();
 
 		timeCounting();
 		printWindow();	
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 			{
 			case SDL_KEYDOWN:
 				if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
-					g.quit = 1;
+					gameInfo.quit = 1;
 				else if (SDL.event.key.keysym.sym == SDLK_n)
 					basicSetting();
 				else if (SDL.event.key.keysym.sym == SDLK_p)
@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
 					playerJumping();
 				break;
 			case SDL_QUIT: //X button in right up corner
-				g.quit = 1;
+				gameInfo.quit = 1;
 				break;
 			}
 		}
