@@ -84,18 +84,6 @@ void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outli
 	}
 }
 
-//My functions
-
-void basicSetting()
-{
-	p.score = 0;
-	p.lives = 3;
-	p.xCord = playerX;
-	p.yCord = playerY;
-	g.quit = 0;
-	g.gameTime = 0;
-}
-
 void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 {
 	g.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
@@ -123,13 +111,18 @@ void createWindow() // Create a window with specified size. Also create renderer
 void printWindow()
 {
 	SDL_FillRect(SDL.screen, NULL, c.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+	DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord); //draws the screen
+	printGameInfo();
+	printPlayerInfo();
+	printGround();
+}
 
-	DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord);
-	// info text
+void printGameInfo()
+{
 	DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, c.white, c.black);
 	sprintf(g.text, "King Donkey");
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 8, g.text, SDL.charset);
-	sprintf(g.text, "Time from beginning: %.1lf s", g.gameTime); //"...1lf s, % .0lf klatek / s", worldTime, fps);
+	sprintf(g.text, "Time from beginning: %.1lf s", g.gameTime);
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 25, g.text, SDL.charset);
 	sprintf(g.text, "Esc - quit, n - new game ");
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 40, g.text, SDL.charset);
@@ -137,16 +130,33 @@ void printWindow()
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 55, g.text, SDL.charset);
 	sprintf(g.text, "Author: Tomasz Kruczalak 198049");
 	DrawString(SDL.screen, X, END_OF_SCREEN_HEIGHT, g.text, SDL.charset);
+}
 
-	//game info
+void printPlayerInfo()
+{
 	DrawRectangle(SDL.screen, X, 70, 120, 36, c.white, c.black);
 	sprintf(g.text, "Score: %.6d", p.score);
 	DrawString(SDL.screen, TEN_ROW, 75, g.text, SDL.charset);
 	sprintf(g.text, "Lives: %d", p.lives);
 	DrawString(SDL.screen, TEN_ROW, 90, g.text, SDL.charset);
+}
 
-	//draw gorund
+/*My functions
+======================================================================================================*/
+
+void printGround()
+{
 	DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, c.white);
+}
+
+void basicSetting()
+{
+	p.score = 0;
+	p.lives = 3;
+	p.xCord = playerX;
+	p.yCord = playerY;
+	g.quit = 0;
+	g.gameTime = 0;
 }
 
 void createColor()
@@ -238,6 +248,26 @@ void timeCounting() //counting the game time
 	g.deltaTime = (g.t2 - g.t1) * 0.001;
 	g.t1 = g.t2;
 	g.gameTime += g.deltaTime;
+}
+
+void createPlatforms()
+{
+	Platform p1 = { 1,2,3,4,5,6 };
+}
+
+void printPlatforms()
+{
+
+}
+
+void createLadders()
+{
+
+}
+
+void printLadders()
+{
+
 }
 
 bool playerOnLadder() //flaga-na razie nie korzystam
