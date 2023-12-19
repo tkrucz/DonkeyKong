@@ -86,60 +86,61 @@ void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outli
 
 void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 {
-	g.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+	gameInfo.err = SDL_CreateWindowAndRenderer(ScreenWidth, ScreenHeight, 0,
 		&SDL.window, &SDL.renderer);
-	if (g.err != 0)
+	if (gameInfo.err != 0)
 	{
 		SDL_Quit();
 		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
 	}
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	SDL_RenderSetLogicalSize(SDL.renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SDL_RenderSetLogicalSize(SDL.renderer, ScreenWidth, ScreenHeight);
 	SDL_SetRenderDrawColor(SDL.renderer, 0, 0, 0, 255);
 
 	SDL_SetWindowTitle(SDL.window, "Tomasz Kruczalak 198049");
 
-	SDL.screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
+	SDL.screen = SDL_CreateRGBSurface(0, ScreenWidth, ScreenHeight, 32,
 		0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 
 	SDL.scrtex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888,
 		SDL_TEXTUREACCESS_STREAMING,
-		SCREEN_WIDTH, SCREEN_HEIGHT);
+		ScreenWidth, ScreenHeight);
 }
 
 void printWindow()
 {
-	SDL_FillRect(SDL.screen, NULL, c.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	DrawSurface(SDL.screen, SDL.eti, p.xCord, p.yCord); //draws the screen
+	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+	DrawSurface(SDL.screen, SDL.eti, playerInfo.xCord, playerInfo.yCord); //draws the screen
 	printGameInfo();
 	printPlayerInfo();
 	printGround();
 	createPlatforms();
+	createLadders();
 }
 
 void printGameInfo()
 {
-	DrawRectangle(SDL.screen, X, Y, SCREEN_WIDTH, 70, c.white, c.black);
-	sprintf(g.text, "King Donkey");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 8, g.text, SDL.charset);
-	sprintf(g.text, "Time from beginning: %.1lf s", g.gameTime);
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 25, g.text, SDL.charset);
-	sprintf(g.text, "Esc - quit, n - new game ");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 40, g.text, SDL.charset);
-	sprintf(g.text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(g.text) * 8 / 2, 55, g.text, SDL.charset);
-	sprintf(g.text, "Author: Tomasz Kruczalak 198049");
-	DrawString(SDL.screen, X, END_OF_SCREEN_HEIGHT, g.text, SDL.charset);
+	DrawRectangle(SDL.screen, ZeroColumn, FirstRow, ScreenWidth, 70, colors.white, colors.black);
+	sprintf(gameInfo.text, "King Donkey");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 8, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "Time from beginning: %.1lf s", gameInfo.gameTime);
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 25, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "Esc - quit, n - new game ");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 40, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 55, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "Author: Tomasz Kruczalak 198049");
+	DrawString(SDL.screen, ZeroColumn, AuhtorInfoRow, gameInfo.text, SDL.charset);
 }
 
 void printPlayerInfo()
 {
-	DrawRectangle(SDL.screen, X, 70, 120, 36, c.white, c.black);
-	sprintf(g.text, "Score: %.6d", p.score);
-	DrawString(SDL.screen, TEN_ROW, 75, g.text, SDL.charset);
-	sprintf(g.text, "Lives: %d", p.lives);
-	DrawString(SDL.screen, TEN_ROW, 90, g.text, SDL.charset);
+	DrawRectangle(SDL.screen, ZeroColumn, 70, 120, 36, colors.white, colors.black);
+	sprintf(gameInfo.text, "Score: %.6d", playerInfo.score);
+	DrawString(SDL.screen, TenRow, 75, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "Lives: %d", playerInfo.lives);
+	DrawString(SDL.screen, TenRow, 90, gameInfo.text, SDL.charset);
 }
 
 /*My functions
@@ -147,62 +148,57 @@ void printPlayerInfo()
 
 void printGround()
 {
-	DrawLine(SDL.screen, X, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, c.white);
+	DrawLine(SDL.screen, ZeroColumn, GroundHeight, ScreenWidth, 1, 0, colors.white);
 }
 
 void basicSetting()
 {
-	p.score = 0;
-	p.lives = 3;
-	p.xCord = playerX;
-	p.yCord = playerY;
-	g.quit = 0;
-	g.gameTime = 0;
+	playerInfo.score = 0;
+	playerInfo.lives = 3;
+	playerInfo.xCord = PlayerStartXCoordinate;
+	playerInfo.yCord = PlayerStartYCoordinate;
+	gameInfo.quit = 0;
+	gameInfo.gameTime = 0;
 }
 
 void createColor()
 {
-	c.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
-	c.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
-	c.blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
-	c.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);	
-	c.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
-	c.pink = SDL_MapRGB(SDL.screen->format, 214, 136, 150);
-	c.indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
-	c.lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
-	c.grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
+	colors.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
+	colors.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
+	colors.blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
+	colors.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
+	colors.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
+	colors.pink = SDL_MapRGB(SDL.screen->format, 214, 136, 150);
+	colors.indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
+	colors.lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
+	colors.grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
 }
 
 void playerWalking()
 {
-	if(SDL.event.key.keysym.sym == SDLK_LEFT)
-		p.xCord -= WalkingSpeed;
-	else if(SDL.event.key.keysym.sym == SDLK_RIGHT)
-	p.xCord += WalkingSpeed;
+	if (SDL.event.key.keysym.sym == SDLK_LEFT)
+		playerInfo.xCord -= WalkingSpeed;
+	else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
+		playerInfo.xCord += WalkingSpeed;
 }
 
 void playerClimbing()
 {
 	if (SDL.event.key.keysym.sym == SDLK_UP)
-		p.yCord -= ClimbingSpeed;
+		playerInfo.yCord -= ClimbingSpeed;
 	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
-	p.yCord += ClimbingSpeed;
+		playerInfo.yCord += ClimbingSpeed;
 }
 
-void playerJumping()  
+void playerJumping()
 {
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
 	{
-		j.beginning = SDL_GetTicks();
-		j.duration = j.beginning;
-		while(p.yCord<GROUND_HEIGHT)
-		{
-			p.yCord -= j.velocity - (j.g*j.duration);		
-		}
-	}		
+		
+	}
 }
 
-void playerMove() 
+void playerMove()
 {
 	playerWalking();
 	playerClimbing();
@@ -210,22 +206,22 @@ void playerMove()
 
 void addPoints()
 {
-	p.score += 10;
+	playerInfo.score += 10;
 }
 
 void jumpOverBarrel()
 {
-	p.score += s.jumpOverBarrel;
+	playerInfo.score += score.jumpOverBarrel;
 }
 
 void endTheStage()
 {
-	p.score += s.endTheStage;
+	playerInfo.score += score.endTheStage;
 }
 
 void getTrophy()
 {
-	p.score += s.getTrophy;
+	playerInfo.score += score.getTrophy;
 }
 
 void addScore()
@@ -237,29 +233,57 @@ void addScore()
 
 void loseLive()
 {
-	p.lives -= 1;
-	if (p.lives == 0)
+	playerInfo.lives -= 1;
+	if (playerInfo.lives == 0)
 	{
-		g.quit = 1;
+		gameInfo.quit = 1;
 	}
 }
 
 void timeCounting() //counting the game time
 {
-	g.deltaTime = (g.t2 - g.t1) * 0.001;
-	g.t1 = g.t2;
-	g.gameTime += g.deltaTime;
+	gameInfo.deltaTime = (gameInfo.t2 - gameInfo.t1) * 0.001;
+	gameInfo.t1 = gameInfo.t2;
+	gameInfo.gameTime += gameInfo.deltaTime;
 }
 
-void createPlatforms() 
+void createPlatforms()
 {
-	Platform platorm1 = { 50,100,30,40 };	
-	DrawRectangle(SDL.screen, platorm1.x, platorm1.y, platorm1.w, platorm1.h, c.black, c.pink);
+	Platform platorm1 = { 60,440,350 };
+	DrawRectangle(SDL.screen, platorm1.x, platorm1.y, platorm1.l, platorm1.w, colors.black, colors.pink);
+	Platform platorm2 = {520,440,160 };
+	DrawRectangle(SDL.screen, platorm2.x, platorm2.y, platorm2.l, platorm2.w, colors.black, colors.pink);
+	Platform platorm3 = { 420,360,170 };
+	DrawRectangle(SDL.screen, platorm3.x, platorm3.y, platorm3.l, platorm3.w, colors.black, colors.pink);
+	Platform platorm4 = { 40,360,330 };
+	DrawRectangle(SDL.screen, platorm4.x, platorm4.y, platorm4.l, platorm4.w, colors.black, colors.pink);
+	Platform platorm5 = { 480,280,200 };
+	DrawRectangle(SDL.screen, platorm5.x, platorm5.y, platorm5.l, platorm5.w, colors.black, colors.pink);
+	Platform platorm6 = { 340,280,80 };
+	DrawRectangle(SDL.screen, platorm6.x, platorm6.y, platorm6.l, platorm6.w, colors.black, colors.pink);
+	Platform platorm7 = { 60,280,240 };
+	DrawRectangle(SDL.screen, platorm7.x, platorm7.y, platorm7.l, platorm7.w, colors.black, colors.pink);
+	Platform platorm8 = { 100,200,240 };
+	DrawRectangle(SDL.screen, platorm8.x, platorm8.y, platorm8.l, platorm8.w, colors.black, colors.pink);
+	Platform platorm9 = { 470,200,230 };
+	DrawRectangle(SDL.screen, platorm9.x, platorm9.y, platorm9.l, platorm9.w, colors.black, colors.pink);
+	Platform platorm10 = { 280,120,150 };
+	DrawRectangle(SDL.screen, platorm10.x, platorm10.y, platorm10.l, platorm10.w, colors.black, colors.pink);
+
 }
 
 void createLadders()
 {
-
+	Ladder ladder1 = {365,120};
+	DrawRectangle(SDL.screen, ladder1.x, ladder1.y, ladder1.w, 160, colors.black, colors.grey);
+	Ladder ladder2 = { 600,200 };
+	DrawRectangle(SDL.screen, ladder2.x, ladder2.y, ladder2.w, ladder2.h, colors.black, colors.grey);
+	Ladder ladder3 = { 150,280 };
+	DrawRectangle(SDL.screen, ladder3.x, ladder3.y, ladder3.w, ladder3.h, colors.black, colors.grey);
+	Ladder ladder4 = { 550,360 };
+	DrawRectangle(SDL.screen, ladder4.x, ladder4.y, ladder4.w, ladder4.h, colors.black, colors.grey);
+	Ladder ladder5 = { 110,440 };
+	DrawRectangle(SDL.screen, ladder5.x, ladder5.y, ladder5.w, 60, colors.black, colors.grey);
 }
 
 
