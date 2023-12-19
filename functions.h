@@ -55,11 +55,7 @@ void timeCounting();
 
 void createPlatforms();
 
-void printPlatforms();
-
 void createLadders();
-
-void printLadders();
 
 bool playerOnLadder(); //na razie nie korzystam
 
