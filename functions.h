@@ -17,11 +17,17 @@ void DrawLine(SDL_Surface* screen, int x, int y, int l, int dx, int dy, Uint32 c
 
 void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outlineColor, Uint32 fillColor);
 
-void basicSetting();
-
 void createWindow();
 
 void printWindow();
+
+void printGameInfo();
+
+void printPlayerInfo();
+
+void printGround();
+
+void basicSetting();
 
 void createColor();
 
@@ -46,6 +52,14 @@ void addScore();
 void loseLive();
 
 void timeCounting();
+
+void createPlatforms();
+
+void printPlatforms();
+
+void createLadders();
+
+void printLadders();
 
 bool playerOnLadder(); //na razie nie korzystam
 
