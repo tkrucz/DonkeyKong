@@ -58,30 +58,18 @@ struct Jumping
 	double beginning, duration; // beginning of jump, time duration of jump
 }j;
 
-struct PlatformTable
-{
-	int x1; //x1,y1-left upper corner of platform
-	int y1; 
-	int w; //width
-	int h; //height
-	int x2; //x2,y2-right low corner of platform
-	int y2; 
-};
-
 struct Platform
 {
-	PlatformTable platformTable[6] = {};
-};
-
-struct LadderTable
-{
-	int x1; //x1,y1-left upper corner of platform
-	int y1;
-	int w=LadderWidth; //width
-	int h=LadderHeight; //height
+	int x; //x,y-left upper corner of platform
+	int y;
+	int w; //width
+	int h; //height
 };
 
 struct Ladder
 {
-	LadderTable ladderTable[4] = {};
+	int x; //x,y-left upper corner of platform
+	int y;
+	int w=LadderWidth; //width
+	int h=LadderHeight; //height
 };
