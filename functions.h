@@ -37,7 +37,7 @@ void playerClimbing();
 
 void playerJumping();
 
-void playerMove(); 
+void playerMove();
 
 void addPoints();
 
