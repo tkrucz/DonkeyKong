@@ -21,6 +21,8 @@ void createWindow();
 
 void printWindow();
 
+void refreshWindow();
+
 void printGameInfo();
 
 void printPlayerInfo();
@@ -29,17 +31,21 @@ void printGround();
 
 void basicSetting();
 
+void playerSettings();
+
 void createColor();
 
 void playerWalking();
 
 void playerClimbing();
 
+void graivityApply(); //checks if Mario is jumping, change his position during jump
+
 void playerJumping();
 
 void playerMove();
 
-void addPoints();
+void addPoints(); //function needed only right for test
 
 void jumpOverBarrel();
 
@@ -51,17 +57,15 @@ void addScore();
 
 void loseLive();
 
-void timeCounting();
+void timeCounting(); //counting the game time
 
 void createPlatforms();
 
 void createLadders();
 
-void graivityApply();
+void playerOnLadder(); //na razie nie korzystam
 
-bool playerOnLadder(); //na razie nie korzystam
-
-bool playerOnPlatform(); //na razie nie korzystam
+void playerOnPlatform(); //na razie nie korzystam
 
 void whereIsPLayer(); //na razie nie korzystam
 

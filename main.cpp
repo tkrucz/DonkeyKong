@@ -21,7 +21,6 @@ int main(int argc, char** argv) {
 	createWindow();
 	createColor();
 
-	// wy≥πczenie widocznoúci kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);	
 
 	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
@@ -35,9 +34,9 @@ int main(int argc, char** argv) {
 		SDL_DestroyRenderer(SDL.renderer);
 		SDL_Quit();
 		return 1;
-	}	
-	gameInfo.t1 = SDL_GetTicks();
+	}
 
+	gameInfo.t1 = SDL_GetTicks();
 	basicSetting();
 
 	while (!gameInfo.quit)
@@ -46,21 +45,17 @@ int main(int argc, char** argv) {
 
 		timeCounting();
 		printWindow();
-
-		SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
-		//  	  SDL_RenderClear(renderer);
-		SDL_RenderCopy(SDL.renderer, SDL.scrtex, NULL, NULL);
-		SDL_RenderPresent(SDL.renderer);
+		refreshWindow();		
 
 		graivityApply();
+		whereIsPLayer();
 
 		// obs≥uga zdarzeÒ (o ile jakieú zasz≥y) / handling of events (if there were any)
 		while (SDL_PollEvent(&SDL.event))
 		{
 			switch (SDL.event.type)
 			{
-			case SDL_KEYDOWN:
-				whereIsPLayer(); //èLE YUP?
+			case SDL_KEYDOWN:				
 				if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
 					gameInfo.quit = 1;
 				else if (SDL.event.key.keysym.sym == SDLK_n)
@@ -69,15 +64,8 @@ int main(int argc, char** argv) {
 					addPoints();
 				else if (SDL.event.key.keysym.sym == SDLK_l)
 					loseLive();
-				else if ((playerOnGround() || playerOnPlatform()) && (SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT))
-					playerWalking();
-				else if (playerOnLadder() && (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN))
-					playerClimbing();
-				else if (SDL.event.key.keysym.sym == SDLK_SPACE)
-				{
-					Mario.isJumping = true;
-					playerJumping();
-				}
+				else if (Mario.onPlatform || Mario.onLadder)
+					playerMove();		
 				break;		
 			case SDL_QUIT: //X button in right up corner
 				gameInfo.quit = 1;

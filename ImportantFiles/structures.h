@@ -20,6 +20,8 @@ struct Player
 	double speedX;
 	double speedY;
 	bool isJumping;
+	bool onPlatform;
+	bool onLadder;
 }Mario;
 
 struct GameInfo

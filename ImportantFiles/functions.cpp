@@ -116,7 +116,14 @@ void printWindow()
 	printGround();
 	createPlatforms();
 	createLadders();
-	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner+DifferenceInX, Mario.upperYCorner+DifferenceInY, &Mario.size); //draws the player(eti)
+	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner+DifferenceInX, Mario.upperYCorner+DifferenceInY, &Mario.size); //draws the player
+}
+
+void refreshWindow()
+{
+	SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
+	SDL_RenderCopy(SDL.renderer, SDL.scrtex, NULL, NULL);
+	SDL_RenderPresent(SDL.renderer);
 }
 
 void printGameInfo()
@@ -157,11 +164,19 @@ void basicSetting()
 	playerInfo.lives = 3;
 	gameInfo.quit = 0;
 	gameInfo.gameTime = 0;
+	playerSettings();
+}
+
+void playerSettings()
+{
 	Mario.upperXCorner = PlayerStartXCoordinate;
 	Mario.upperYCorner = PlayerStartYCoordinate;
-	Mario.size = { PlayerWidth*4+10,PlayerHeight*0,Mario.realSize[0],Mario.realSize[1]};
+	Mario.size = { PlayerWidth * 4 + 10,PlayerHeight * 0,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = WalkingSpeed;
 	Mario.speedY = 0;
+	Mario.isJumping = false;
+	Mario.onLadder = false;
+	Mario.onPlatform = true;
 }
 
 void createColor()
@@ -194,16 +209,16 @@ void playerClimbing()
 }
 
 void graivityApply()
-{
-	Mario.upperYCorner += Mario.speedY;
-	if (Mario.upperYCorner >= 500)
-	{
-		Mario.isJumping = false;
-		Mario.speedY = 0;
-	}
+{	
 	if (Mario.isJumping)
 	{
 		Mario.speedY += GravitySpeed;
+		Mario.upperYCorner += Mario.speedY;
+		if (Mario.upperYCorner >= 500)
+		{
+			Mario.isJumping = false;
+			Mario.speedY = 0;
+		}
 	}
 }
 
@@ -214,8 +229,15 @@ void playerJumping()
 
 void playerMove()
 {
+	if(Mario.onPlatform)
 	playerWalking();
-	playerClimbing();	
+	if(Mario.onLadder)
+	playerClimbing();
+	if (SDL.event.key.keysym.sym == SDLK_SPACE)
+	{
+		Mario.isJumping = true;
+		playerJumping();
+	}
 }
 
 void addPoints()
@@ -254,7 +276,7 @@ void loseLive()
 	}
 }
 
-void timeCounting() //counting the game time
+void timeCounting() 
 {
 	gameInfo.deltaTime = (gameInfo.t2 - gameInfo.t1) * 0.001;
 	gameInfo.t1 = gameInfo.t2;
@@ -301,19 +323,16 @@ void createLadders()
 }
 
 
-bool playerOnLadder() //flaga-na razie nie korzystam
+void playerOnLadder() //flaga-na razie nie korzystam
 {
-	return true;
+		Mario.onLadder = true;
+		Mario.onPlatform = false;
 }
 
-bool playerOnPlatform() //flaga-na razie nie korzystam
+void playerOnPlatform() //flaga-na razie nie korzystam
 {
-	return true;
-}
-
-bool playerOnGround() //flaga-na razie nie korzystam
-{
-	return true;
+		Mario.onPlatform = true;
+		Mario.onLadder = false;
 }
 
 void whereIsPLayer() //na razie nie korzystam
@@ -321,7 +340,7 @@ void whereIsPLayer() //na razie nie korzystam
 	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner };
 	int rightLowerCorner[2] = { Mario.upperXCorner + PlayerWidth,Mario.upperYCorner + PlayerHeight };
 	if (rightLowerCorner[1] == GroundHeight+50)
-		playerOnGround();
+		playerOnPlatform();
 	else if (leftUpperCorner[0] == 110 && leftUpperCorner[1] == Platform_I_Height + 60)
 		playerOnLadder();
 	else if (rightLowerCorner[1] == Platform_I_Height)

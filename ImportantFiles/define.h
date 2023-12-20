@@ -12,7 +12,7 @@
 #define AuhtorInfoRow ScreenHeight - 12
 #define GroundHeight ScreenHeight - 20
 
-#define PlayerStartXCoordinate 110
+#define PlayerStartXCoordinate 310 
 #define PlayerStartYCoordinate 500
 #define DifferenceInX 144
 #define DifferenceInY 50
