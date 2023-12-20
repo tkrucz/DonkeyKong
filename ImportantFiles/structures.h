@@ -13,8 +13,13 @@ struct PlayerInfo
 
 struct Player
 {
+	SDL_Rect size; 
 	int upperXCorner;
 	int upperYCorner;
+	int realSize[2] = { 16,16 };
+	double speedX;
+	double speedY;
+	bool isJumping;
 }Mario;
 
 struct GameInfo
@@ -37,7 +42,7 @@ struct SDLConst
 {
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
-	SDL_Surface* eti;
+	SDL_Surface* player;
 	SDL_Texture* scrtex;
 	SDL_Window* window;
 	SDL_Renderer* renderer;

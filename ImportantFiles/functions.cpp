@@ -38,14 +38,14 @@ void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface
 // draw a surface sprite on a surface screen in point (x, y)
 // (x, y) is the center of sprite on screen
 // "sprite" meaning an asset/image or a part of it
-void DrawSurface(SDL_Surface* screen, SDL_Surface* sprite, int x, int y)
+void DrawSurface(SDL_Surface* screen, SDL_Surface* sprite, int x, int y,SDL_Rect *src)
 {
 	SDL_Rect dest;
 	dest.x = x - sprite->w / 2;
 	dest.y = y - sprite->h / 2;
 	dest.w = sprite->w;
 	dest.h = sprite->h;
-	SDL_BlitSurface(sprite, NULL, screen, &dest);
+	SDL_BlitSurface(sprite, src, screen, &dest);
 }
 
 // draw a single pixel
@@ -111,12 +111,12 @@ void createWindow() // Create a window with specified size. Also create renderer
 void printWindow()
 {
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	DrawSurface(SDL.screen, SDL.eti, Mario.upperXCorner, Mario.upperYCorner); //draws the player(eti)
 	printGameInfo();
 	printPlayerInfo();
 	printGround();
 	createPlatforms();
 	createLadders();
+	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner+DifferenceInX, Mario.upperYCorner+DifferenceInY, &Mario.size); //draws the player(eti)
 }
 
 void printGameInfo()
@@ -159,6 +159,9 @@ void basicSetting()
 	gameInfo.gameTime = 0;
 	Mario.upperXCorner = PlayerStartXCoordinate;
 	Mario.upperYCorner = PlayerStartYCoordinate;
+	Mario.size = { PlayerWidth*4+10,PlayerHeight*0,Mario.realSize[0],Mario.realSize[1]};
+	Mario.speedX = WalkingSpeed;
+	Mario.speedY = 0;
 }
 
 void createColor()
@@ -177,9 +180,9 @@ void createColor()
 void playerWalking()
 {
 	if (SDL.event.key.keysym.sym == SDLK_LEFT)
-		Mario.upperXCorner -= WalkingSpeed;
+		Mario.upperXCorner -= Mario.speedX;
 	else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
-		Mario.upperXCorner += WalkingSpeed;
+		Mario.upperXCorner += Mario.speedX;
 }
 
 void playerClimbing()
@@ -190,18 +193,29 @@ void playerClimbing()
 		Mario.upperYCorner += ClimbingSpeed;
 }
 
+void graivityApply()
+{
+	Mario.upperYCorner += Mario.speedY;
+	if (Mario.upperYCorner >= 500)
+	{
+		Mario.isJumping = false;
+		Mario.speedY = 0;
+	}
+	if (Mario.isJumping)
+	{
+		Mario.speedY += GravitySpeed;
+	}
+}
+
 void playerJumping()
 {
-	if (SDL.event.key.keysym.sym == SDLK_SPACE)
-	{
-		
-	}
+		Mario.speedY = -JumpingSpeed;
 }
 
 void playerMove()
 {
 	playerWalking();
-	playerClimbing();
+	playerClimbing();	
 }
 
 void addPoints()
@@ -306,7 +320,7 @@ void whereIsPLayer() //na razie nie korzystam
 {
 	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner };
 	int rightLowerCorner[2] = { Mario.upperXCorner + PlayerWidth,Mario.upperYCorner + PlayerHeight };
-	if (rightLowerCorner[1] == GroundHeight)
+	if (rightLowerCorner[1] == GroundHeight+50)
 		playerOnGround();
 	else if (leftUpperCorner[0] == 110 && leftUpperCorner[1] == Platform_I_Height + 60)
 		playerOnLadder();

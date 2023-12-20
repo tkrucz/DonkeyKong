@@ -9,7 +9,7 @@ extern "C" {
 
 void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface* charset);
 
-void DrawSurface(SDL_Surface* screen, SDL_Surface* sprite, int x, int y);
+void DrawSurface(SDL_Surface* screen, SDL_Surface* sprite, int x, int y, SDL_Rect* src = nullptr);
 
 void DrawPixel(SDL_Surface* surface, int x, int y, Uint32 color);
 
@@ -56,6 +56,8 @@ void timeCounting();
 void createPlatforms();
 
 void createLadders();
+
+void graivityApply();
 
 bool playerOnLadder(); //na razie nie korzystam
 
