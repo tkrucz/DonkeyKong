@@ -29,8 +29,7 @@ struct GameInfo
 {
 	int t1, t2;
 	double gameTime, deltaTime;
-	//TODO quit bool
-	int quit;
+	bool quit;
 	int err;
 	char text[128];
 }gameInfo;

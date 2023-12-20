@@ -44,7 +44,6 @@ int main(int argc, char** argv) {
 
 	while (!gameInfo.quit)
 	{
-		//TODO define
 		Platform platforms[NUMBER_OF_PLATFORMS];
 		gameInfo.t2 = SDL_GetTicks();
 
@@ -64,7 +63,7 @@ int main(int argc, char** argv) {
 			{
 			case SDL_KEYDOWN:				
 				if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
-					gameInfo.quit = 1;
+					gameInfo.quit = true;
 				else if (SDL.event.key.keysym.sym == SDLK_n)
 					basicSetting();
 				else if (SDL.event.key.keysym.sym == SDLK_p)
@@ -75,7 +74,7 @@ int main(int argc, char** argv) {
 					playerMove();		
 				break;		
 			case SDL_QUIT: //X button in right up corner
-				gameInfo.quit = 1;
+				gameInfo.quit = true;
 				break;
 			}
 		}

@@ -170,7 +170,7 @@ void basicSetting()
 	playerInfo.score = 0;
 	//TODO lives to define
 	playerInfo.lives = 3;
-	gameInfo.quit = 0;
+	gameInfo.quit = false;
 	gameInfo.gameTime = 0;
 	playerSettings();
 }
@@ -285,8 +285,7 @@ void loseLive()
 	playerInfo.lives -= 1;
 	if (playerInfo.lives == 0)
 	{
-		//TODO true insted of 1
-		gameInfo.quit = 1;
+		gameInfo.quit = true;
 	}
 }
 
