@@ -39,7 +39,7 @@ void playerWalking();
 
 void playerClimbing();
 
-void graivityApply(); //checks if Mario is jumping, change his position during jump
+void graivityApply(); //checks if Mario is jumping, change his position while jumping
 
 void playerJumping();
 
@@ -63,10 +63,12 @@ void createPlatforms();
 
 void createLadders();
 
-void playerOnLadder(); //na razie nie korzystam
+void playerOnLadder(); 
 
-void playerOnPlatform(); //na razie nie korzystam
+void playerOnPlatform(); 
 
-void whereIsPLayer(); //na razie nie korzystam
+void playerNoWhere();
+
+void whereIsPLayer(); 
 
 void freeSpace();

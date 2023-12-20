@@ -214,13 +214,14 @@ void playerClimbing()
 
 void graivityApply()
 {	
-	if (Mario.isJumping)
+	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GravitySpeed;
 		Mario.upperYCorner += Mario.speedY;
-		if (Mario.upperYCorner >= 500)
-		{
+		if (Mario.onPlatform)
+		{			
 			Mario.isJumping = false;
+			Mario.fallDown = false;
 			Mario.speedY = 0;
 		}
 	}
@@ -239,6 +240,7 @@ void playerMove()
 	playerClimbing();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
 	{
+		Mario.onPlatform = false;
 		Mario.isJumping = true;
 		playerJumping();
 	}
@@ -327,7 +329,7 @@ void createLadders()
 }
 
 
-void playerOnLadder() //flaga-na razie nie korzystam
+void playerOnLadder()
 {
 		Mario.onLadder = true;
 		Mario.onPlatform = false;
@@ -339,19 +341,28 @@ void playerOnLadderEdge()
 	Mario.onPlatform = true;
 }
 
-void playerOnPlatform() //flaga-na razie nie korzystam
+void playerOnPlatform() 
 {
 		Mario.onPlatform = true;
 		Mario.onLadder = false;
 }
 
-void whereIsPLayer() //na razie nie korzystam
+void playerNoWhere()
+{
+	Mario.onLadder = false;
+	Mario.onPlatform = false;
+	Mario.fallDown = true;
+}
+
+void whereIsPLayer() 
 {
 	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner };		
 	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == Platform_I_Height + 60)
 		playerOnLadderEdge();
-	else if ((leftUpperCorner[0] == 110 ||leftUpperCorner[0]==115) && leftUpperCorner[1] == Platform_I_Height + 58)
+	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == Platform_I_Height + 58)
 		playerOnLadder();
+	else if (leftUpperCorner[1] == 500)
+		playerOnPlatform();
 	else if (leftUpperCorner[1] == Platform_I_Height)
 		playerOnPlatform(); 
 }

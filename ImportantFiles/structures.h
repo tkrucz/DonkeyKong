@@ -22,6 +22,7 @@ struct Player
 	bool isJumping;
 	bool onPlatform;
 	bool onLadder;
+	bool fallDown;
 }Mario;
 
 struct GameInfo
