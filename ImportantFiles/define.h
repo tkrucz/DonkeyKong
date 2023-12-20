@@ -4,40 +4,39 @@
 
 
 //TODO #define CAPS_LOCK 0
-#define ScreenWidth	720
-#define ScreenHeight	520
+
+#define SCREEN_WIDTH	720
+#define SCREEN_HEIGHT	520
 #define SECONDS_BETWEEN_REFRESH 0.5
 #define REFRESH_RATE 1/SECONDS_BETWEEN_REFRESH
 
-#define ZeroColumn 0 
-#define FirstRow 1
-#define TenRow 10
-#define AuhtorInfoRow ScreenHeight - 12
-#define GroundHeight ScreenHeight - 20
+#define ZERO_COLUMN 0 
+#define FIRST_ROW 1
+#define TEN_ROW 10
+#define AUTHOR_INFO_ROW SCREEN_HEIGHT - 12
+#define GROUND_HEIGHT SCREEN_HEIGHT - 20
 
-#define PlayerStartXCoordinate 310 
-#define PlayerStartYCoordinate 500
-#define DifferenceInX 144
-#define DifferenceInY 50
-#define PlayerWidth 37 
-#define PlayerHeight 34
+#define PLAYER_START_X_COORDINATE 310 
+#define PLAYER_START_Y_COORDINATE 500
+#define DIFFERENCE_IN_X 144
+#define DIFFERENCE_IN_Y 50
+#define PLAYER_WIDTH 37 
+#define PLAYER_HEIGHT 34
 
-#define NumberOfPlatforms 
-#define PlatformWidth 20
-#define Platform_I_Height 440
-#define Platform_II_Height 360
-#define Platform_III_Height 280
-#define Platform_IV_Height 200
-#define Platform_V_Height 120
+#define NUMBER_OF_PLATFORMS 10
+#define PLATFORM_WIDTH 20
+#define PLATFROM_I_HEIGHT 440
+#define PLATFROM_II_HEIGHT 360
+#define PLATFROM_III_HEIGHT 280
+#define PLATFORM_IV_HEIGHT 200
+#define PLATFORM_V_HEIGHT 120
 
-#define NumberOfLadders 
-#define LadderWidth 18
-#define LadderHeight 80
+#define NUMBERS_OF_LADDERS 
+#define LADDER_WIDTH 18
+#define LADDER_HEIGHT 80
 
-#define GravitySpeed 0.007
-#define JumpingSpeed 0.7
+#define GRAVITY_SPEED 0.007
+#define JUMPING_SPEED 0.7
 
-#define WalkingSpeed 5
-#define ClimbingSpeed 3
-
-#define PLATFORMS_COUNT 10
+#define WALKING_SPEED 5
+#define CLIMBING_SPEED 3
