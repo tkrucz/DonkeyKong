@@ -8,9 +8,14 @@ extern "C" {
 struct PlayerInfo
 {
 	int score;
-	int lives;
-	int xCord, yCord;//coordinates of player	
+	int lives;	
 }playerInfo;
+
+struct Player
+{
+	int upperXCorner;
+	int upperYCorner;
+}Mario;
 
 struct GameInfo
 {

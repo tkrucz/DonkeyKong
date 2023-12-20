@@ -8,20 +8,29 @@
 
 #define ZeroColumn 0
 #define FirstRow 1
-#define PlayerStartXCoordinate 300
-#define PlayerStartYCoordinate 400
 #define TenRow 10
 #define AuhtorInfoRow ScreenHeight - 12
 #define GroundHeight ScreenHeight - 20
 
+#define PlayerStartXCoordinate 300
+#define PlayerStartYCoordinate 480
+#define PlayerWidth 16
+#define PlayerHeight 20
 
 #define NumberOfPlatforms 
 #define PlatformWidth 20
+#define Platform_I_Height 440
+#define Platform_II_Height 360
+#define Platform_III_Height 280
+#define Platform_IV_Height 200
+#define Platform_V_Height 120
+
 #define NumberOfLadders 
-#define LadderWidth 16
+#define LadderWidth 18
 #define LadderHeight 80
 
 #define GravitySpeed 0.1
 #define JumpingSpeed 5
+
 #define WalkingSpeed 2
 #define ClimbingSpeed 2

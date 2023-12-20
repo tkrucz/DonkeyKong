@@ -111,7 +111,7 @@ void createWindow() // Create a window with specified size. Also create renderer
 void printWindow()
 {
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	DrawSurface(SDL.screen, SDL.eti, playerInfo.xCord, playerInfo.yCord); //draws the screen
+	DrawSurface(SDL.screen, SDL.eti, Mario.upperXCorner, Mario.upperYCorner); //draws the player(eti)
 	printGameInfo();
 	printPlayerInfo();
 	printGround();
@@ -155,10 +155,10 @@ void basicSetting()
 {
 	playerInfo.score = 0;
 	playerInfo.lives = 3;
-	playerInfo.xCord = PlayerStartXCoordinate;
-	playerInfo.yCord = PlayerStartYCoordinate;
 	gameInfo.quit = 0;
 	gameInfo.gameTime = 0;
+	Mario.upperXCorner = PlayerStartXCoordinate;
+	Mario.upperYCorner = PlayerStartYCoordinate;
 }
 
 void createColor()
@@ -177,17 +177,17 @@ void createColor()
 void playerWalking()
 {
 	if (SDL.event.key.keysym.sym == SDLK_LEFT)
-		playerInfo.xCord -= WalkingSpeed;
+		Mario.upperXCorner -= WalkingSpeed;
 	else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
-		playerInfo.xCord += WalkingSpeed;
+		Mario.upperXCorner += WalkingSpeed;
 }
 
 void playerClimbing()
 {
 	if (SDL.event.key.keysym.sym == SDLK_UP)
-		playerInfo.yCord -= ClimbingSpeed;
+		Mario.upperYCorner -= ClimbingSpeed;
 	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
-		playerInfo.yCord += ClimbingSpeed;
+		Mario.upperYCorner += ClimbingSpeed;
 }
 
 void playerJumping()
@@ -249,40 +249,40 @@ void timeCounting() //counting the game time
 
 void createPlatforms()
 {
-	Platform platorm1 = { 60,440,350 };
+	Platform platorm1 = { 60,Platform_I_Height,350 };
 	DrawRectangle(SDL.screen, platorm1.x, platorm1.y, platorm1.l, platorm1.w, colors.black, colors.pink);
-	Platform platorm2 = {520,440,160 };
+	Platform platorm2 = {520,Platform_I_Height,160 };
 	DrawRectangle(SDL.screen, platorm2.x, platorm2.y, platorm2.l, platorm2.w, colors.black, colors.pink);
-	Platform platorm3 = { 420,360,170 };
+	Platform platorm3 = { 440,Platform_II_Height,160 };
 	DrawRectangle(SDL.screen, platorm3.x, platorm3.y, platorm3.l, platorm3.w, colors.black, colors.pink);
-	Platform platorm4 = { 40,360,330 };
+	Platform platorm4 = { 40,Platform_II_Height,350 };
 	DrawRectangle(SDL.screen, platorm4.x, platorm4.y, platorm4.l, platorm4.w, colors.black, colors.pink);
-	Platform platorm5 = { 480,280,200 };
+	Platform platorm5 = { 480,Platform_III_Height,200 };
 	DrawRectangle(SDL.screen, platorm5.x, platorm5.y, platorm5.l, platorm5.w, colors.black, colors.pink);
-	Platform platorm6 = { 340,280,80 };
+	Platform platorm6 = { 340,Platform_III_Height,80 };
 	DrawRectangle(SDL.screen, platorm6.x, platorm6.y, platorm6.l, platorm6.w, colors.black, colors.pink);
-	Platform platorm7 = { 60,280,240 };
+	Platform platorm7 = { 60,Platform_III_Height,240 };
 	DrawRectangle(SDL.screen, platorm7.x, platorm7.y, platorm7.l, platorm7.w, colors.black, colors.pink);
-	Platform platorm8 = { 100,200,240 };
+	Platform platorm8 = { 100,Platform_IV_Height,240 };
 	DrawRectangle(SDL.screen, platorm8.x, platorm8.y, platorm8.l, platorm8.w, colors.black, colors.pink);
-	Platform platorm9 = { 470,200,230 };
+	Platform platorm9 = { 470,Platform_IV_Height,240 };
 	DrawRectangle(SDL.screen, platorm9.x, platorm9.y, platorm9.l, platorm9.w, colors.black, colors.pink);
-	Platform platorm10 = { 280,120,150 };
+	Platform platorm10 = { 280,Platform_V_Height,160 };
 	DrawRectangle(SDL.screen, platorm10.x, platorm10.y, platorm10.l, platorm10.w, colors.black, colors.pink);
 
 }
 
 void createLadders()
 {
-	Ladder ladder1 = {365,120};
+	Ladder ladder1 = {365,Platform_V_Height};
 	DrawRectangle(SDL.screen, ladder1.x, ladder1.y, ladder1.w, 160, colors.black, colors.grey);
-	Ladder ladder2 = { 600,200 };
+	Ladder ladder2 = { 600,Platform_IV_Height };
 	DrawRectangle(SDL.screen, ladder2.x, ladder2.y, ladder2.w, ladder2.h, colors.black, colors.grey);
-	Ladder ladder3 = { 150,280 };
+	Ladder ladder3 = { 150,Platform_III_Height };
 	DrawRectangle(SDL.screen, ladder3.x, ladder3.y, ladder3.w, ladder3.h, colors.black, colors.grey);
-	Ladder ladder4 = { 550,360 };
+	Ladder ladder4 = { 550,Platform_II_Height };
 	DrawRectangle(SDL.screen, ladder4.x, ladder4.y, ladder4.w, ladder4.h, colors.black, colors.grey);
-	Ladder ladder5 = { 110,440 };
+	Ladder ladder5 = { 110,Platform_I_Height };
 	DrawRectangle(SDL.screen, ladder5.x, ladder5.y, ladder5.w, 60, colors.black, colors.grey);
 }
 
@@ -297,9 +297,21 @@ bool playerOnPlatform() //flaga-na razie nie korzystam
 	return true;
 }
 
+bool playerOnGround() //flaga-na razie nie korzystam
+{
+	return true;
+}
+
 void whereIsPLayer() //na razie nie korzystam
 {
-
+	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner };
+	int rightLowerCorner[2] = { Mario.upperXCorner + PlayerWidth,Mario.upperYCorner + PlayerHeight };
+	if (rightLowerCorner[1] == GroundHeight)
+		playerOnGround();
+	else if (leftUpperCorner[0] == 110 && leftUpperCorner[1] == Platform_I_Height + 60)
+		playerOnLadder();
+	else if (rightLowerCorner[1] == Platform_I_Height)
+		playerOnPlatform();
 }
 
 void freeSpace() 	//freeing all surfaces

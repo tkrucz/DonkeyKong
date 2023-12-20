@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 		gameInfo.t2 = SDL_GetTicks();
 
 		timeCounting();
-		printWindow();	
+		printWindow();
 
 		SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
 		//  	  SDL_RenderClear(renderer);
@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 			switch (SDL.event.type)
 			{
 			case SDL_KEYDOWN:
+				whereIsPLayer();
 				if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
 					gameInfo.quit = 1;
 				else if (SDL.event.key.keysym.sym == SDLK_n)
@@ -66,13 +67,13 @@ int main(int argc, char** argv) {
 					addPoints();
 				else if (SDL.event.key.keysym.sym == SDLK_l)
 					loseLive();
-				else if (SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT)
+				else if ((playerOnGround() || playerOnPlatform()) &&( SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT))
 					playerWalking();
-				else if (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN)
+				else if (playerOnLadder() && (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN))
 					playerClimbing();
 				else if (SDL.event.key.keysym.sym == SDLK_SPACE)
 					playerJumping();
-				break;
+				break;		
 			case SDL_QUIT: //X button in right up corner
 				gameInfo.quit = 1;
 				break;
