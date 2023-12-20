@@ -4,7 +4,6 @@
 #include<string.h>
 #include "ImportantFiles/define.h"
 #include"ImportantFiles/functions.h"
-#include "ImportantFiles/functions.cpp"
 #include "ImportantFiles/structures.h"
 
 extern "C" {
@@ -16,11 +15,13 @@ extern "C" {
 extern "C"
 #endif
 
+//TODO main do mainGameLoop()
 int main(int argc, char** argv) {	
 
 	createWindow();
 	createColor();
 
+	//TODO 28-39 loadBMPS() 
 	SDL_ShowCursor(SDL_DISABLE);	
 
 	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
@@ -39,17 +40,23 @@ int main(int argc, char** argv) {
 	gameInfo.t1 = SDL_GetTicks();
 	basicSetting();
 
+
+
 	while (!gameInfo.quit)
 	{
+		//TODO define
+		Platform platforms[PLATFORMS_COUNT];
 		gameInfo.t2 = SDL_GetTicks();
 
 		timeCounting();
-		printWindow();
+		initializeGameObjects(platforms);
+		displayWindow(platforms);
 		refreshWindow();		
 
 		graivityApply();
-		whereIsPLayer();
+		whereIsPLayer(platforms);
 
+		// TODO 57 -> 78 readKeys() 
 		// obs³uga zdarzeñ (o ile jakieœ zasz³y) / handling of events (if there were any)
 		while (SDL_PollEvent(&SDL.event))
 		{
@@ -74,7 +81,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	freeSpace();
+	SDLSpace();
 	SDL_Quit();
 	return 0;
 }

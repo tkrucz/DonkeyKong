@@ -1,6 +1,9 @@
 #pragma once
 //REMEMBER: GET RID OF MAGIC NUMBERS !!!
+//+ 1
 
+
+//TODO #define CAPS_LOCK 0
 #define ScreenWidth	720
 #define ScreenHeight	520
 #define SECONDS_BETWEEN_REFRESH 0.5
@@ -36,3 +39,5 @@
 
 #define WalkingSpeed 5
 #define ClimbingSpeed 3
+
+#define PLATFORMS_COUNT 10
