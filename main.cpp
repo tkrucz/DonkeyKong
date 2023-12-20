@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 	while (!gameInfo.quit)
 	{
 		//TODO define
-		Platform platforms[PLATFORMS_COUNT];
+		Platform platforms[NUMBER_OF_PLATFORMS];
 		gameInfo.t2 = SDL_GetTicks();
 
 		timeCounting();

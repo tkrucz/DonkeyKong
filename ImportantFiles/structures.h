@@ -67,8 +67,8 @@ struct Colors
 
 struct Jumping
 {
-	double g = GravitySpeed;
-	double velocity = JumpingSpeed;
+	double g = GRAVITY_SPEED;
+	double velocity = JUMPING_SPEED;
 	double beginning, duration; // beginning of jump, time duration of jump
 }jumping;
 
@@ -77,13 +77,13 @@ struct Platform //Arguemnts: x,y (upper corners), l-length, w-width is const=Pla
 	int x; 
 	int y;
 	int l; 
-	int w=PlatformWidth; 
+	int w=PLATFORM_WIDTH; 
 };
 
 struct Ladder //Arguemnts: x,y (upper corners), w-width is const=LadderWidth, h-height is const=LadderHeight
 {
 	int x; 
 	int y;
-	int w = LadderWidth; 
-	int h = LadderHeight; 
+	int w = LADDER_WIDTH; 
+	int h = LADDER_HEIGHT; 
 };

@@ -76,7 +76,7 @@ void SDLSpace();
 
 void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 {
-	gameInfo.err = SDL_CreateWindowAndRenderer(ScreenWidth, ScreenHeight, 0,
+	gameInfo.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&SDL.window, &SDL.renderer);
 	if (gameInfo.err != 0)
 	{
@@ -85,17 +85,17 @@ void createWindow() // Create a window with specified size. Also create renderer
 	}
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	SDL_RenderSetLogicalSize(SDL.renderer, ScreenWidth, ScreenHeight);
+	SDL_RenderSetLogicalSize(SDL.renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SDL_SetRenderDrawColor(SDL.renderer, 0, 0, 0, 255);
 
 	SDL_SetWindowTitle(SDL.window, "Tomasz Kruczalak 198049");
 
-	SDL.screen = SDL_CreateRGBSurface(0, ScreenWidth, ScreenHeight, 32,
+	SDL.screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
 		0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 
 	SDL.scrtex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888,
 		SDL_TEXTUREACCESS_STREAMING,
-		ScreenWidth, ScreenHeight);
+		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void drawInfo() {
@@ -119,7 +119,7 @@ void displayWindow(Platform* platforms)
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms);
 	drawInfo();
-	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner + DifferenceInX, Mario.upperYCorner + DifferenceInY, &Mario.size); //draws the player
+	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner + DIFFERENCE_IN_X, Mario.upperYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player
 }
 
 void refreshWindow()
@@ -131,7 +131,7 @@ void refreshWindow()
 
 void printGameInfo()
 {
-	DrawRectangle(SDL.screen, ZeroColumn, FirstRow, ScreenWidth, 70, colors.white, colors.black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, 70, colors.white, colors.black);
 	sprintf(gameInfo.text, "King Donkey");
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 8, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "Time from beginning: %.1lf s", gameInfo.gameTime);
@@ -141,20 +141,20 @@ void printGameInfo()
 	sprintf(gameInfo.text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 55, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "Author: Tomasz Kruczalak 198049");
-	DrawString(SDL.screen, ZeroColumn, AuhtorInfoRow, gameInfo.text, SDL.charset);
+	DrawString(SDL.screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo.text, SDL.charset);
 }
 
 void printPlayerInfo()
 {
-	DrawRectangle(SDL.screen, ZeroColumn, 70, 120, 36, colors.white, colors.black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 36, colors.white, colors.black);
 	sprintf(gameInfo.text, "Score: %.6d", playerInfo.score);
-	DrawString(SDL.screen, TenRow, 75, gameInfo.text, SDL.charset);
+	DrawString(SDL.screen, TEN_ROW, 75, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "Lives: %d", playerInfo.lives);
-	DrawString(SDL.screen, TenRow, 90, gameInfo.text, SDL.charset);
+	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftUpperXCorner: %d", Mario.upperXCorner);
-	DrawString(SDL.screen, TenRow, 150, gameInfo.text, SDL.charset);
+	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftUpperYCorner: %d", Mario.upperYCorner);
-	DrawString(SDL.screen, TenRow, 170, gameInfo.text, SDL.charset);
+	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
 }
 
 /*My functions
@@ -162,7 +162,7 @@ void printPlayerInfo()
 
 void printGround()
 {
-	DrawLine(SDL.screen, ZeroColumn, GroundHeight, ScreenWidth, 1, 0, colors.white);
+	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
 
 void basicSetting()
@@ -179,11 +179,11 @@ void basicSetting()
 // smf like that #define DEFAULT_MARIO_SPRITE PlayerWidth * 4 + 10
 void playerSettings()
 {
-	Mario.upperXCorner = PlayerStartXCoordinate;
-	Mario.upperYCorner = PlayerStartYCoordinate;
+	Mario.upperXCorner = PLAYER_START_X_COORDINATE;
+	Mario.upperYCorner = PLAYER_START_Y_COORDINATE;
 	//TODO comments
-	Mario.size = { PlayerWidth * 4 + 10, PlayerHeight * 0,Mario.realSize[0],Mario.realSize[1] };
-	Mario.speedX = WalkingSpeed;
+	Mario.size = { PLAYER_WIDTH * 4 + 10, PLAYER_HEIGHT * 0,Mario.realSize[0],Mario.realSize[1] };
+	Mario.speedX = WALKING_SPEED;
 	Mario.speedY = 0;
 	Mario.isJumping = false;
 	Mario.onLadder = false;
@@ -214,16 +214,16 @@ void playerWalking()
 void playerClimbing()
 {
 	if (SDL.event.key.keysym.sym == SDLK_UP)
-		Mario.upperYCorner -= ClimbingSpeed;
+		Mario.upperYCorner -= CLIMBING_SPEED;
 	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
-		Mario.upperYCorner += ClimbingSpeed;
+		Mario.upperYCorner += CLIMBING_SPEED;
 }
 
 void graivityApply()
 {
 	if (Mario.isJumping || Mario.fallDown)
 	{
-		Mario.speedY += GravitySpeed;
+		Mario.speedY += GRAVITY_SPEED;
 		Mario.upperYCorner += Mario.speedY;
 		if (Mario.onPlatform)
 		{
@@ -236,7 +236,7 @@ void graivityApply()
 
 void playerJumping()
 {
-	Mario.speedY = -JumpingSpeed;
+	Mario.speedY = -JUMPING_SPEED;
 }
 
 void playerMove()
@@ -299,15 +299,15 @@ void timeCounting()
 
 void createPlatforms(Platform* platforms)
 {
-	int platformsParameters[PLATFORMS_COUNT][3] = {
-		{60,Platform_I_Height,350}, {520,Platform_I_Height,160},
-		{440,Platform_II_Height,160}, { 40,Platform_II_Height,350 },
-		{ 480,Platform_III_Height,200 }, { 340,Platform_III_Height,80 },
-		{ 60,Platform_III_Height,240 }, { 100,Platform_IV_Height,240 },
-		{ 470,Platform_IV_Height,240 }, { 280,Platform_V_Height,160 }
+	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
+		{60,PLATFROM_I_HEIGHT,350}, {520,PLATFROM_I_HEIGHT,160},
+		{440,PLATFROM_II_HEIGHT,160}, { 40,PLATFROM_II_HEIGHT,350 },
+		{ 480,PLATFROM_III_HEIGHT,200 }, { 340,PLATFROM_III_HEIGHT,80 },
+		{ 60,PLATFROM_III_HEIGHT,240 }, { 100,PLATFORM_IV_HEIGHT,240 },
+		{ 470,PLATFORM_IV_HEIGHT,240 }, { 280,PLATFORM_V_HEIGHT,160 }
 	};
 
-	for (int i = 0; i < PLATFORMS_COUNT; i++) {
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
 		platforms[i].x = platformsParameters[i][0];
 		platforms[i].y = platformsParameters[i][1];
 		platforms[i].l = platformsParameters[i][2];
@@ -316,7 +316,7 @@ void createPlatforms(Platform* platforms)
 
 void drawPlatforms(Platform* platforms) {
 
-	for (int i = 0; i < PLATFORMS_COUNT; i++)
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 		DrawRectangle(SDL.screen, platforms[i].x, platforms[i].y, platforms[i].l, platforms[i].w, colors.black, colors.pink);
 
 }
@@ -324,15 +324,15 @@ void drawPlatforms(Platform* platforms) {
 //TODO like platforms
 void createLadders()
 {
-	Ladder ladder1 = { 365,Platform_V_Height };
+	Ladder ladder1 = { 365,PLATFORM_V_HEIGHT };
 	DrawRectangle(SDL.screen, ladder1.x, ladder1.y, ladder1.w, 160, colors.black, colors.grey);
-	Ladder ladder2 = { 600,Platform_IV_Height };
+	Ladder ladder2 = { 600,PLATFORM_IV_HEIGHT };
 	DrawRectangle(SDL.screen, ladder2.x, ladder2.y, ladder2.w, ladder2.h, colors.black, colors.grey);
-	Ladder ladder3 = { 150,Platform_III_Height };
+	Ladder ladder3 = { 150,PLATFROM_III_HEIGHT };
 	DrawRectangle(SDL.screen, ladder3.x, ladder3.y, ladder3.w, ladder3.h, colors.black, colors.grey);
-	Ladder ladder4 = { 550,Platform_II_Height };
+	Ladder ladder4 = { 550,PLATFROM_II_HEIGHT };
 	DrawRectangle(SDL.screen, ladder4.x, ladder4.y, ladder4.w, ladder4.h, colors.black, colors.grey);
-	Ladder ladder5 = { 110,Platform_I_Height };
+	Ladder ladder5 = { 110,PLATFROM_I_HEIGHT };
 	DrawRectangle(SDL.screen, ladder5.x, ladder5.y, ladder5.w, 60, colors.black, colors.grey);
 }
 
@@ -366,14 +366,14 @@ void playerNoWhere()
 void whereIsPLayer(Platform* platforms)
 {
 
-	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner - PlayerHeight };
-	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == Platform_I_Height + 60)
+	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner - PLAYER_HEIGHT };
+	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFROM_I_HEIGHT + 60)
 		playerOnLadderEdge();
-	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == Platform_I_Height + 58)
+	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFROM_I_HEIGHT + 58)
 		playerOnLadder();
 	else if (leftUpperCorner[1] == 500)
 		playerOnPlatform();
-	else if (leftUpperCorner[1] == Platform_I_Height)
+	else if (leftUpperCorner[1] == PLATFROM_I_HEIGHT)
 		playerOnPlatform();
 
 	//loop for platforms
