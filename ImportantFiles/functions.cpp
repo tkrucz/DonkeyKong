@@ -148,6 +148,10 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TenRow, 75, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "Lives: %d", playerInfo.lives);
 	DrawString(SDL.screen, TenRow, 90, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "LeftUpperXCorner: %d", Mario.upperXCorner);
+	DrawString(SDL.screen, TenRow, 150, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "LeftUpperYCorner: %d", Mario.upperYCorner);
+	DrawString(SDL.screen, TenRow, 170, gameInfo.text, SDL.charset);
 }
 
 /*My functions
@@ -329,6 +333,12 @@ void playerOnLadder() //flaga-na razie nie korzystam
 		Mario.onPlatform = false;
 }
 
+void playerOnLadderEdge()
+{
+	Mario.onLadder = true;
+	Mario.onPlatform = true;
+}
+
 void playerOnPlatform() //flaga-na razie nie korzystam
 {
 		Mario.onPlatform = true;
@@ -337,14 +347,13 @@ void playerOnPlatform() //flaga-na razie nie korzystam
 
 void whereIsPLayer() //na razie nie korzystam
 {
-	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner };
-	int rightLowerCorner[2] = { Mario.upperXCorner + PlayerWidth,Mario.upperYCorner + PlayerHeight };
-	if (rightLowerCorner[1] == GroundHeight+50)
-		playerOnPlatform();
-	else if (leftUpperCorner[0] == 110 && leftUpperCorner[1] == Platform_I_Height + 60)
+	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner };		
+	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == Platform_I_Height + 60)
+		playerOnLadderEdge();
+	else if ((leftUpperCorner[0] == 110 ||leftUpperCorner[0]==115) && leftUpperCorner[1] == Platform_I_Height + 58)
 		playerOnLadder();
-	else if (rightLowerCorner[1] == Platform_I_Height)
-		playerOnPlatform();
+	else if (leftUpperCorner[1] == Platform_I_Height)
+		playerOnPlatform(); 
 }
 
 void freeSpace() 	//freeing all surfaces
