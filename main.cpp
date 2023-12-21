@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 		refreshWindow();		
 
 		graivityApply();
-		whereIsPLayer(platforms);
+		whereIsPLayer(platforms,ladders);
 
 		// TODO 48 -> 69 readKeys() 
 		// obs³uga zdarzeñ (o ile jakieœ zasz³y) / handling of events (if there were any)

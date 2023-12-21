@@ -370,10 +370,10 @@ void playerNoWhere()
 }
 
 // TODO magic numbers, maybe use platforms array and ladders array
-void whereIsPLayer(Platform* platforms)
+void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 
-	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner - PLAYER_HEIGHT };
+	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner  };
 	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFORM_I_HEIGHT + 60)
 		playerOnLadderEdge();
 	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFORM_I_HEIGHT + 58)
