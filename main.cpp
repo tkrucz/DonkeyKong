@@ -15,27 +15,15 @@ extern "C" {
 extern "C"
 #endif
 
-//TODO main do mainGameLoop()
+//TODO main to mainGameLoop()
 int main(int argc, char** argv) {	
 
 	createWindow();
-	createColor();
+	createColors();
 
-	//TODO 28-39 loadBMPS() 
-	SDL_ShowCursor(SDL_DISABLE);	
+	SDL_ShowCursor(SDL_DISABLE);
 
-	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
-	SDL.player = SDL_LoadBMP("./BMP/mario.bmp");
-	if (SDL.charset == NULL)
-	{
-		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
-		SDL_FreeSurface(SDL.screen);
-		SDL_DestroyTexture(SDL.scrtex);
-		SDL_DestroyWindow(SDL.window);
-		SDL_DestroyRenderer(SDL.renderer);
-		SDL_Quit();
-		return 1;
-	}
+	loadBMPs();
 
 	gameInfo.t1 = SDL_GetTicks();
 	basicSetting();
@@ -55,7 +43,7 @@ int main(int argc, char** argv) {
 		graivityApply();
 		whereIsPLayer(platforms);
 
-		// TODO 57 -> 78 readKeys() 
+		// TODO 48 -> 69 readKeys() 
 		// obs³uga zdarzeñ (o ile jakieœ zasz³y) / handling of events (if there were any)
 		while (SDL_PollEvent(&SDL.event))
 		{

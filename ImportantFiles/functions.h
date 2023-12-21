@@ -32,7 +32,7 @@ void basicSetting();
 
 void playerSettings();
 
-void createColor();
+void createColors();
 
 void playerWalking();
 
@@ -73,6 +73,8 @@ void playerNoWhere();
 void whereIsPLayer(Platform* platforms); 
 
 void SDLSpace();
+
+//Functions definitions
 
 void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 {
@@ -119,7 +121,7 @@ void displayWindow(Platform* platforms)
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms);
 	drawInfo();
-	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner + DIFFERENCE_IN_X, Mario.upperYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player
+	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner + DIFFERENCE_IN_X, Mario.upperYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player 
 }
 
 void refreshWindow()
@@ -167,22 +169,19 @@ void printGround()
 
 void basicSetting()
 {
-	playerInfo.score = 0;
-	//TODO lives to define
-	playerInfo.lives = 3;
+	playerInfo.score = PLAYER_START_POINTS;
+	playerInfo.lives = PLAYER_LIVES;
 	gameInfo.quit = false;
 	gameInfo.gameTime = 0;
 	playerSettings();
 }
 
-//TODO
-// smf like that #define DEFAULT_MARIO_SPRITE PlayerWidth * 4 + 10
 void playerSettings()
 {
 	Mario.upperXCorner = PLAYER_START_X_COORDINATE;
 	Mario.upperYCorner = PLAYER_START_Y_COORDINATE;
 	//TODO comments
-	Mario.size = { PLAYER_WIDTH * 4 + 10, PLAYER_HEIGHT * 0,Mario.realSize[0],Mario.realSize[1] };
+	Mario.size = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = WALKING_SPEED;
 	Mario.speedY = 0;
 	Mario.isJumping = false;
@@ -190,7 +189,7 @@ void playerSettings()
 	Mario.onPlatform = true;
 }
 
-void createColor()
+void createColors()
 {
 	colors.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
 	colors.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);

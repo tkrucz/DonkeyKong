@@ -15,6 +15,8 @@ void DrawLine(SDL_Surface* screen, int x, int y, int l, int dx, int dy, Uint32 c
 
 void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outlineColor, Uint32 fillColor);
 
+int loadBMPs();
+
 // draw a text txt on surface screen, starting from the point (x, y)
 // charset is a 128x128 bitmap containing character images
 void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface* charset)
@@ -84,5 +86,21 @@ void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outli
 	for (i = y + 1; i < y + k - 1; i++)
 	{
 		DrawLine(screen, x + 1, i, l - 2, 1, 0, fillColor);
+	}
+}
+
+int loadBMPs()
+{
+	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
+	SDL.player = SDL_LoadBMP("./BMP/mario.bmp");
+	if (SDL.charset == NULL)
+	{
+		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
+		SDL_FreeSurface(SDL.screen);
+		SDL_DestroyTexture(SDL.scrtex);
+		SDL_DestroyWindow(SDL.window);
+		SDL_DestroyRenderer(SDL.renderer);
+		SDL_Quit();
+		return 1;
 	}
 }
