@@ -33,11 +33,12 @@ int main(int argc, char** argv) {
 	while (!gameInfo.quit)
 	{
 		Platform platforms[NUMBER_OF_PLATFORMS];
+		Ladder ladders[NUMBERS_OF_LADDERS];
 		gameInfo.t2 = SDL_GetTicks();
 
 		timeCounting();
-		initializeGameObjects(platforms);
-		displayWindow(platforms);
+		initializeGameObjects(platforms,ladders);
+		displayWindow(platforms,ladders);
 		refreshWindow();		
 
 		graivityApply();

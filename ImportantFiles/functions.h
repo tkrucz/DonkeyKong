@@ -62,7 +62,9 @@ void createPlatforms(Platform* platforms);
 
 void drawPlatforms(Platform* platforms);
 
-void createLadders();
+void createLadders(Ladder* ladders);
+
+void drawLadders(Ladder* ladders);
 
 void playerOnLadder(); 
 
@@ -105,21 +107,21 @@ void drawInfo() {
 	printPlayerInfo();
 }
 
-//TODO createLadders
-void initializeGameObjects(Platform* platforms) {
+void initializeGameObjects(Platform* platforms, Ladder* ladders) {
 	createPlatforms(platforms);
+	createLadders(ladders);
 }
 
-void drawScene(Platform* platforms) {
+void drawScene(Platform* platforms, Ladder* ladders) {
 	printGround();
 	drawPlatforms(platforms);
-	createLadders();
+	drawLadders(ladders);
 }
 
-void displayWindow(Platform* platforms)
+void displayWindow(Platform* platforms, Ladder* ladders)
 {
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(platforms);
+	drawScene(platforms,ladders);
 	drawInfo();
 	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner + DIFFERENCE_IN_X, Mario.upperYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player 
 }
@@ -298,10 +300,10 @@ void timeCounting()
 void createPlatforms(Platform* platforms)
 {
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
-		{60,PLATFROM_I_HEIGHT,350}, {520,PLATFROM_I_HEIGHT,160},
-		{440,PLATFROM_II_HEIGHT,160}, { 40,PLATFROM_II_HEIGHT,350 },
-		{ 480,PLATFROM_III_HEIGHT,200 }, { 340,PLATFROM_III_HEIGHT,80 },
-		{ 60,PLATFROM_III_HEIGHT,240 }, { 100,PLATFORM_IV_HEIGHT,240 },
+		{60,PLATFORM_I_HEIGHT,350}, {520,PLATFORM_I_HEIGHT,160},
+		{440,PLATFORM_II_HEIGHT,160}, { 40,PLATFORM_II_HEIGHT,350 },
+		{ 480,PLATFORM_III_HEIGHT,200 }, { 340,PLATFORM_III_HEIGHT,80 },
+		{ 60,PLATFORM_III_HEIGHT,240 }, { 100,PLATFORM_IV_HEIGHT,240 },
 		{ 470,PLATFORM_IV_HEIGHT,240 }, { 280,PLATFORM_V_HEIGHT,160 }
 	};
 
@@ -319,21 +321,28 @@ void drawPlatforms(Platform* platforms) {
 
 }
 
-//TODO like platforms
-void createLadders()
+void createLadders(Ladder* ladders)
 {
-	Ladder ladder1 = { 365,PLATFORM_V_HEIGHT };
-	DrawRectangle(SDL.screen, ladder1.x, ladder1.y, ladder1.w, 160, colors.black, colors.grey);
-	Ladder ladder2 = { 600,PLATFORM_IV_HEIGHT };
-	DrawRectangle(SDL.screen, ladder2.x, ladder2.y, ladder2.w, ladder2.h, colors.black, colors.grey);
-	Ladder ladder3 = { 150,PLATFROM_III_HEIGHT };
-	DrawRectangle(SDL.screen, ladder3.x, ladder3.y, ladder3.w, ladder3.h, colors.black, colors.grey);
-	Ladder ladder4 = { 550,PLATFROM_II_HEIGHT };
-	DrawRectangle(SDL.screen, ladder4.x, ladder4.y, ladder4.w, ladder4.h, colors.black, colors.grey);
-	Ladder ladder5 = { 110,PLATFROM_I_HEIGHT };
-	DrawRectangle(SDL.screen, ladder5.x, ladder5.y, ladder5.w, 60, colors.black, colors.grey);
+	int laddersParameters[NUMBERS_OF_LADDERS][3] = {
+		{365,PLATFORM_V_HEIGHT,160}, {600,PLATFORM_IV_HEIGHT,LADDER_HEIGHT},
+		{150,PLATFORM_III_HEIGHT,LADDER_HEIGHT}, {550,PLATFORM_II_HEIGHT,LADDER_HEIGHT},
+		{110,PLATFORM_I_HEIGHT,60}
+	};
+
+	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
+	{
+		ladders[i].x = laddersParameters[i][0];
+		ladders[i].y = laddersParameters[i][1];
+		ladders[i].h = laddersParameters[i][2];
+	}	
 }
 
+void drawLadders(Ladder* ladders)
+{
+	for (int i = 0; i < NUMBERS_OF_LADDERS; i++) {
+		DrawRectangle(SDL.screen, ladders[i].x, ladders[i].y, ladders[i].w, ladders[i].h, colors.black, colors.grey);
+	}
+}
 
 void playerOnLadder()
 {
@@ -365,13 +374,13 @@ void whereIsPLayer(Platform* platforms)
 {
 
 	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner - PLAYER_HEIGHT };
-	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFROM_I_HEIGHT + 60)
+	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFORM_I_HEIGHT + 60)
 		playerOnLadderEdge();
-	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFROM_I_HEIGHT + 58)
+	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFORM_I_HEIGHT + 58)
 		playerOnLadder();
 	else if (leftUpperCorner[1] == 500)
 		playerOnPlatform();
-	else if (leftUpperCorner[1] == PLATFROM_I_HEIGHT)
+	else if (leftUpperCorner[1] == PLATFORM_I_HEIGHT)
 		playerOnPlatform();
 
 	//loop for platforms
