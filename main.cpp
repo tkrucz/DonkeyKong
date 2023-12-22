@@ -17,25 +17,24 @@ extern "C"
 
 //TODO main to mainGameLoop()
 int main(int argc, char** argv) {
-
-	createWindow();
-	createColors();
+	Platform platforms[NUMBER_OF_PLATFORMS];
+	Ladder ladders[NUMBERS_OF_LADDERS];
 
 	SDL_ShowCursor(SDL_DISABLE);
 
+	createWindow();
+	createColors();
 	loadBMPs();
+	basicSetting();
+	initializeGameObjects(platforms, ladders);
 
 	gameInfo.t1 = SDL_GetTicks();
-	basicSetting();
 
 	while (!gameInfo.quit)
 	{
-		Platform platforms[NUMBER_OF_PLATFORMS];
-		Ladder ladders[NUMBERS_OF_LADDERS];
 		gameInfo.t2 = SDL_GetTicks();
 		timeCounting();
 
-		initializeGameObjects(platforms, ladders);
 		displayWindow(platforms, ladders);
 		refreshWindow();
 
