@@ -408,7 +408,7 @@ void isPlayerOnLadder(Ladder* ladders)
 
 void isPlayerOnPlatform(Platform* platforms)
 {
-	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
+	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner }; //table containing player left lower corner cordinates
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		// is Mario on platform?
