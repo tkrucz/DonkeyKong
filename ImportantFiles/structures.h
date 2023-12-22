@@ -64,13 +64,6 @@ struct Colors
 	int grey; //for ladders
 }colors;
 
-struct Jumping
-{
-	double g = GRAVITY_SPEED;
-	double velocity = JUMPING_SPEED;
-	double beginning, duration; // beginning of jump, time duration of jump
-}jumping;
-
 struct Platform //Arguemnts: x,y (upper corners), l-length, w-width is const=PlatformWidth
 {
 	int x; 

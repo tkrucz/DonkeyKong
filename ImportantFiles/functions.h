@@ -243,7 +243,7 @@ void graivityApply()
 
 void playerJumping()
 {
-	Mario.speedY = -JUMPING_SPEED;
+	Mario.speedY = -JUMPING_SPEED;	
 }
 
 void playerFallDown()
@@ -262,7 +262,7 @@ void playerMove()
 		Mario.onPlatform = false;
 		Mario.isJumping = true;
 		playerJumping();
-	}
+	}	
 }
 
 void addPoints()
@@ -444,8 +444,8 @@ void readKeys()
 		switch (SDL.event.type)
 		{
 		case SDL_KEYDOWN:
-			if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
-				gameInfo.quit = 1;
+			if (SDL.event.key.keysym.sym == SDLK_ESCAPE) 
+				gameInfo.quit = true;
 			else if (SDL.event.key.keysym.sym == SDLK_n)
 				basicSetting();
 			else if (SDL.event.key.keysym.sym == SDLK_p)
@@ -460,7 +460,7 @@ void readKeys()
 				playerMove();
 			break;
 		case SDL_QUIT: //X button in right up corner
-			gameInfo.quit = 1;
+			gameInfo.quit = true;
 			break;
 		}
 	}
