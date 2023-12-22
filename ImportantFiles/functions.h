@@ -68,9 +68,9 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(Ladder* ladders);
 
-void playerOnLadder(); 
+void playerOnLadder();
 
-void playerOnPlatform(); 
+void playerOnPlatform();
 
 void playerNoWhere();
 
@@ -78,9 +78,11 @@ void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
 
-void whereIsPLayer(Platform* platforms, Ladder* ladders); 
+void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
 void SDLSpace();
+
+void readKeys();
 
 //Functions definitions
 
@@ -127,9 +129,9 @@ void drawScene(Platform* platforms, Ladder* ladders) {
 void displayWindow(Platform* platforms, Ladder* ladders)
 {
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(platforms,ladders);
+	drawScene(platforms, ladders);
 	drawInfo();
-	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + DIFFERENCE_IN_X, Mario.lowerYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player 
+	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + DIFFERENCE_IN_X, Mario.lowerYCorner + DIFFERENCE_IN_Y, &Mario.animation); //draws the player 
 }
 
 void refreshWindow()
@@ -189,7 +191,7 @@ void playerSettings()
 	Mario.lowerXCorner = PLAYER_START_X_COORDINATE;
 	Mario.lowerYCorner = PLAYER_START_Y_COORDINATE;
 	//TODO comments
-	Mario.size = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
+	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = WALKING_SPEED;
 	Mario.speedY = 0;
 	playerOnPlatform();
@@ -343,7 +345,7 @@ void createLadders(Ladder* ladders)
 		ladders[i].x = laddersParameters[i][0];
 		ladders[i].y = laddersParameters[i][1];
 		ladders[i].h = laddersParameters[i][2];
-	}	
+	}
 }
 
 void drawLadders(Ladder* ladders)
@@ -386,7 +388,7 @@ void isPlayerOnLadder(Ladder* ladders)
 	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
 	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
 	{
-		if (ladders[i].x <= leftLowerCorner[0]<= ladders[i].x + ladders[i].w) //x increses in right direciton
+		if (ladders[i].x <= leftLowerCorner[0] <= ladders[i].x + ladders[i].w) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
 			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h)
@@ -430,8 +432,8 @@ void isPlayerOnPlatform(Platform* platforms)
 //Oversave whereisPLayer, doesn't change properly (all time "playerOnLadder")
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
-		isPlayerOnPlatform(platforms);
-		isPlayerOnLadder(ladders);
+	isPlayerOnPlatform(platforms);
+	isPlayerOnLadder(ladders);
 
 }
 
@@ -443,4 +445,29 @@ void SDLSpace() 	//freeing all surfaces
 	SDL_DestroyTexture(SDL.scrtex);
 	SDL_DestroyRenderer(SDL.renderer);
 	SDL_DestroyWindow(SDL.window);
+}
+
+void readKeys()
+{
+	while (SDL_PollEvent(&SDL.event))
+	{
+		switch (SDL.event.type)
+		{
+		case SDL_KEYDOWN:
+			if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
+				gameInfo.quit = true;
+			else if (SDL.event.key.keysym.sym == SDLK_n)
+				basicSetting();
+			else if (SDL.event.key.keysym.sym == SDLK_p)
+				addPoints();
+			else if (SDL.event.key.keysym.sym == SDLK_l)
+				loseLive();
+			else if (Mario.onPlatform || Mario.onLadder)
+				playerMove();
+			break;
+		case SDL_QUIT: //X button in right up corner
+			gameInfo.quit = true;
+			break;
+		}
+	}
 }

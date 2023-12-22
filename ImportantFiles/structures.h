@@ -13,7 +13,7 @@ struct PlayerInfo
 
 struct Player
 {
-	SDL_Rect size; 
+	SDL_Rect animation; 
 	int lowerXCorner;
 	int lowerYCorner;
 	int realSize[2] = { 16,16 };
