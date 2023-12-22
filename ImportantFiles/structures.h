@@ -14,15 +14,15 @@ struct PlayerInfo
 struct Player
 {
 	SDL_Rect size; 
-	int upperXCorner;
-	int upperYCorner;
+	int lowerXCorner;
+	int lowerYCorner;
 	int realSize[2] = { 16,16 };
 	double speedX;
 	double speedY;
 	bool isJumping;
 	bool onPlatform;
 	bool onLadder;
-	bool fallDown;
+	bool fallDown;	
 }Mario;
 
 struct GameInfo

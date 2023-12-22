@@ -28,8 +28,6 @@ int main(int argc, char** argv) {
 	gameInfo.t1 = SDL_GetTicks();
 	basicSetting();
 
-
-
 	while (!gameInfo.quit)
 	{
 		Platform platforms[NUMBER_OF_PLATFORMS];

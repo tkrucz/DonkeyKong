@@ -16,9 +16,9 @@ void createWindow();
 
 void drawInfo();
 
-void drawScene(Platform* platforms);
+void drawScene(Platform* platforms, Ladder* ladders);
 
-void displayWindow(Platform* platforms);
+void displayWindow(Platform* platforms, Ladder* ladders);
 
 void refreshWindow();
 
@@ -41,6 +41,8 @@ void playerClimbing();
 void graivityApply(); //checks if Mario is jumping, change his position while jumping
 
 void playerJumping();
+
+void playerFallDown();
 
 void playerMove();
 
@@ -72,7 +74,11 @@ void playerOnPlatform();
 
 void playerNoWhere();
 
-void whereIsPLayer(Platform* platforms); 
+void isPlayerOnLadder(Ladder* ladders);
+
+void isPlayerOnPlatform(Platform* platforms);
+
+void whereIsPLayer(Platform* platforms, Ladder* ladders); 
 
 void SDLSpace();
 
@@ -123,7 +129,7 @@ void displayWindow(Platform* platforms, Ladder* ladders)
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms,ladders);
 	drawInfo();
-	DrawSurface(SDL.screen, SDL.player, Mario.upperXCorner + DIFFERENCE_IN_X, Mario.upperYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player 
+	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + DIFFERENCE_IN_X, Mario.lowerYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player 
 }
 
 void refreshWindow()
@@ -155,9 +161,9 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 75, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "Lives: %d", playerInfo.lives);
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftUpperXCorner: %d", Mario.upperXCorner);
+	sprintf(gameInfo.text, "LeftLowerXCorner: %d", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftUpperYCorner: %d", Mario.upperYCorner);
+	sprintf(gameInfo.text, "LeftLowerYCorner: %d", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
 }
 
@@ -180,15 +186,13 @@ void basicSetting()
 
 void playerSettings()
 {
-	Mario.upperXCorner = PLAYER_START_X_COORDINATE;
-	Mario.upperYCorner = PLAYER_START_Y_COORDINATE;
+	Mario.lowerXCorner = PLAYER_START_X_COORDINATE;
+	Mario.lowerYCorner = PLAYER_START_Y_COORDINATE;
 	//TODO comments
 	Mario.size = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = WALKING_SPEED;
 	Mario.speedY = 0;
-	Mario.isJumping = false;
-	Mario.onLadder = false;
-	Mario.onPlatform = true;
+	playerOnPlatform();
 }
 
 void createColors()
@@ -207,17 +211,17 @@ void createColors()
 void playerWalking()
 {
 	if (SDL.event.key.keysym.sym == SDLK_LEFT)
-		Mario.upperXCorner -= Mario.speedX;
+		Mario.lowerXCorner -= Mario.speedX;
 	else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
-		Mario.upperXCorner += Mario.speedX;
+		Mario.lowerXCorner += Mario.speedX;
 }
 
 void playerClimbing()
 {
 	if (SDL.event.key.keysym.sym == SDLK_UP)
-		Mario.upperYCorner -= CLIMBING_SPEED;
+		Mario.lowerYCorner -= CLIMBING_SPEED;
 	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
-		Mario.upperYCorner += CLIMBING_SPEED;
+		Mario.lowerYCorner += CLIMBING_SPEED;
 }
 
 void graivityApply()
@@ -225,8 +229,8 @@ void graivityApply()
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
-		Mario.upperYCorner += Mario.speedY;
-		if (Mario.onPlatform)
+		Mario.lowerYCorner += Mario.speedY;
+		if (Mario.onPlatform || Mario.lowerYCorner == GROUND_HEIGHT)
 		{
 			Mario.isJumping = false;
 			Mario.fallDown = false;
@@ -238,6 +242,11 @@ void graivityApply()
 void playerJumping()
 {
 	Mario.speedY = -JUMPING_SPEED;
+}
+
+void playerFallDown()
+{
+	graivityApply();
 }
 
 void playerMove()
@@ -348,18 +357,21 @@ void playerOnLadder()
 {
 	Mario.onLadder = true;
 	Mario.onPlatform = false;
+	Mario.fallDown = false;
 }
 
 void playerOnLadderEdge()
 {
 	Mario.onLadder = true;
 	Mario.onPlatform = true;
+	Mario.fallDown = false;
 }
 
 void playerOnPlatform()
 {
-	Mario.onPlatform = true;
 	Mario.onLadder = false;
+	Mario.onPlatform = true;
+	Mario.fallDown = false;
 }
 
 void playerNoWhere()
@@ -369,34 +381,57 @@ void playerNoWhere()
 	Mario.fallDown = true;
 }
 
-// TODO magic numbers, maybe use platforms array and ladders array
-void whereIsPLayer(Platform* platforms, Ladder* ladders)
+void isPlayerOnLadder(Ladder* ladders)
 {
-
-	int leftUpperCorner[2] = { Mario.upperXCorner,Mario.upperYCorner  };
-	if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFORM_I_HEIGHT + 60)
-		playerOnLadderEdge();
-	else if ((leftUpperCorner[0] == 110 || leftUpperCorner[0] == 115) && leftUpperCorner[1] == PLATFORM_I_HEIGHT + 58)
-		playerOnLadder();
-	else if (leftUpperCorner[1] == 500)
-		playerOnPlatform();
-	else if (leftUpperCorner[1] == PLATFORM_I_HEIGHT)
-		playerOnPlatform();
-
-	//loop for platforms
-	/*for (int i = 0; i < PLATFORMS_COUNT; i++) {
-		// is mario on platform?
-		if (leftUpperCorner[1] == platforms[i].y) {
-			// how far from left
-			if (platforms[i].x <= leftUpperCorner[0])
-				playerOnPlatform();
-			else if (platforms[i].x >= leftUpperCorner[0] + PlayerWidth)
+	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
+	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
+	{
+		if (ladders[i].x <= leftLowerCorner[0]<= ladders[i].x + ladders[i].w) //x increses in right direciton
+		{
+			//is Mario at the beginning of ladder?
+			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h)
+				playerOnLadderEdge();
+			//is Mario in the "middle" of ladder?
+			else if (ladders[i].y < leftLowerCorner[1] <= ladders[i].y + ladders[i].h) //y increases in down direction
+				playerOnLadder();
+		}
+		else
+		{
+			playerNoWhere();
+			if (leftLowerCorner[1] == GROUND_HEIGHT)
 				playerOnPlatform();
 		}
-	}*/
+	}
+}
 
-	//loop for ladders
-	// ............
+void isPlayerOnPlatform(Platform* platforms)
+{
+	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		// is Mario on platform?
+		if (leftLowerCorner[1] == platforms[i].y) {
+			// how far from left
+			if (platforms[i].x <= leftLowerCorner[0])
+				playerOnPlatform();
+			//how far from right
+			else if (platforms[i].x >= leftLowerCorner[0] + PLAYER_WIDTH)
+				playerOnPlatform();
+		}
+		else
+		{
+			playerNoWhere();
+			if (leftLowerCorner[1] == GROUND_HEIGHT)
+				playerOnPlatform();
+		}
+	}
+}
+
+//Oversave whereisPLayer, doesn't change properly (all time "playerOnLadder")
+void whereIsPLayer(Platform* platforms, Ladder* ladders)
+{
+		isPlayerOnPlatform(platforms);
+		isPlayerOnLadder(ladders);
 
 }
 
