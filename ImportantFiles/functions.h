@@ -131,7 +131,7 @@ void displayWindow(Platform* platforms, Ladder* ladders)
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms, ladders);
 	drawInfo();
-	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + DIFFERENCE_IN_X, Mario.lowerYCorner + DIFFERENCE_IN_Y, &Mario.size); //draws the player 
+	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + DIFFERENCE_IN_X, Mario.lowerYCorner + DIFFERENCE_IN_Y, &Mario.animation); //draws the player 
 }
 
 void refreshWindow()
@@ -191,7 +191,7 @@ void playerSettings()
 	Mario.lowerXCorner = PLAYER_START_X_COORDINATE;
 	Mario.lowerYCorner = PLAYER_START_Y_COORDINATE;
 	//TODO comments
-	Mario.size = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
+	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = WALKING_SPEED;
 	Mario.speedY = 0;
 	playerOnPlatform();
