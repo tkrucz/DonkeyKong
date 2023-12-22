@@ -437,6 +437,34 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 
 }
 
+void readKeys()
+{
+	while (SDL_PollEvent(&SDL.event))
+	{
+		switch (SDL.event.type)
+		{
+		case SDL_KEYDOWN:
+			if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
+				gameInfo.quit = 1;
+			else if (SDL.event.key.keysym.sym == SDLK_n)
+				basicSetting();
+			else if (SDL.event.key.keysym.sym == SDLK_p)
+				addPoints();
+			else if (SDL.event.key.keysym.sym == SDLK_l)
+				loseLive();
+			else if (SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT)
+				playerMove();
+			else if (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN)
+				playerMove();
+			else if (SDL.event.key.keysym.sym == SDLK_SPACE)
+				playerMove();
+			break;
+		case SDL_QUIT: //X button in right up corner
+			gameInfo.quit = 1;
+			break;
+		}
+	}
+}
 
 void SDLSpace() 	//freeing all surfaces
 {

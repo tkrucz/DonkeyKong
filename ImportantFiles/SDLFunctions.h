@@ -43,8 +43,7 @@ void DrawString(SDL_Surface* screen, int x, int y, const char* text, SDL_Surface
 }
 
 // draw a surface sprite on a surface screen in point (x, y)
-// (x, y) is the center of sprite on screen
-// "sprite" meaning an asset/image or a part of it
+// (x, y) is the center of sprite on screen, "sprite" meaning an asset/image or a part of it
 void DrawSurface(SDL_Surface* screen, SDL_Surface* sprite, int x, int y, SDL_Rect* src)
 {
 	SDL_Rect dest;
@@ -89,6 +88,7 @@ void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outli
 	}
 }
 
+//load BMPs files
 int loadBMPs()
 {
 	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
