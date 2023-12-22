@@ -230,10 +230,15 @@ void playerClimbing()
 
 void graivityApply()
 {
+	int leftUpperCorner[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner + Mario.realSize[1]};
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;
+		if (leftUpperCorner[1] == 494) //works, Mario stops at the height of lower side of platform.
+			//This crazzy number because: PLATFORM_I_HEIGHT(440)+PLATFORM_WIDTH(20)+PLAYER_HEIGHT(34)==494
+			//General formula: leftUpperCorner[1]==platforms[i].y+PLATFORM_WIDTH+PLAYER_HEIGHT
+			Mario.speedY = 0;
 		if (Mario.onPlatform || Mario.lowerYCorner == GROUND_HEIGHT)
 		{
 			Mario.isJumping = false;
