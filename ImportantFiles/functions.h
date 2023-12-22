@@ -446,28 +446,3 @@ void SDLSpace() 	//freeing all surfaces
 	SDL_DestroyRenderer(SDL.renderer);
 	SDL_DestroyWindow(SDL.window);
 }
-
-void readKeys()
-{
-	while (SDL_PollEvent(&SDL.event))
-	{
-		switch (SDL.event.type)
-		{
-		case SDL_KEYDOWN:
-			if (SDL.event.key.keysym.sym == SDLK_ESCAPE) //if Esc pressed then g.quit=1  so that ending the loop
-				gameInfo.quit = true;
-			else if (SDL.event.key.keysym.sym == SDLK_n)
-				basicSetting();
-			else if (SDL.event.key.keysym.sym == SDLK_p)
-				addPoints();
-			else if (SDL.event.key.keysym.sym == SDLK_l)
-				loseLive();
-			else if (Mario.onPlatform || Mario.onLadder)
-				playerMove();
-			break;
-		case SDL_QUIT: //X button in right up corner
-			gameInfo.quit = true;
-			break;
-		}
-	}
-}
