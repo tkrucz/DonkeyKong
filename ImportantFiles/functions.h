@@ -84,6 +84,8 @@ void SDLSpace();
 
 void readKeys();
 
+void quit();
+
 //Functions definitions
 
 void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
@@ -243,6 +245,9 @@ void graivityApply()
 
 void playerJumping()
 {
+	Mario.onPlatform = false;
+	Mario.onLadder = false;
+	Mario.isJumping = true;
 	Mario.speedY = -JUMPING_SPEED;	
 }
 
@@ -258,11 +263,7 @@ void playerMove()
 	if (Mario.onLadder)
 		playerClimbing();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
-	{
-		Mario.onPlatform = false;
-		Mario.isJumping = true;
 		playerJumping();
-	}	
 }
 
 void addPoints()
@@ -296,9 +297,7 @@ void loseLive()
 {
 	playerInfo.lives -= 1;
 	if (playerInfo.lives == 0)
-	{
-		gameInfo.quit = true;
-	}
+		quit();
 }
 
 void timeCounting()
@@ -444,8 +443,8 @@ void readKeys()
 		switch (SDL.event.type)
 		{
 		case SDL_KEYDOWN:
-			if (SDL.event.key.keysym.sym == SDLK_ESCAPE) 
-				gameInfo.quit = true;
+			if (SDL.event.key.keysym.sym == SDLK_ESCAPE)
+				quit();
 			else if (SDL.event.key.keysym.sym == SDLK_n)
 				basicSetting();
 			else if (SDL.event.key.keysym.sym == SDLK_p)
@@ -460,7 +459,7 @@ void readKeys()
 				playerMove();
 			break;
 		case SDL_QUIT: //X button in right up corner
-			gameInfo.quit = true;
+			quit();
 			break;
 		}
 	}
@@ -473,4 +472,9 @@ void SDLSpace() 	//freeing all surfaces
 	SDL_DestroyTexture(SDL.scrtex);
 	SDL_DestroyRenderer(SDL.renderer);
 	SDL_DestroyWindow(SDL.window);
+}
+
+void quit()
+{
+	gameInfo.quit = true;
 }
