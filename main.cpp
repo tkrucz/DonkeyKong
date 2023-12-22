@@ -42,9 +42,6 @@ int main(int argc, char** argv) {
 		whereIsPLayer(platforms, ladders);
 
 		readKeys();
-	}
-
-	SDLSpace();
-	SDL_Quit();
+	}	
 	return 0;
 }

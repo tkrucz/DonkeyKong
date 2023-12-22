@@ -477,4 +477,6 @@ void SDLSpace() 	//freeing all surfaces
 void quit()
 {
 	gameInfo.quit = true;
+	SDLSpace();
+	SDL_Quit();	
 }
