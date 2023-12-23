@@ -234,7 +234,7 @@ void graivityApply()
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
-		Mario.lowerYCorner += Mario.speedY;
+		Mario.lowerYCorner += Mario.speedY;	
 		if (leftUpperCorner[1] == 494) //works, Mario stops at the height of lower side of platform.
 			//This crazzy number because: PLATFORM_I_HEIGHT(440)+PLATFORM_WIDTH(20)+PLAYER_HEIGHT(34)==494
 			//General formula: if(platforms[i].x<=leftUpperCorner[0]<=platforms[i].x+platforms[i].w && leftUpperCorner[1]==platforms[i].y+PLATFORM_WIDTH+PLAYER_HEIGHT)
