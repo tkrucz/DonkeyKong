@@ -16,9 +16,10 @@ struct Player
 	SDL_Rect animation; 
 	int lowerXCorner;
 	int lowerYCorner;
-	int realSize[2] = { 16,16 };
+	int realSize[2] = { 16,16 }; //pixels size of Mario
 	double speedX;
 	double speedY;
+	double jumpingSpeedX;
 	bool isJumping;
 	bool onPlatform;
 	bool onLadder;

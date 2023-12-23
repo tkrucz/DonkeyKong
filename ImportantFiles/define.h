@@ -29,7 +29,7 @@
 
 #define DEAFULT_PLAYER_SPRITE_I (PLAYER_WIDTH * 4) //DEAFULT_PLAYER_SPRITE_I describes from which column take a graphic 
 #define DEAFULT_PLAYER_SPRITE_II (PLAYER_HEIGHT * 0) //DEAFULT_PLAYER_SPRITE_I describes from which row take a graphic 
-#define MARIO_BMP_DISTANCE 10 //const which allows to show whole Mario graphic
+#define MARIO_BMP_DISTANCE 10 //const which allows to show whole Mario graphic from the chosen row and column
 
 #define NUMBER_OF_PLATFORMS 10
 #define PLATFORM_WIDTH 20
