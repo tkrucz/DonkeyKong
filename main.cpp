@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 	createWindow();
 	createColors();
 	loadBMPs();
-	basicSetting();
+	basicSettings();
 	initializeGameObjects(platforms, ladders);
 
 	gameInfo.t1 = SDL_GetTicks();

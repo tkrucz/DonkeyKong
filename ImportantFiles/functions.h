@@ -28,7 +28,7 @@ void printPlayerInfo();
 
 void printGround();
 
-void basicSetting();
+void basicSettings();
 
 void playerSettings();
 
@@ -43,6 +43,8 @@ void graivityApply(); //checks if Mario is jumping, change his position while ju
 void playerJumping();
 
 void playerFallDown();
+
+void checkIfPlayerIsJumping();
 
 void playerMove();
 
@@ -179,7 +181,7 @@ void printGround()
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
 
-void basicSetting()
+void basicSettings()
 {
 	playerInfo.score = PLAYER_START_POINTS;
 	playerInfo.lives = PLAYER_LIVES;
@@ -263,20 +265,25 @@ void playerFallDown()
 	graivityApply();
 }
 
+void checkIfPlayerIsJumping()
+{
+	if (Mario.isJumping == true) //no "double" jump or inifinity jump
+	{
+		Mario.speedY = Mario.speedY;
+	}
+	else
+		playerJumping();
+}
+
 void playerMove()
 {
 	if (Mario.onPlatform)
 		playerWalking();
-	if (Mario.onLadder)
+	if (Mario.onLadder)	
 		playerClimbing();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
 	{
-		if (Mario.isJumping == true) //no "double" jump or inifinity jump
-		{
-			Mario.speedY = Mario.speedY;
-		}
-		else
-		playerJumping();
+		checkIfPlayerIsJumping();
 	}	
 }
 
@@ -459,7 +466,7 @@ void readKeys()
 			if (SDL.event.key.keysym.sym == SDLK_ESCAPE)
 				quit();
 			else if (SDL.event.key.keysym.sym == SDLK_n)
-				basicSetting();
+				basicSettings();
 			else if (SDL.event.key.keysym.sym == SDLK_p)
 				addPoints();
 			else if (SDL.event.key.keysym.sym == SDLK_l)
