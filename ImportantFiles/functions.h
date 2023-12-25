@@ -428,7 +428,7 @@ void isPlayerOnLadder(Ladder* ladders)
 
 void isPlayerOnPlatform(Platform* platforms)
 {
-	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner }; //table containing player left lower corner cordinates
+	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner }; //table containing player left lower corner coordinates
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		// is Mario on platform?
@@ -449,7 +449,7 @@ void isPlayerOnPlatform(Platform* platforms)
 	}
 }
 
-//Oversave whereisPLayer, doesn't change properly (all time "playerOnLadder")
+//Checked when change starting Mario postition into 440 in Y he fall down immediately (when I left only isPlayerOnPlatform so it doesn't works properly) 
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnPlatform(platforms);
