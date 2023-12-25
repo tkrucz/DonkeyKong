@@ -235,7 +235,7 @@ void graivityApply()
 	{
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;
-		Mario.lowerXCorner += Mario.jumpingSpeedX;
+		//Mario.lowerXCorner += Mario.jumpingSpeedX;
 		/*if (leftUpperCorner[1] == 494) //works, Mario stops at the height of lower side of platform.
 			//This crazzy number because: PLATFORM_I_HEIGHT(440)+PLATFORM_WIDTH(20)+PLAYER_HEIGHT(34)==494
 			//General formula: if(platforms[i].x<=leftUpperCorner[0]<=platforms[i].x+platforms[i].w && leftUpperCorner[1]==platforms[i].y+PLATFORM_WIDTH+PLAYER_HEIGHT)
@@ -270,7 +270,14 @@ void playerMove()
 	if (Mario.onLadder)
 		playerClimbing();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
+	{
+		if (Mario.isJumping == true) //no "double" jump or inifinity jump
+		{
+			Mario.speedY = Mario.speedY;
+		}
+		else
 		playerJumping();
+	}	
 }
 
 void addPoints()
