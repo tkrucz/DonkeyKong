@@ -449,7 +449,8 @@ void isPlayerOnPlatform(Platform* platforms)
 	}
 }
 
-//Checked when change starting Mario postition into 440 in Y he fall down immediately (when I left only isPlayerOnPlatform so it doesn't works properly) 
+//PROBELM: When change Mario starting postition into 440 in Y, and when if statement isn't changed(isPlayerOnPlatform) player fall down immediately
+// When first if(leftCorner[1]==440) works till checking "how far from edges of platforms" is Mario, he doesn't fall down, even when he should  
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnPlatform(platforms);
