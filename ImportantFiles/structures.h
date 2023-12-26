@@ -31,8 +31,8 @@ struct Barrels
 	SDL_Rect animation; //sets the look of barrels
 	int upperXCorner;
 	double upperYCorner; //must be double 
-	int realSizep[2] = { BARRELS_ANIMATION_SIZE,BARRELS_ANIMATION_SIZE };
-	double fallingSpeed=GRAVITY_SPEED;
+	int realSize[2] = { BARRELS_ANIMATION_SIZE,BARRELS_ANIMATION_SIZE };
+	double fallingSpeed=GRAVITY_SPEED*10;
 }barrel;
 
 struct GameInfo

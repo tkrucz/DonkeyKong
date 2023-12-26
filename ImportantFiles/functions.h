@@ -86,6 +86,8 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
 void barrelsMovement();
 
+void collision();
+
 void SDLSpace();
 
 void readKeys();
@@ -209,7 +211,7 @@ void playerSettings()
 
 void barrelsSettings()
 {
-	barrel.animation = { 0,0,20,20 };
+	barrel.animation = { 0,0,barrel.realSize[0],barrel.realSize[1]};
 	barrel.upperXCorner = BARRELS_SPAWN_POINT_X;
 	barrel.upperYCorner = BARRELS_SPAWN_POINT_Y;
 }
@@ -471,7 +473,7 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnLadder(ladders);
 }
 
-void barrelsMovement()
+void barrelsMovement()//doesn't work
 {
 	barrel.upperYCorner += barrel.fallingSpeed;
 	if (barrel.upperYCorner == GROUND_HEIGHT)
