@@ -16,7 +16,7 @@ struct Player
 	SDL_Rect animation; 
 	int lowerXCorner;
 	int lowerYCorner;
-	int realSize[2] = { 16,16 }; //pixels size of Mario
+	int realSize[2] = { PLAYER_ANIMATION_SIZE,PLAYER_ANIMATION_SIZE }; //pixels size of Mario
 	double speedX;
 	double speedY;
 	double jumpingSpeedX;
@@ -25,6 +25,15 @@ struct Player
 	bool onLadder;
 	bool fallDown;	
 }Mario;
+
+struct Barrels
+{
+	SDL_Rect animation;
+	int upperXCorner;
+	int upperYCorner;
+	int realSizep[2] = { BARRELS_ANIMATION_SIZE,BARRELS_ANIMATION_SIZE };
+	double fallingSpeed;
+}barrel;
 
 struct GameInfo
 {
@@ -46,7 +55,7 @@ struct SDLConst
 {
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
-	SDL_Surface* player;
+	SDL_Surface* player, * barrels;
 	SDL_Texture* scrtex;
 	SDL_Window* window;
 	SDL_Renderer* renderer;

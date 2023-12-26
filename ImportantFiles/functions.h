@@ -135,7 +135,8 @@ void displayWindow(Platform* platforms, Ladder* ladders)
 	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms, ladders);
 	drawInfo();
-	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + DIFFERENCE_IN_X, Mario.lowerYCorner + DIFFERENCE_IN_Y, &Mario.animation); //draws the player 
+	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
+	DrawSurface(SDL.screen, SDL.barrels, BARRELS_SPAWN_POINT_X+BARRELS_DIFFERENCE_IN_X, BARRELS_SPAWN_POINT_Y+ BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
 }
 
 void refreshWindow()
@@ -187,6 +188,7 @@ void basicSettings()
 	playerInfo.lives = PLAYER_LIVES;
 	gameInfo.quit = false;
 	gameInfo.gameTime = 0;
+	barrel.animation = { 0,0,20,20 };
 	playerSettings();
 }
 
