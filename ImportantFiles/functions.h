@@ -32,6 +32,8 @@ void basicSettings();
 
 void playerSettings();
 
+void barrelsSettings();
+
 void createColors();
 
 void playerWalking();
@@ -48,7 +50,7 @@ void checkIfPlayerIsJumping();
 
 void playerMove();
 
-void addPoints(); //function needed only right for test
+void addPoints(); //function needed for test
 
 void jumpOverBarrel();
 
@@ -81,6 +83,8 @@ void isPlayerOnLadder(Ladder* ladders);
 void isPlayerOnPlatform(Platform* platforms);
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
+
+void barrelsMovement();
 
 void SDLSpace();
 
@@ -136,7 +140,7 @@ void displayWindow(Platform* platforms, Ladder* ladders)
 	drawScene(platforms, ladders);
 	drawInfo();
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
-	DrawSurface(SDL.screen, SDL.barrels, BARRELS_SPAWN_POINT_X+BARRELS_DIFFERENCE_IN_X, BARRELS_SPAWN_POINT_Y+ BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
+	DrawSurface(SDL.screen, SDL.barrels, barrel.upperXCorner+BARRELS_DIFFERENCE_IN_X, barrel.upperYCorner+ BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
 }
 
 void refreshWindow()
@@ -188,8 +192,8 @@ void basicSettings()
 	playerInfo.lives = PLAYER_LIVES;
 	gameInfo.quit = false;
 	gameInfo.gameTime = 0;
-	barrel.animation = { 0,0,20,20 };
 	playerSettings();
+	barrelsSettings();
 }
 
 void playerSettings()
@@ -201,6 +205,13 @@ void playerSettings()
 	Mario.speedX = WALKING_SPEED;
 	Mario.speedY = 0;
 	playerOnPlatform();
+}
+
+void barrelsSettings()
+{
+	barrel.animation = { 0,0,20,20 };
+	barrel.upperXCorner = BARRELS_SPAWN_POINT_X;
+	barrel.upperYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
 void createColors()
@@ -234,6 +245,7 @@ void playerClimbing()
 
 void graivityApply()
 {
+	barrelsMovement();
 	int leftUpperCorner[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner + Mario.realSize[1]};
 	if (Mario.isJumping || Mario.fallDown)
 	{
@@ -284,9 +296,9 @@ void playerMove()
 	if (Mario.onLadder)	
 		playerClimbing();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
-	{
 		checkIfPlayerIsJumping();
-	}	
+	if (Mario.fallDown)
+		playerFallDown();
 }
 
 void addPoints()
@@ -457,6 +469,13 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnPlatform(platforms);
 	isPlayerOnLadder(ladders);
+}
+
+void barrelsMovement()
+{
+	barrel.upperYCorner += barrel.fallingSpeed;
+	if (barrel.upperYCorner == GROUND_HEIGHT)
+		barrel.upperYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
 void readKeys()

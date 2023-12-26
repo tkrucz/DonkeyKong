@@ -13,7 +13,7 @@ struct PlayerInfo
 
 struct Player
 {
-	SDL_Rect animation; 
+	SDL_Rect animation; //sets the look of player
 	int lowerXCorner;
 	int lowerYCorner;
 	int realSize[2] = { PLAYER_ANIMATION_SIZE,PLAYER_ANIMATION_SIZE }; //pixels size of Mario
@@ -28,11 +28,11 @@ struct Player
 
 struct Barrels
 {
-	SDL_Rect animation;
+	SDL_Rect animation; //sets the look of barrels
 	int upperXCorner;
-	int upperYCorner;
+	double upperYCorner; //must be double 
 	int realSizep[2] = { BARRELS_ANIMATION_SIZE,BARRELS_ANIMATION_SIZE };
-	double fallingSpeed;
+	double fallingSpeed=GRAVITY_SPEED;
 }barrel;
 
 struct GameInfo
