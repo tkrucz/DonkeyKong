@@ -180,7 +180,7 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %d", barrel.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 190, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerYCorner: %d", barrel.lowerYCorner);
+	sprintf(gameInfo.text, "LeftLowerYCorner: %.4f", barrel.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 210, gameInfo.text, SDL.charset);
 }
 
