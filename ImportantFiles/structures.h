@@ -25,8 +25,8 @@ struct Player
 	bool onPlatform = false;
 	bool onLadder = false;
 	bool fallDown = false;
-	bool begLadder = false;
-	bool endLadder = false;
+	bool begLadder = false; //player at the beginning of ladder
+	bool endLadder = false; //player at the end of ladder
 }Mario;
 
 struct Barrels
