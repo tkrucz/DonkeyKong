@@ -11,6 +11,7 @@ struct PlayerInfo
 	int lives;	
 }playerInfo;
 
+// TODO struct flags, maybe barrel will require flags?
 struct Player
 {
 	SDL_Rect animation; //sets the look of player
@@ -20,10 +21,12 @@ struct Player
 	double speedX;
 	double speedY;
 	double jumpingSpeedX;
-	bool isJumping;
-	bool onPlatform;
-	bool onLadder;
-	bool fallDown;	
+	bool isJumping = false;
+	bool onPlatform = false;
+	bool onLadder = false;
+	bool fallDown = false;
+	bool begLadder = false;
+	bool endLadder = false;
 }Mario;
 
 struct Barrels

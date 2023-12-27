@@ -76,11 +76,17 @@ void playerOnLadder();
 
 void playerOnPlatform();
 
+void playerNotOnPlatform();
+
 void playerNoWhere();
+
+void playerOnGround();
 
 void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
+
+void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
@@ -93,6 +99,12 @@ void SDLSpace();
 void readKeys();
 
 void quit();
+
+void playerNotOnLadder();
+
+void playerNotFallingDown();
+
+void playerNotJumping();
 
 //Functions definitions
 
@@ -184,9 +196,6 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 210, gameInfo.text, SDL.charset);
 }
 
-/*My functions
-======================================================================================================*/
-
 void drawGround()
 {
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
@@ -243,17 +252,30 @@ void playerWalking()
 
 void playerClimbing()
 {
-	if (SDL.event.key.keysym.sym == SDLK_UP)
+	if (SDL.event.key.keysym.sym == SDLK_UP && !Mario.endLadder)
 		Mario.lowerYCorner -= CLIMBING_SPEED;
-	else if (SDL.event.key.keysym.sym == SDLK_DOWN)
+	else if (SDL.event.key.keysym.sym == SDLK_DOWN && !Mario.begLadder)
 		Mario.lowerYCorner += CLIMBING_SPEED;
 }
 
+void approximateGravity()
+{
+	if (Mario.fallDown) {
+		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) {
+			Mario.lowerYCorner = GROUND_HEIGHT;
+			playerNotFallingDown();
+			playerNotJumping();
+		}
+	}
+}
+
+//TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
 void graivityApply()
 {
 	barrelsMovement();
 	collision();
 	int leftUpperCorner[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner + Mario.realSize[1]};
+	approximateGravity();
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
@@ -263,10 +285,12 @@ void graivityApply()
 			//This crazzy number because: PLATFORM_I_HEIGHT(440)+PLATFORM_WIDTH(20)+PLAYER_HEIGHT(34)==494
 			//General formula: if(platforms[i].x<=leftUpperCorner[0]<=platforms[i].x+platforms[i].w && leftUpperCorner[1]==platforms[i].y+PLATFORM_WIDTH+PLAYER_HEIGHT)
 			Mario.speedY = 0; */
-		if (Mario.onPlatform || Mario.lowerYCorner == GROUND_HEIGHT)
+
+		//if (Mario.onPlatform || Mario.onLadder || Mario.lowerYCorner == GROUND_HEIGHT)
+		if (Mario.onPlatform || Mario.onLadder)
 		{
-			Mario.isJumping = false;
-			Mario.fallDown = false;
+			//Mario.isJumping = false;
+			//Mario.fallDown = false;
 			Mario.speedY = 0;
 		}
 	}
@@ -290,7 +314,8 @@ void checkIfPlayerIsJumping()
 {
 	if (Mario.isJumping == true) //no "double" jump or inifinity jump
 	{
-		Mario.speedY = Mario.speedY;
+		//Mario.speedY = Mario.speedY;
+		return;
 	}
 	else
 		playerJumping();
@@ -304,8 +329,8 @@ void playerMove()
 		playerClimbing();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
 		checkIfPlayerIsJumping();
-	if (Mario.fallDown)
-		playerFallDown();
+	//if (Mario.fallDown)
+		//playerFallDown();
 }
 
 void addPoints()
@@ -396,32 +421,78 @@ void drawLadders(Ladder* ladders)
 	}
 }
 
+
+void playerOnLadderBeg()
+{
+	//Mario.onLadder = true;
+	//Mario.onPlatform = true;
+	Mario.begLadder = true;
+}
+
+void playerNotOnLadderBeg()
+{
+	Mario.begLadder = false;
+}
+
+void playerOnLadderEnd()
+{
+	//Mario.onLadder = true;
+	//Mario.onPlatform = true;
+	Mario.endLadder = true;
+}
+
+void playerNotOnLadderEnd()
+{
+	Mario.endLadder = false;
+}
+
 void playerOnLadder()
 {
 	Mario.onLadder = true;
-	Mario.onPlatform = false;
-	Mario.fallDown = false;
 }
 
-void playerOnLadderEdge()
+void playerNotOnLadder()
 {
-	Mario.onLadder = true;
-	Mario.onPlatform = true;
-	Mario.fallDown = false;
+	Mario.onLadder = false;
 }
 
 void playerOnPlatform()
 {
-	Mario.onLadder = false;
 	Mario.onPlatform = true;
-	Mario.fallDown = false;
+}
+
+void playerNotOnPlatform()
+{
+	Mario.onPlatform = false;
 }
 
 void playerNoWhere()
 {
-	Mario.onLadder = false;
-	Mario.onPlatform = false;
 	Mario.fallDown = true;
+}
+
+void playerNotFallingDown()
+{
+	Mario.fallDown = false;
+}
+
+void playerNotJumping()
+{
+	Mario.isJumping = false;
+}
+
+void playerOnGround()
+{
+	Mario.onPlatform = true;
+	Mario.fallDown = false;
+}
+
+void isPlayerOnGround()
+{
+	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT) 
+		playerNoWhere();
+	else if (Mario.lowerYCorner == GROUND_HEIGHT)
+		playerOnGround();
 }
 
 void isPlayerOnLadder(Ladder* ladders)
@@ -429,22 +500,33 @@ void isPlayerOnLadder(Ladder* ladders)
 	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
 	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
 	{
-		if (ladders[i].x <= leftLowerCorner[0] <= ladders[i].x + ladders[i].w) //x increses in right direciton
+		if (ladders[i].x <= leftLowerCorner[0] && leftLowerCorner[0] <= ladders[i].x + ladders[i].w) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
-			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h)
-				playerOnLadderEdge();
-			//is Mario in the "middle" of ladder?
-			else if (ladders[i].y < leftLowerCorner[1] <= ladders[i].y + ladders[i].h) //y increases in down direction
+			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h) {
+				playerOnLadderBeg();
+				playerNotOnLadderEnd();
 				playerOnLadder();
-		}
-		else
-		{
-			playerNoWhere();
-			if (leftLowerCorner[1] == GROUND_HEIGHT)
-				playerOnPlatform();
+				return;
+			}
+			else if (leftLowerCorner[1] == ladders[i].y) {
+				playerOnLadderEnd();
+				playerNotOnLadderBeg();
+				playerOnLadder();
+				return;
+			}
+			//is Mario in the "middle" of ladder?
+			else if (ladders[i].y < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].y + ladders[i].h) { //y increases in down direction 
+				playerOnLadder();
+				playerNotOnLadderEnd();
+				playerNotOnLadderBeg();
+				return;
+			}
 		}
 	}
+	playerNotOnLadderEnd();
+	playerNotOnLadderBeg();
+	playerNotOnLadder();
 }
 
 void isPlayerOnPlatform(Platform* platforms)
@@ -455,27 +537,22 @@ void isPlayerOnPlatform(Platform* platforms)
 		// is Mario on platform?
 		if (leftLowerCorner[1] == platforms[i].y) {
 			// how far from left
-			if (platforms[i].x <= leftLowerCorner[0])
+			if (platforms[i].x <= leftLowerCorner[0] + Mario.realSize[0] && platforms[i].x + platforms[i].l >= leftLowerCorner[0]) {
 				playerOnPlatform();
-			//how far from right
-			else if (platforms[i].x >= leftLowerCorner[0] + PLAYER_WIDTH)
-				playerOnPlatform();
-		}
-		else
-		{
-			playerNoWhere();
-			if (leftLowerCorner[1] == GROUND_HEIGHT)
-				playerOnPlatform();
+				return;
+			}
 		}
 	}
+	playerNotOnPlatform();	
 }
 
 //PROBELM: When change Mario starting postition into 440 in Y, and when if statement isn't changed(isPlayerOnPlatform) player fall down immediately
 // When first if(leftCorner[1]==440) works till checking "how far from edges of platforms" is Mario, he doesn't fall down, even when he should  
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
-	isPlayerOnPlatform(platforms);
 	isPlayerOnLadder(ladders);
+	isPlayerOnPlatform(platforms);
+	isPlayerOnGround();
 }
 
 void barrelsMovement() //works but barrel.lowerYCorner must be double as well as fallingSpeed and becasue of that I can't chceck the collision

@@ -39,9 +39,9 @@ int main(int argc, char** argv) {
 		refreshWindow();
 
 		graivityApply();
-		whereIsPLayer(platforms, ladders);
+		whereIsPLayer(platforms, ladders);		
 
-		readKeys();
+ 		readKeys();
 	}	
 	return 0;
 }
