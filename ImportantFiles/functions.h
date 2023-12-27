@@ -272,9 +272,10 @@ void playerClimbing()
 		Mario.lowerYCorner += CLIMBING_SPEED;
 }
 
-void approximateGravity()
+void approximateGravity() //analogicznie trzeba sprawdzić górę i dół platformy
 {
 	if (Mario.fallDown) {
+
 		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) {
 			Mario.lowerYCorner = GROUND_HEIGHT;
 			playerNotFallingDown();
@@ -313,7 +314,6 @@ void playerJumping()
 	Mario.onLadder = false;
 	Mario.isJumping = true;
 	Mario.speedY = -JUMPING_SPEED;
-	Mario.jumpingSpeedX = 1;
 }
 
 void playerFallDown()
