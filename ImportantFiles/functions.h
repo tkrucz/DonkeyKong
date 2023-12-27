@@ -16,6 +16,8 @@ void createWindow();
 
 void drawInfo();
 
+void initializeGameObjects(Platform* platforms, Ladder* ladders);
+
 void drawScene(Platform* platforms, Ladder* ladders);
 
 void displayWindow(Platform* platforms, Ladder* ladders);
@@ -39,6 +41,8 @@ void createColors();
 void playerWalking();
 
 void playerClimbing();
+
+void approximateGravity();
 
 void graivityApply(); //checks if Mario is jumping, change his position while jumping
 
@@ -72,10 +76,6 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(Ladder* ladders);
 
-void playerOnLadder();
-
-void playerNotOnLadder();
-
 void playerOnLadderBeg();
 
 void playerNotOnLadderBeg();
@@ -84,23 +84,27 @@ void playerOnLadderEnd();
 
 void playerNotOnLadderEnd();
 
+void playerOnLadder();
+
+void playerNotOnLadder();
+
 void playerOnPlatform();
 
 void playerNotOnPlatform();
 
 void playerNoWhere();
 
-void playerOnGround();
-
 void playerNotFallingDown();
 
 void playerNotJumping();
 
+void playerOnGround();
+
+void isPlayerOnGround();
+
 void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
-
-void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
@@ -108,9 +112,9 @@ void barrelsMovement();
 
 void collision();
 
-void SDLSpace(); //freeing all surfaces
-
 void readKeys(); //read key input
+
+void SDLSpace(); //freeing all surfaces
 
 void quit();
 
