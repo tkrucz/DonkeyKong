@@ -26,7 +26,7 @@ void printGameInfo();
 
 void printPlayerInfo();
 
-void printGround();
+void drawGround();
 
 void basicSettings();
 
@@ -50,17 +50,17 @@ void checkIfPlayerIsJumping();
 
 void playerMove();
 
-void addPoints(); //function needed for test
+void addPoints(); //for test
 
-void jumpOverBarrel();
+void jumpOverBarrel();//not used
 
-void endTheStage();
+void getTrophy();//not used
 
-void getTrophy();
+void endTheStage();//not used
 
-void addScore();
+void addScore(); //not used
 
-void loseLive();
+void loseLive(); //for test
 
 void timeCounting(); //counting the game time
 
@@ -131,7 +131,7 @@ void initializeGameObjects(Platform* platforms, Ladder* ladders) {
 }
 
 void drawScene(Platform* platforms, Ladder* ladders) {
-	printGround();
+	drawGround();
 	drawPlatforms(platforms);
 	drawLadders(ladders);
 }
@@ -142,7 +142,7 @@ void displayWindow(Platform* platforms, Ladder* ladders)
 	drawScene(platforms, ladders);
 	drawInfo();
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
-	DrawSurface(SDL.screen, SDL.barrels, barrel.upperXCorner+BARRELS_DIFFERENCE_IN_X, barrel.upperYCorner+ BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
+	DrawSurface(SDL.screen, SDL.barrels, barrel.lowerXCorner + BARRELS_DIFFERENCE_IN_X, barrel.lowerYCorner + BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
 }
 
 void refreshWindow()
@@ -178,12 +178,16 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerYCorner: %d", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "LeftLowerXCorner: %d", barrel.lowerXCorner);
+	DrawString(SDL.screen, TEN_ROW, 190, gameInfo.text, SDL.charset);
+	sprintf(gameInfo.text, "LeftLowerYCorner: %d", barrel.lowerYCorner);
+	DrawString(SDL.screen, TEN_ROW, 210, gameInfo.text, SDL.charset);
 }
 
 /*My functions
 ======================================================================================================*/
 
-void printGround()
+void drawGround()
 {
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
@@ -212,8 +216,8 @@ void playerSettings()
 void barrelsSettings()
 {
 	barrel.animation = { 0,0,barrel.realSize[0],barrel.realSize[1]};
-	barrel.upperXCorner = BARRELS_SPAWN_POINT_X;
-	barrel.upperYCorner = BARRELS_SPAWN_POINT_Y;
+	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
+	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
 void createColors()
@@ -248,6 +252,7 @@ void playerClimbing()
 void graivityApply()
 {
 	barrelsMovement();
+	collision();
 	int leftUpperCorner[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner + Mario.realSize[1]};
 	if (Mario.isJumping || Mario.fallDown)
 	{
@@ -313,14 +318,14 @@ void jumpOverBarrel()
 	playerInfo.score += score.jumpOverBarrel;
 }
 
-void endTheStage()
-{
-	playerInfo.score += score.endTheStage;
-}
-
 void getTrophy()
 {
 	playerInfo.score += score.getTrophy;
+}
+
+void endTheStage()
+{
+	playerInfo.score += score.endTheStage;
 }
 
 void addScore()
@@ -473,11 +478,17 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnLadder(ladders);
 }
 
-void barrelsMovement()//doesn't work
+void barrelsMovement() //works but barrel.lowerYCorner must be double as well as fallingSpeed and becasue of that I can't chceck the collision
 {
-	barrel.upperYCorner += barrel.fallingSpeed;
-	if (barrel.upperYCorner == GROUND_HEIGHT)
-		barrel.upperYCorner = BARRELS_SPAWN_POINT_Y;
+	barrel.lowerYCorner += barrel.fallingSpeed;
+	if (barrel.lowerYCorner == GROUND_HEIGHT)
+		barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
+}
+
+void collision()//should be X && Y check
+{
+	if (barrel.lowerXCorner == Mario.lowerXCorner)
+		barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
 void readKeys()
