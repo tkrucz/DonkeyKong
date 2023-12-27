@@ -20,7 +20,6 @@ struct Player
 	int realSize[2] = { PLAYER_ANIMATION_SIZE,PLAYER_ANIMATION_SIZE }; //pixels size of Mario
 	double speedX;
 	double speedY;
-	double jumpingSpeedX;
 	bool isJumping = false;
 	bool onPlatform = false;
 	bool onLadder = false;
