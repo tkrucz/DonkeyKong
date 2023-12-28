@@ -112,13 +112,7 @@ void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
 
-void barrelOnPlatform();
-
-void barrelNotOnPlatform();
-
 void isBarrelOnGround();
-
-void isBarrelOnPlatform(Platform* platforms);  
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
@@ -302,7 +296,6 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-
 		if (Mario.speedY >= 0 && Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
 		{
 			Mario.lowerYCorner = platforms[i].y;
@@ -311,16 +304,7 @@ void approximateOnPlatform(Platform* platforms)
 			playerNotJumping();
 		}
 	}
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-	{
-		if (barrel.lowerYCorner + barrel.fallingSpeed <= platforms[i].y)
-		{
-			barrel.lowerYCorner = platforms[i].y;
-			barrel.fallingSpeed = NULL_SPEED;
-			barrelOnPlatform();
-		}
-	}
-}
+}	
 
 void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit the bottom of the platform
 {
@@ -340,14 +324,13 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 void graivityApply(Platform* platforms)
 {
 	barrelsFallDown();
-	collision();		
+	collision();
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;	
 		approximateGravity();
 		hitBottomOfThePlatform(platforms);
-		approximateOnPlatform(platforms); //przez tą funckcję Mario nie może skoczyć kiedy jest na platformie, po zakomednowaniu tej funcki,spada po naciśniecu spacji
 	}
 }
 
@@ -604,47 +587,15 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnGround();
 }
 
-void barrelOnPlatform()
-{
-	barrel.onPlatform = true;
-}
-
-void barrelNotOnPlatform()
-{
-	barrel.onPlatform = false;
-}
-
 void isBarrelOnGround()
 {
-	if (barrel.lowerYCorner+barrel.fallingSpeed >= GROUND_HEIGHT)
+	if (barrel.lowerYCorner + barrel.fallingSpeed >= GROUND_HEIGHT)
 		barrelsSettings();
-}
-
-void isBarrelOnPlatform(Platform* platforms)
-{
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-	{
-		// is barrel on platform height?
-		if (barrel.lowerYCorner == platforms[i].y)
-			// how far from edges?
-			if (platforms[i].x <= barrel.lowerXCorner+barrel.realSize[0] && barrel.lowerXCorner <= platforms[i].x + platforms[i].l)
-			{
-				barrelOnPlatform();
-				return;
-			}
-	}
-	barrelNotOnPlatform();
 }
 
 void whereIsBarrel(Platform* platforms)
 {
-	isBarrelOnPlatform(platforms);
 	isBarrelOnGround();
-	if (barrel.onPlatform)
-	{
-		barrel.lowerXCorner += 10;
-		barrel.fallingSpeed = 0;
-	}
 }
 
 void barrelsFallDown()

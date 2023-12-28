@@ -51,7 +51,7 @@
 #define BARRELS_REAL_SIZE 20
 
 #define GRAVITY_SPEED 0.007
-#define JUMPING_SPEED 0.7
+#define JUMPING_SPEED 1
 #define ELASTIC_COLISION_CONST -1.18 //-1.16 for laptop
 
 #define NULL_SPEED 0
