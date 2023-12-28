@@ -46,6 +46,8 @@ void approximateGravity();
 
 void approximateOnPlatform(Platform* platforms);
 
+void hitBottomOfThePlatform(Platform* platforms);
+
 void graivityApply(Platform* platforms); //checks if Mario is jumping, change his position while jumping
 
 void playerJump();
@@ -276,7 +278,7 @@ void playerClimbing()
 		Mario.lowerYCorner += CLIMBING_SPEED;
 }
 
-void approximateGravity() //analogicznie trzeba sprawdzić górę i dół platformy
+void approximateGravity()
 {
 	if (Mario.fallDown) {
 		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) {
@@ -296,8 +298,22 @@ void approximateOnPlatform(Platform* platforms)
 			Mario.lowerYCorner = platforms[i].y;
 			Mario.speedY = 0;
 			playerNotFallingDown();
-			playerNotJumping();
+			playerNotJumping();		
 		}
+	}
+}
+
+void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit the bottom of the platform
+{
+	int upperYCorner = Mario.lowerYCorner-Mario.realSize[1]; //"-" beacuse y increases in down direction
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		if (upperYCorner <= platforms[i].y + platforms[i].w)
+			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner + Mario.realSize[0] <= platforms[i].x + platforms[i].l)
+			{
+				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
+				Mario.speedY =elasticColision; //dodać elastic colision do sturktury skok kiedyś?
+			}
 	}
 }
 
@@ -312,17 +328,9 @@ void graivityApply(Platform* platforms)
 	{
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;
-		//Mario.lowerXCorner += Mario.jumpingSpeedX;
-		/*if (leftUpperCorner[1] == 494) //works, Mario stops at the height of lower side of platform.
-			//This crazzy number because: PLATFORM_I_HEIGHT(440)+PLATFORM_WIDTH(20)+PLAYER_HEIGHT(34)==494
-			//General formula: if(platforms[i].x<=leftUpperCorner[0]<=platforms[i].x+platforms[i].w && leftUpperCorner[1]==platforms[i].y+PLATFORM_WIDTH+PLAYER_HEIGHT)
-			Mario.speedY = 0; */
-
-		/*if (Mario.onPlatform || Mario.onLadder)
-		{
-			Mario.speedY=0;
-		} */
-			approximateOnPlatform(platforms);		
+		//Mario.lowerXCorner += Mario.jumpingSpeedX;		
+		hitBottomOfThePlatform(platforms);
+		approximateOnPlatform(platforms);		
 	}
 }
 
@@ -406,7 +414,8 @@ void createPlatforms(Platform* platforms)
 		{ 470,PLATFORM_IV_HEIGHT,240 }, { 280,PLATFORM_V_HEIGHT,160 }
 	};
 
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
 		platforms[i].x = platformsParameters[i][0];
 		platforms[i].y = platformsParameters[i][1];
 		platforms[i].l = platformsParameters[i][2];
@@ -438,9 +447,8 @@ void createLadders(Ladder* ladders)
 
 void drawLadders(Ladder* ladders)
 {
-	for (int i = 0; i < NUMBERS_OF_LADDERS; i++) {
+	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
 		DrawRectangle(SDL.screen, ladders[i].x, ladders[i].y, ladders[i].w, ladders[i].h, colors.black, colors.grey);
-	}
 }
 
 
@@ -526,21 +534,24 @@ void isPlayerOnLadder(Ladder* ladders)
 		if (ladders[i].x <= leftLowerCorner[0] && leftLowerCorner[0] <= ladders[i].x + ladders[i].w) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
-			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h) {
+			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h)
+			{
 				playerOnLadderBeg();
 				playerNotOnLadderEnd();
 				playerOnLadder();
 				return;
 			}
 			//is Mario at the end of ladder?
-			else if (leftLowerCorner[1] == ladders[i].y) {
+			else if (leftLowerCorner[1] == ladders[i].y) 
+			{
 				playerOnLadderEnd();
 				playerNotOnLadderBeg();
 				playerOnLadder();
 				return;
 			}
 			//is Mario in the "middle" of ladder?
-			else if (ladders[i].y < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].y + ladders[i].h) { //y increases in down direction 
+			else if (ladders[i].y < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].y + ladders[i].h)//y increases in down direction 
+			{ 
 				playerOnLadder();
 				playerNotOnLadderEnd();
 				playerNotOnLadderBeg();
@@ -559,13 +570,13 @@ void isPlayerOnPlatform(Platform* platforms)
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		// is Mario on platform height?
-		if (leftLowerCorner[1] == platforms[i].y) {
+		if (leftLowerCorner[1] == platforms[i].y)
 			// how far from edges?
-			if (platforms[i].x <= leftLowerCorner[0] + Mario.realSize[0] && platforms[i].x + platforms[i].l >= leftLowerCorner[0]) {
+			if (platforms[i].x <= leftLowerCorner[0] + Mario.realSize[0] && leftLowerCorner[0] <= platforms[i].x + platforms[i].l)
+			{
 				playerOnPlatform();
 				return;
 			}
-		}
 	}
 	playerNotOnPlatform();	
 }
