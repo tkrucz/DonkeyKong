@@ -38,9 +38,9 @@ void barrelsSettings();
 
 void createColors();
 
-void playerWalking();
+void playerWalk();
 
-void playerClimbing();
+void playerClimb();
 
 void approximateGravity();
 
@@ -96,7 +96,7 @@ void playerOnPlatform();
 
 void playerNotOnPlatform();
 
-void playerNoWhere();
+void playerFallingDown();
 
 void playerNotFallingDown();
 
@@ -226,7 +226,7 @@ void defaultSettings()
 	playerInfo.score = PLAYER_START_POINTS;
 	playerInfo.lives = PLAYER_LIVES;
 	gameInfo.quit = false;
-	gameInfo.gameTime = 0;
+	gameInfo.gameTime = NULL;
 	playerSettings();
 	barrelsSettings();
 }
@@ -238,13 +238,13 @@ void playerSettings()
 	//TODO comments
 	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = WALKING_SPEED;
-	Mario.speedY = 0;
+	Mario.speedY = NULL_SPEED;
 	playerOnPlatform();
 }
 
 void barrelsSettings()
 {
-	barrel.animation = { 0,0,barrel.realSize[0],barrel.realSize[1]};
+	barrel.animation = { NULL,NULL,barrel.realSize[0],barrel.realSize[1]};
 	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
 	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
@@ -262,7 +262,7 @@ void createColors()
 	colors.grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
 }
 
-void playerWalking()
+void playerWalk()
 {
 	if (SDL.event.key.keysym.sym == SDLK_LEFT)
 		Mario.lowerXCorner -= Mario.speedX;
@@ -270,7 +270,7 @@ void playerWalking()
 		Mario.lowerXCorner += Mario.speedX;
 }
 
-void playerClimbing()
+void playerClimb()
 {
 	if (SDL.event.key.keysym.sym == SDLK_UP && !Mario.endLadder)
 		Mario.lowerYCorner -= CLIMBING_SPEED;
@@ -293,10 +293,10 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
+		if (Mario.speedY >= 0 && Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
 		{
 			Mario.lowerYCorner = platforms[i].y;
-			Mario.speedY = 0;
+			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();		
 		}
@@ -322,15 +322,13 @@ void graivityApply(Platform* platforms)
 {
 	barrelsMovement();
 	collision();
-	approximateGravity();
-	int leftUpperCorner[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner + Mario.realSize[1]};
+	approximateGravity();	
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
-		Mario.lowerYCorner += Mario.speedY;
-		//Mario.lowerXCorner += Mario.jumpingSpeedX; skakanie na boki...		
+		Mario.lowerYCorner += Mario.speedY;			
 		hitBottomOfThePlatform(platforms);
-		approximateOnPlatform(platforms);		
+		approximateOnPlatform(platforms);
 	}
 }
 
@@ -356,9 +354,9 @@ void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 void playerMove()
 {
 	if (Mario.onPlatform)
-		playerWalking();
+		playerWalk();
 	if (Mario.onLadder)	
-		playerClimbing();
+		playerClimb();
 	if (SDL.event.key.keysym.sym == SDLK_SPACE)
 		checkIfPlayerIsJumping();
 }
@@ -393,7 +391,7 @@ void addScore()
 void loseLive()
 {
 	playerInfo.lives -= 1;
-	if (playerInfo.lives == 0)
+	if (playerInfo.lives == NULL)
 		quit();
 }
 
@@ -492,7 +490,7 @@ void playerNotOnPlatform()
 	Mario.onPlatform = false;
 }
 
-void playerNoWhere()
+void playerFallingDown()
 {
 	Mario.fallDown = true;
 }
@@ -515,13 +513,13 @@ void playerNotJumping()
 void playerOnGround()
 {
 	Mario.onPlatform = true;
-	Mario.fallDown = false;
+	playerNotFallingDown();
 }
 
 void isPlayerOnGround()
 {
 	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT) 
-		playerNoWhere();
+		playerFallingDown();
 	else if (Mario.lowerYCorner == GROUND_HEIGHT)
 		playerOnGround();
 }
