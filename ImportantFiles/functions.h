@@ -248,7 +248,7 @@ void playerSettings()
 
 void barrelsSettings()
 {
-	barrel.animation = { NULL,NULL,barrel.realSize[0],barrel.realSize[1]};
+	barrel.animation = { NULL,NULL,barrel.realSize[0],barrel.realSize[1] };
 	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
 	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
@@ -284,7 +284,7 @@ void playerClimb()
 
 void approximateGravity()
 {
-	if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) 
+	if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT)
 	{
 		Mario.lowerYCorner = GROUND_HEIGHT;
 		playerNotFallingDown();
@@ -304,18 +304,18 @@ void approximateOnPlatform(Platform* platforms)
 			playerNotJumping();
 		}
 	}
-}	
+}
 
 void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit the bottom of the platform
 {
-	int upperYCorner = Mario.lowerYCorner-Mario.realSize[1]; //"-" beacuse y increases in down direction
+	int upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		if (upperYCorner <= platforms[i].y + platforms[i].w)
 			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
-				Mario.speedY =elasticColision; //dodać elastic colision do sturktury skok kiedyś?
+				Mario.speedY = elasticColision; //dodać elastic colision do sturktury skok kiedyś?
 			}
 	}
 }
@@ -328,7 +328,7 @@ void graivityApply(Platform* platforms)
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
-		Mario.lowerYCorner += Mario.speedY;	
+		Mario.lowerYCorner += Mario.speedY;
 		approximateGravity();
 		hitBottomOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
@@ -348,7 +348,7 @@ void playerFallDown(Platform* platforms)
 
 void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 {
-	if (Mario.isJumping == true)	
+	if (Mario.isJumping == true)
 		return;
 	else
 		playerJump();
@@ -358,7 +358,7 @@ void playerMove()
 {
 	if (Mario.onPlatform)
 		playerWalk();
-	if (Mario.onLadder)	
+	if (Mario.onLadder)
 		playerClimb();
 	/*if (SDL.event.key.keysym.sym == SDLK_SPACE)// <--wcześniej
 		checkIfPlayerIsJumping(); */
@@ -521,7 +521,7 @@ void playerOnGround()
 
 void isPlayerOnGround()
 {
-	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT) 
+	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
 		playerFallingDown();
 	else if (Mario.lowerYCorner == GROUND_HEIGHT)
 		playerOnGround();
@@ -543,7 +543,7 @@ void isPlayerOnLadder(Ladder* ladders)
 				return;
 			}
 			//is Mario at the end of ladder?
-			else if (leftLowerCorner[1] == ladders[i].y) 
+			else if (leftLowerCorner[1] == ladders[i].y)
 			{
 				playerOnLadderEnd();
 				playerNotOnLadderBeg();
@@ -552,7 +552,7 @@ void isPlayerOnLadder(Ladder* ladders)
 			}
 			//is Mario in the "middle" of ladder?
 			else if (ladders[i].y < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].y + ladders[i].h)//y increases in down direction 
-			{ 
+			{
 				playerOnLadder();
 				playerNotOnLadderEnd();
 				playerNotOnLadderBeg();
@@ -578,9 +578,9 @@ void isPlayerOnPlatform(Platform* platforms)
 				return;
 			}
 	}
-	playerNotOnPlatform();	
+	playerNotOnPlatform();
 }
- 
+
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnLadder(ladders);
@@ -601,7 +601,7 @@ void whereIsBarrel(Platform* platforms)
 
 void barrelsFallDown()
 {
-	barrel.lowerYCorner += barrel.fallingSpeed;	
+	barrel.lowerYCorner += barrel.fallingSpeed;
 }
 
 void collision()//should add something like "one barrel can substract only one life", so I have to start numerate them
@@ -654,5 +654,5 @@ void quit()
 {
 	gameInfo.quit = true;
 	SDLSpace();
-	SDL_Quit();	
+	SDL_Quit();
 }

@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 		whereIsPLayer(platforms, ladders);
 		whereIsBarrel(platforms);
 
- 		readKeys();
-	}	
+		readKeys();
+	}
 	return 0;
 }
