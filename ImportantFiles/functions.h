@@ -112,9 +112,19 @@ void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
 
+void barrelOnPlatform();
+
+void barrelNotOnPlatform();
+
+void isBarrelOnGround();
+
+void isBarrelOnPlatform(Platform* platforms);  
+
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void barrelsMovement();
+void whereIsBarrel(Platform* platforms);
+
+void barrelsFallDown();
 
 void collision();
 
@@ -292,13 +302,22 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		
+
 		if (Mario.speedY >= 0 && Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
 		{
 			Mario.lowerYCorner = platforms[i].y;
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();
+		}
+	}
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		if (barrel.lowerYCorner + barrel.fallingSpeed <= platforms[i].y)
+		{
+			barrel.lowerYCorner = platforms[i].y;
+			barrel.fallingSpeed = NULL_SPEED;
+			barrelOnPlatform();
 		}
 	}
 }
@@ -320,7 +339,7 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
 void graivityApply(Platform* platforms)
 {
-	barrelsMovement();
+	barrelsFallDown();
 	collision();		
 	if (Mario.isJumping || Mario.fallDown)
 	{
@@ -564,13 +583,12 @@ void isPlayerOnLadder(Ladder* ladders)
 
 void isPlayerOnPlatform(Platform* platforms)
 {
-	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner }; //table containing player left lower corner coordinates
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		// is Mario on platform height?
-		if (leftLowerCorner[1] == platforms[i].y)
+		if (Mario.lowerYCorner == platforms[i].y)
 			// how far from edges?
-			if (platforms[i].x <= leftLowerCorner[0] + Mario.realSize[0] && leftLowerCorner[0] <= platforms[i].x + platforms[i].l)
+			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				playerOnPlatform();
 				return;
@@ -586,7 +604,50 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnGround();
 }
 
-void barrelsMovement()
+void barrelOnPlatform()
+{
+	barrel.onPlatform = true;
+}
+
+void barrelNotOnPlatform()
+{
+	barrel.onPlatform = false;
+}
+
+void isBarrelOnGround()
+{
+	if (barrel.lowerYCorner+barrel.fallingSpeed >= GROUND_HEIGHT)
+		barrelsSettings();
+}
+
+void isBarrelOnPlatform(Platform* platforms)
+{
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		// is barrel on platform height?
+		if (barrel.lowerYCorner == platforms[i].y)
+			// how far from edges?
+			if (platforms[i].x <= barrel.lowerXCorner+barrel.realSize[0] && barrel.lowerXCorner <= platforms[i].x + platforms[i].l)
+			{
+				barrelOnPlatform();
+				return;
+			}
+	}
+	barrelNotOnPlatform();
+}
+
+void whereIsBarrel(Platform* platforms)
+{
+	isBarrelOnPlatform(platforms);
+	isBarrelOnGround();
+	if (barrel.onPlatform)
+	{
+		barrel.lowerXCorner += 10;
+		barrel.fallingSpeed = 0;
+	}
+}
+
+void barrelsFallDown()
 {
 	barrel.lowerYCorner += barrel.fallingSpeed;	
 }

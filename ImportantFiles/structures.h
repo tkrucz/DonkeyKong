@@ -35,6 +35,7 @@ struct Barrels
 	double lowerYCorner; //must be double 
 	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE };
 	double fallingSpeed=GRAVITY_SPEED*5;
+	bool onPlatform = false;
 }barrel;
 
 struct GameInfo
