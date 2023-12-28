@@ -39,7 +39,7 @@ struct Barrels
 
 struct GameInfo
 {
-	int t1, t2;
+	double t1, t2;
 	double gameTime, deltaTime;
 	bool quit;
 	int err;

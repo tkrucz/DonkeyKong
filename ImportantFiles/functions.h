@@ -311,7 +311,7 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 	int upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (upperYCorner <= platforms[i].y + platforms[i].w)
+		if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner >= platforms[i].y)
 			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
