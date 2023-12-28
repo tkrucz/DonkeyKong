@@ -621,10 +621,7 @@ void moveObjects()
 
 
 void readKeys()
-{	
-	//const Uint8* xd;
-	//xd= SDL_GetKeyboardState(NULL);
-
+{
 	while (SDL_PollEvent(&SDL.event))
 	{
 		int keyPressed = SDL.event.key.keysym.sym;
