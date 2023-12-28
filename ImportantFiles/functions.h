@@ -30,7 +30,7 @@ void printPlayerInfo();
 
 void drawGround();
 
-void basicSettings();
+void defaultSettings();
 
 void playerSettings();
 
@@ -44,11 +44,13 @@ void playerClimbing();
 
 void approximateGravity();
 
-void graivityApply(); //checks if Mario is jumping, change his position while jumping
+void approximateOnPlatform(Platform* platforms);
+
+void graivityApply(Platform* platforms); //checks if Mario is jumping, change his position while jumping
 
 void playerJumping();
 
-void playerFallDown();
+void playerFallDown(Platform* platforms);
 
 void checkIfPlayerIsJumping();
 
@@ -215,7 +217,7 @@ void drawGround()
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
 
-void basicSettings()
+void defaultSettings()
 {
 	playerInfo.score = PLAYER_START_POINTS;
 	playerInfo.lives = PLAYER_LIVES;
@@ -275,7 +277,6 @@ void playerClimbing()
 void approximateGravity() //analogicznie trzeba sprawdzić górę i dół platformy
 {
 	if (Mario.fallDown) {
-
 		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) {
 			Mario.lowerYCorner = GROUND_HEIGHT;
 			playerNotFallingDown();
@@ -284,8 +285,22 @@ void approximateGravity() //analogicznie trzeba sprawdzić górę i dół platfo
 	}
 }
 
+void approximateOnPlatform(Platform* platforms)
+{
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
+		{
+			Mario.lowerYCorner = platforms[i].y;
+			Mario.speedY = 0;
+			playerNotFallingDown();
+			playerNotJumping();
+		}
+	}
+}
+
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void graivityApply()
+void graivityApply(Platform* platforms)
 {
 	barrelsMovement();
 	collision();
@@ -301,10 +316,11 @@ void graivityApply()
 			//General formula: if(platforms[i].x<=leftUpperCorner[0]<=platforms[i].x+platforms[i].w && leftUpperCorner[1]==platforms[i].y+PLATFORM_WIDTH+PLAYER_HEIGHT)
 			Mario.speedY = 0; */
 
-		if (Mario.onPlatform || Mario.onLadder)
+		/*if (Mario.onPlatform || Mario.onLadder)
 		{
-			Mario.speedY = 0;
-		}
+			Mario.speedY=0;
+		} */
+			approximateOnPlatform(platforms);		
 	}
 }
 
@@ -316,9 +332,9 @@ void playerJumping()
 	Mario.speedY = -JUMPING_SPEED;
 }
 
-void playerFallDown()
+void playerFallDown(Platform* platforms)
 {
-	graivityApply();
+	graivityApply(platforms);
 }
 
 void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
@@ -577,7 +593,7 @@ void readKeys()
 			if (SDL.event.key.keysym.sym == SDLK_ESCAPE)
 				quit();
 			else if (SDL.event.key.keysym.sym == SDLK_n)
-				basicSettings();
+				defaultSettings();
 			else if (SDL.event.key.keysym.sym == SDLK_p)
 				addPoints();
 			else if (SDL.event.key.keysym.sym == SDLK_l)

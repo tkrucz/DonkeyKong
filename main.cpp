@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 	createWindow();
 	createColors();
 	loadBMPs();
-	basicSettings();
+	defaultSettings();
 	initializeGameObjects(platforms, ladders);
 
 	gameInfo.t1 = SDL_GetTicks();
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 		displayWindow(platforms, ladders);
 		refreshWindow();
 
-		graivityApply();
+		graivityApply(platforms);
 		whereIsPLayer(platforms, ladders);		
 
  		readKeys();
