@@ -212,7 +212,7 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %d", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerYCorner: %.1f", Mario.lowerYCorner);
+	sprintf(gameInfo.text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %d", barrel.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 190, gameInfo.text, SDL.charset);
@@ -331,6 +331,7 @@ void graivityApply(Platform* platforms)
 		Mario.lowerYCorner += Mario.speedY;	
 		approximateGravity();
 		hitBottomOfThePlatform(platforms);
+		approximateOnPlatform(platforms);
 	}
 }
 
