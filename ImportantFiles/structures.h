@@ -15,11 +15,11 @@ struct PlayerInfo
 struct Player
 {
 	SDL_Rect animation; //sets the look of player
-	int lowerXCorner;
+	double lowerXCorner;
 	double lowerYCorner;
 	int realSize[2] = { PLAYER_REAL_SIZE,PLAYER_REAL_SIZE }; //pixels size of Mario
 	double speedX;
-	double speedY;	
+	double speedY;
 	bool isJumping = false;
 	bool onPlatform = false;
 	bool onLadder = false;
@@ -78,16 +78,16 @@ struct Colors
 
 struct Platform //Arguemnts: x,y (upper corners), l-length, w-width is const=PlatformWidth
 {
-	int x; 
-	int y;
-	int l; 
-	int w=PLATFORM_WIDTH; 
+	double x; 
+	double y;
+	double l; 
+	double w=PLATFORM_WIDTH; 
 };
 
 struct Ladder //Arguemnts: x,y (upper corners), w-width is const=LadderWidth, h-height is const=LadderHeight
 {
-	int x; 
-	int y;
-	int w = LADDER_WIDTH; 
-	int h = LADDER_HEIGHT; 
+	double x; 
+	double y;
+	double w = LADDER_WIDTH; 
+	double h = LADDER_HEIGHT; 
 };

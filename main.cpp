@@ -38,11 +38,13 @@ int main(int argc, char** argv) {
 		displayWindow(platforms, ladders);
 		refreshWindow();
 
+		readKeys();
+
 		graivityApply(platforms);
 		whereIsPLayer(platforms, ladders);
 		whereIsBarrel(platforms);
 
-		readKeys();
+		moveObjects();
 	}
 	return 0;
 }

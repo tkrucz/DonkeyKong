@@ -118,9 +118,11 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
 void whereIsBarrel(Platform* platforms);
 
-void barrelsFallDown();
+void barrelFallDown();
 
 void collision();
+
+void moveObjects();
 
 void readKeys(); //read key input
 
@@ -210,7 +212,7 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 75, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "Lives: %d", playerInfo.lives);
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerXCorner: %d", Mario.lowerXCorner);
+	sprintf(gameInfo.text, "LeftLowerXCorner: %.0f", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
@@ -241,7 +243,7 @@ void playerSettings()
 	Mario.lowerYCorner = PLAYER_START_Y_COORDINATE;
 	//TODO comments
 	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
-	Mario.speedX = WALKING_SPEED;
+	Mario.speedX = NULL_SPEED;
 	Mario.speedY = NULL_SPEED;
 	playerOnPlatform();
 }
@@ -268,18 +270,13 @@ void createColors()
 
 void playerWalk()
 {
-	if (SDL.event.key.keysym.sym == SDLK_LEFT)
-		Mario.lowerXCorner -= Mario.speedX;
-	else if (SDL.event.key.keysym.sym == SDLK_RIGHT)
-		Mario.lowerXCorner += Mario.speedX;
+	Mario.lowerXCorner += Mario.speedX;
 }
 
 void playerClimb()
 {
-	if (SDL.event.key.keysym.sym == SDLK_UP && !Mario.endLadder)
-		Mario.lowerYCorner -= CLIMBING_SPEED;
-	else if (SDL.event.key.keysym.sym == SDLK_DOWN && !Mario.begLadder)
-		Mario.lowerYCorner += CLIMBING_SPEED;
+	if (Mario.onLadder)
+		Mario.lowerYCorner += Mario.speedY;	
 }
 
 void approximateGravity()
@@ -323,12 +320,11 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
 void graivityApply(Platform* platforms)
 {
-	barrelsFallDown();
 	collision();
 	if (Mario.isJumping || Mario.fallDown)
 	{
-		Mario.speedY += GRAVITY_SPEED;
-		Mario.lowerYCorner += Mario.speedY;
+ 		Mario.speedY += GRAVITY_SPEED;
+		Mario.lowerYCorner += Mario.speedY; 
 		approximateGravity();
 		hitBottomOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
@@ -356,10 +352,15 @@ void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 
 void playerMove()
 {
-	if (Mario.onPlatform)
+	if (Mario.onPlatform || Mario.isJumping || Mario.fallDown)
 		playerWalk();
 	if (Mario.onLadder)
 		playerClimb();
+	if (Mario.begLadder || Mario.endLadder)
+	{
+		playerWalk();
+		playerClimb();
+	}
 	/*if (SDL.event.key.keysym.sym == SDLK_SPACE)// <--wcześniej
 		checkIfPlayerIsJumping(); */
 }
@@ -532,7 +533,7 @@ void isPlayerOnLadder(Ladder* ladders)
 	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
 	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
 	{
-		if (ladders[i].x <= leftLowerCorner[0] && leftLowerCorner[0] <= ladders[i].x + ladders[i].w) //x increses in right direciton
+		if (ladders[i].x <= Mario.lowerXCorner && Mario.lowerXCorner <= ladders[i].x + ladders[i].w) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
 			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h)
@@ -599,7 +600,7 @@ void whereIsBarrel(Platform* platforms)
 	isBarrelOnGround();
 }
 
-void barrelsFallDown()
+void barrelFallDown()
 {
 	barrel.lowerYCorner += barrel.fallingSpeed;
 }
@@ -612,28 +613,48 @@ void collision()//should add something like "one barrel can substract only one l
 	}
 }
 
-void readKeys()
+void moveObjects()
 {
+	playerMove();
+	barrelFallDown();
+}
+
+
+void readKeys()
+{	
+	//const Uint8* xd;
+	//xd= SDL_GetKeyboardState(NULL);
+
 	while (SDL_PollEvent(&SDL.event))
 	{
+		int keyPressed = SDL.event.key.keysym.sym;
 		switch (SDL.event.type)
 		{
 		case SDL_KEYDOWN:
-			if (SDL.event.key.keysym.sym == SDLK_ESCAPE)
+			if (keyPressed == SDLK_ESCAPE)
 				quit();
-			else if (SDL.event.key.keysym.sym == SDLK_n)
+			else if (keyPressed == SDLK_n)
 				defaultSettings();
-			else if (SDL.event.key.keysym.sym == SDLK_p)
+			else if (keyPressed == SDLK_p)
 				addPoints();
-			else if (SDL.event.key.keysym.sym == SDLK_l)
+			else if (keyPressed == SDLK_l)
 				loseLive();
-			else if (SDL.event.key.keysym.sym == SDLK_LEFT || SDL.event.key.keysym.sym == SDLK_RIGHT)
-				playerMove();
-			else if (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN)
-				playerMove();
-			else if (SDL.event.key.keysym.sym == SDLK_SPACE)
-				checkIfPlayerIsJumping();  //wcześniej playerMove()
+			else if (keyPressed == SDLK_RIGHT)
+				Mario.speedX = WALKING_SPEED;
+			else if (keyPressed == SDLK_LEFT)
+				Mario.speedX = -WALKING_SPEED;
+			else if ( keyPressed == SDLK_DOWN)
+				Mario.speedY = CLIMBING_SPEED;
+			else if (keyPressed == SDLK_UP)
+				Mario.speedY = -CLIMBING_SPEED;
+			else if (keyPressed == SDLK_SPACE)
+				checkIfPlayerIsJumping(); 
 			break;
+		case SDL_KEYUP:
+			Mario.speedX = 0;
+			if(keyPressed==SDLK_DOWN || keyPressed==SDLK_UP)
+				Mario.speedY = 0;
+			break;		
 		case SDL_QUIT: //X button in right up corner
 			quit();
 			break;
