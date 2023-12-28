@@ -309,7 +309,7 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		if (upperYCorner <= platforms[i].y + platforms[i].w)
-			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner + Mario.realSize[0] <= platforms[i].x + platforms[i].l)
+			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
 				Mario.speedY =elasticColision; //dodać elastic colision do sturktury skok kiedyś?
@@ -328,7 +328,7 @@ void graivityApply(Platform* platforms)
 	{
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;
-		//Mario.lowerXCorner += Mario.jumpingSpeedX;		
+		//Mario.lowerXCorner += Mario.jumpingSpeedX; skakanie na boki...		
 		hitBottomOfThePlatform(platforms);
 		approximateOnPlatform(platforms);		
 	}
