@@ -360,8 +360,8 @@ void playerMove()
 		playerWalk();
 	if (Mario.onLadder)	
 		playerClimb();
-	if (SDL.event.key.keysym.sym == SDLK_SPACE)
-		checkIfPlayerIsJumping();
+	/*if (SDL.event.key.keysym.sym == SDLK_SPACE)// <--wcześniej
+		checkIfPlayerIsJumping(); */
 }
 
 void addPoints()
@@ -632,7 +632,7 @@ void readKeys()
 			else if (SDL.event.key.keysym.sym == SDLK_UP || SDL.event.key.keysym.sym == SDLK_DOWN)
 				playerMove();
 			else if (SDL.event.key.keysym.sym == SDLK_SPACE)
-				playerMove();
+				checkIfPlayerIsJumping();  //wcześniej playerMove()
 			break;
 		case SDL_QUIT: //X button in right up corner
 			quit();
