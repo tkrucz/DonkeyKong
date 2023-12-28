@@ -16,7 +16,7 @@ struct Player
 {
 	SDL_Rect animation; //sets the look of player
 	int lowerXCorner;
-	int lowerYCorner;
+	double lowerYCorner;
 	int realSize[2] = { PLAYER_REAL_SIZE,PLAYER_REAL_SIZE }; //pixels size of Mario
 	double speedX;
 	double speedY;	

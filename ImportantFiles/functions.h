@@ -208,7 +208,7 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %d", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerYCorner: %d", Mario.lowerYCorner);
+	sprintf(gameInfo.text, "LeftLowerYCorner: %.1f", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %d", barrel.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 190, gameInfo.text, SDL.charset);
@@ -280,12 +280,11 @@ void playerClimb()
 
 void approximateGravity()
 {
-	if (Mario.fallDown) {
-		if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) {
-			Mario.lowerYCorner = GROUND_HEIGHT;
-			playerNotFallingDown();
-			playerNotJumping();
-		}
+	if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT) 
+	{
+		Mario.lowerYCorner = GROUND_HEIGHT;
+		playerNotFallingDown();
+		playerNotJumping();
 	}
 }
 
@@ -293,12 +292,13 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
+		
 		if (Mario.speedY >= 0 && Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
 		{
 			Mario.lowerYCorner = platforms[i].y;
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
-			playerNotJumping();		
+			playerNotJumping();
 		}
 	}
 }
@@ -321,14 +321,14 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 void graivityApply(Platform* platforms)
 {
 	barrelsMovement();
-	collision();
-	approximateGravity();	
+	collision();		
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
-		Mario.lowerYCorner += Mario.speedY;			
+		Mario.lowerYCorner += Mario.speedY;	
+		approximateGravity();
 		hitBottomOfThePlatform(platforms);
-		approximateOnPlatform(platforms);
+		approximateOnPlatform(platforms); //przez tą funckcję Mario nie może skoczyć kiedy jest na platformie, po zakomednowaniu tej funcki,spada po naciśniecu spacji
 	}
 }
 
@@ -591,10 +591,12 @@ void barrelsMovement()
 	barrel.lowerYCorner += barrel.fallingSpeed;	
 }
 
-void collision()//should be X && Y check
+void collision()//should add something like "one barrel can substract only one life", so I have to start numerate them
 {
-	if (barrel.lowerXCorner == Mario.lowerXCorner)
-		barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
+	if (barrel.lowerXCorner == Mario.lowerXCorner && barrel.lowerYCorner + 0.1 >= Mario.lowerYCorner && barrel.lowerYCorner - 0.1 <= Mario.lowerYCorner)
+	{
+		loseLive();
+	}
 }
 
 void readKeys()
