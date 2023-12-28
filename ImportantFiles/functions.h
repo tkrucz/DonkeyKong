@@ -48,7 +48,7 @@ void approximateOnPlatform(Platform* platforms);
 
 void graivityApply(Platform* platforms); //checks if Mario is jumping, change his position while jumping
 
-void playerJumping();
+void playerJump();
 
 void playerFallDown(Platform* platforms);
 
@@ -97,6 +97,8 @@ void playerNotOnPlatform();
 void playerNoWhere();
 
 void playerNotFallingDown();
+
+void playerJumping();
 
 void playerNotJumping();
 
@@ -324,11 +326,9 @@ void graivityApply(Platform* platforms)
 	}
 }
 
-void playerJumping()
+void playerJump()
 {
-	Mario.onPlatform = false;
-	Mario.onLadder = false;
-	Mario.isJumping = true;
+	playerJumping();
 	Mario.speedY = -JUMPING_SPEED;
 }
 
@@ -342,7 +342,7 @@ void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 	if (Mario.isJumping == true)	
 		return;
 	else
-		playerJumping();
+		playerJump();
 }
 
 void playerMove()
@@ -492,6 +492,11 @@ void playerNoWhere()
 void playerNotFallingDown()
 {
 	Mario.fallDown = false;
+}
+
+void playerJumping()
+{
+	Mario.isJumping = true;
 }
 
 void playerNotJumping()
