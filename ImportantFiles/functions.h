@@ -304,10 +304,10 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (Mario.speedY > 0 && Mario.lowerYCorner>platforms[i].y &&
-			Mario.lowerYCorner<platforms[i].y+platforms[i].w && 
-			Mario.lowerXCorner<platforms[i].x+platforms[i].l &&
-			Mario.lowerXCorner+Mario.realSize[0]>platforms[i].x)
+		if (Mario.speedY > 0 && Mario.lowerYCorner > platforms[i].y &&
+			Mario.lowerYCorner < platforms[i].y + platforms[i].w &&
+			Mario.lowerXCorner<platforms[i].x + platforms[i].l &&
+			Mario.lowerXCorner + Mario.realSize[0]>platforms[i].x)
 		{
 			Mario.lowerYCorner = platforms[i].y;
 			Mario.speedY = NULL_SPEED;
