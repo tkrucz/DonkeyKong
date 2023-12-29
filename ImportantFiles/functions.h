@@ -312,7 +312,7 @@ void approximateOnPlatform(Platform* platforms)
 	}
 }
 
-void aroundThePlatform(Platform* platforms) //nowość, gdzie to dodać
+void aroundThePlatform(Platform* platforms) 
 {
 	if (Mario.endLadder) 
 	{
@@ -591,7 +591,7 @@ void isPlayerOnPlatform(Platform* platforms)
 	playerNotOnPlatform();
 }
 
-void isPlayerOnGround() //przez to Mario na II poziome platform spada znowu do I poziomu
+void isPlayerOnGround()
 {
 	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
 		playerFallingDown();
