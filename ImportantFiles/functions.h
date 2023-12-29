@@ -30,13 +30,13 @@ void printPlayerInfo();
 
 void drawGround();
 
-void defaultSettings();
+void basicSettings();
 
-void playerSettings();
+void initializePlayer();
 
-void barrelsSettings();
+void initializeBarrels();
 
-void createColors();
+void initializeColors();
 
 void playerWalk();
 
@@ -56,7 +56,7 @@ void playerFallDown(Platform* platforms);
 
 void checkIfPlayerIsJumping();
 
-void playerMove();
+void playerMovement();
 
 void addPoints(); //for test
 
@@ -112,15 +112,21 @@ void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
 
-void isBarrelOnGround();
-
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
+
+void areBarrelsOnGround();
+
+void areBarrelsOnPlatform(Platform* platforms);
 
 void whereAreBarrels(Platform* platforms);
 
 void whereAreObjects(Platform* platforms, Ladder* ladders);
 
+void barrelBowling();
+
 void barrelFallDown();
+
+void barrelMovement();
 
 void collision();
 
@@ -229,17 +235,17 @@ void drawGround()
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
 
-void defaultSettings()
+void basicSettings()
 {
 	playerInfo.score = PLAYER_START_POINTS;
 	playerInfo.lives = PLAYER_LIVES;
 	gameInfo.quit = false;
 	gameInfo.gameTime = NULL;
-	playerSettings();
-	barrelsSettings();
+	initializePlayer();
+	initializeBarrels();
 }
 
-void playerSettings()
+void initializePlayer()
 {
 	Mario.lowerXCorner = PLAYER_START_X_COORDINATE;
 	Mario.lowerYCorner = PLAYER_START_Y_COORDINATE;
@@ -250,14 +256,14 @@ void playerSettings()
 	playerOnPlatform();
 }
 
-void barrelsSettings()
+void initializeBarrels()
 {
 	barrel.animation = { NULL,NULL,barrel.realSize[0],barrel.realSize[1] };
 	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
 	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
-void createColors()
+void initializeColors()
 {
 	colors.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
 	colors.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
@@ -277,8 +283,9 @@ void playerWalk()
 
 void playerClimb()
 {
-	if (Mario.onLadder)
-		Mario.lowerYCorner += Mario.speedY;	
+	if (Mario.begLadder && Mario.speedY >= 0)
+		Mario.speedY = NULL_SPEED;
+	Mario.lowerYCorner += Mario.speedY;
 }
 
 void approximateOnGround()
@@ -352,7 +359,7 @@ void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 		playerJump();
 }
 
-void playerMove()
+void playerMovement()
 {
 	if (Mario.onPlatform || Mario.isJumping || Mario.fallDown)
 		playerWalk();
@@ -589,15 +596,20 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnGround();	
 }
 
-void isBarrelOnGround()
+void areBarrelsOnGround()
 {
 	if (barrel.lowerYCorner + barrel.fallingSpeed >= GROUND_HEIGHT)
-		barrelsSettings();
+		initializeBarrels();
+}
+
+void areBarrelsOnPlatform(Platform* platforms)
+{
+
 }
 
 void whereAreBarrels(Platform* platforms)
 {
-	isBarrelOnGround();
+	areBarrelsOnGround();
 }
 
 void whereAreObjects(Platform* platforms, Ladder* ladders)
@@ -606,9 +618,20 @@ void whereAreObjects(Platform* platforms, Ladder* ladders)
 	whereAreBarrels(platforms);
 }
 
+void barrelBowling()
+{
+
+}
+
 void barrelFallDown()
 {
 	barrel.lowerYCorner += barrel.fallingSpeed;
+}
+
+void barrelMovement()
+{
+	barrelBowling();
+	barrelFallDown();
 }
 
 void collision()//should add something like "one barrel can substract only one life", so I have to start numerate them
@@ -621,8 +644,8 @@ void collision()//should add something like "one barrel can substract only one l
 
 void moveObjects()
 {
-	playerMove();
-	barrelFallDown();
+	playerMovement();
+	barrelMovement();
 }
 
 
@@ -637,7 +660,7 @@ void readKeys()
 			if (keyPressed == SDLK_ESCAPE)
 				quit();
 			else if (keyPressed == SDLK_n)
-				defaultSettings();
+				basicSettings();
 			else if (keyPressed == SDLK_p)
 				addPoints();
 			else if (keyPressed == SDLK_l)
