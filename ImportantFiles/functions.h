@@ -48,7 +48,9 @@ void approximateOnPlatform(Platform* platforms); //check if player is near the p
 
 void aroundThePlatform(Platform* platforms); //chcek if player is near the platform
 
-void hitBottomOfThePlatform(Platform* platforms); //check if player hit the platform
+void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bottom of platform
+
+void hitSdiesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
 void graivityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
 
@@ -302,7 +304,10 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (Mario.speedY >= 0 && Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED <= platforms[i].y)
+		if (Mario.speedY > 0 && Mario.lowerYCorner>platforms[i].y &&
+			Mario.lowerYCorner<platforms[i].y+platforms[i].w && 
+			Mario.lowerXCorner<platforms[i].x+platforms[i].l &&
+			Mario.lowerXCorner+Mario.realSize[0]>platforms[i].x)
 		{
 			Mario.lowerYCorner = platforms[i].y;
 			Mario.speedY = NULL_SPEED;
@@ -343,6 +348,27 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 	}
 }
 
+void hitSdiesOfThePlatform(Platform* platforms) //do poprawy !!
+{
+	int upperCorners[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner - Mario.realSize[1] };
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		if (upperCorners[1] <= platforms[i].y + platforms[i].w && upperCorners[1] >= platforms[i].y)
+		{
+			if (upperCorners[1] == platforms[i].x && upperCorners[0] >= platforms[i].x)
+			{
+				Mario.lowerXCorner = platforms[i].x - ONE;
+				Mario.speedY = 0.15;
+			}
+			if (Mario.lowerXCorner == platforms[i].x + platforms[i].l && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
+			{
+				Mario.lowerXCorner = platforms[i].x + platforms[i].l + ONE;
+				Mario.speedY = 0.15;
+			}
+		}
+	}
+}
+
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
 void graivityApply(Platform* platforms)
 {
@@ -352,7 +378,8 @@ void graivityApply(Platform* platforms)
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;
 		approximateOnGround();
-		hitBottomOfThePlatform(platforms);
+		hitBottomOfThePlatform(platforms); 
+		hitSdiesOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
 	}	
 }
