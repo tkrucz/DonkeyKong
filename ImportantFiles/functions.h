@@ -104,11 +104,11 @@ void playerNotJumping();
 
 void playerOnGround();
 
-void isPlayerOnGround();
-
 void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
+
+void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
@@ -306,7 +306,7 @@ void approximateOnPlatform(Platform* platforms)
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();
-		}
+		}		
 	}
 }
 
@@ -519,17 +519,6 @@ void playerOnGround()
 	Mario.onPlatform = true;
 }
 
-void isPlayerOnGround() //przez to Mario na drugim poziome platform spada znowu do I poziomu
-{
-	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
-		playerFallingDown();
-	if (Mario.lowerYCorner == GROUND_HEIGHT)
-	{
-		playerOnGround();
-		playerNotFallingDown();
-	}
-}
-
 void isPlayerOnLadder(Ladder* ladders)
 {
 	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
@@ -582,6 +571,17 @@ void isPlayerOnPlatform(Platform* platforms)
 			}
 	}
 	playerNotOnPlatform();
+}
+
+void isPlayerOnGround() //przez to Mario na drugim poziome platform spada znowu do I poziomu
+{
+	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
+		playerFallingDown();
+	if (Mario.lowerYCorner == GROUND_HEIGHT)
+	{
+		playerOnGround();
+		playerNotFallingDown();
+	}
 }
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
