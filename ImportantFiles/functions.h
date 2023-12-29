@@ -44,7 +44,9 @@ void playerClimb(); //move player in Y axis by the current speedY
 
 void approximateOnGround(); //check if player is near the ground
 
-void approximateOnPlatform(Platform* platforms); //check if player is near the platform
+void approximateOnPlatform(Platform* platforms); //check if player is near the platform, while falling down
+
+void aroundThePlatform(Platform* platforms); //chcek if player is near the platform
 
 void hitBottomOfThePlatform(Platform* platforms); //check if player hit the platform
 
@@ -222,7 +224,7 @@ void printPlayerInfo()
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerXCorner: %d", barrel.lowerXCorner);
+	sprintf(gameInfo.text, "LeftLowerXCorner: %.0f", barrel.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 190, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerYCorner: %.4f", barrel.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 210, gameInfo.text, SDL.charset);
@@ -310,6 +312,20 @@ void approximateOnPlatform(Platform* platforms)
 	}
 }
 
+void aroundThePlatform(Platform* platforms) //nowość, gdzie to dodać
+{
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		if (Mario.lowerYCorner <= platforms[i].y + HALF)
+		{
+			Mario.lowerYCorner = platforms[i].y;
+			Mario.speedY = NULL_SPEED;
+			playerNotFallingDown();
+			playerNotJumping();			
+		}
+	}
+}
+
 void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit the bottom of the platform
 {
 	int upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
@@ -334,8 +350,8 @@ void graivityApply(Platform* platforms)
 		Mario.lowerYCorner += Mario.speedY; 
 		approximateOnGround();
 		hitBottomOfThePlatform(platforms);
-		approximateOnPlatform(platforms);
-	}
+		approximateOnPlatform(platforms);		
+	}	
 }
 
 void playerJump()
@@ -452,7 +468,6 @@ void drawLadders(Ladder* ladders)
 	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
 		DrawRectangle(SDL.screen, ladders[i].x, ladders[i].y, ladders[i].w, ladders[i].h, colors.black, colors.grey);
 }
-
 
 void playerOnLadderBeg()
 {
@@ -573,7 +588,7 @@ void isPlayerOnPlatform(Platform* platforms)
 	playerNotOnPlatform();
 }
 
-void isPlayerOnGround() //przez to Mario na drugim poziome platform spada znowu do I poziomu
+void isPlayerOnGround() //przez to Mario na II poziome platform spada znowu do I poziomu
 {
 	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
 		playerFallingDown();
@@ -605,6 +620,7 @@ void areBarrelsOnPlatform(Platform* platforms)
 void whereAreBarrels(Platform* platforms)
 {
 	areBarrelsOnGround();
+	areBarrelsOnPlatform(platforms);
 }
 
 void whereAreObjects(Platform* platforms, Ladder* ladders)

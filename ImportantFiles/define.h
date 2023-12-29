@@ -14,6 +14,7 @@
 #define GROUND_HEIGHT SCREEN_HEIGHT - 20
 
 #define NULL 0
+#define HALF 0.5
 #define ONE 1
 
 #define PLAYER_START_X_COORDINATE 310 
