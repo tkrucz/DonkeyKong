@@ -42,7 +42,7 @@ void playerWalk();
 
 void playerClimb();
 
-void approximateGravity();
+void approximateOnGround();
 
 void approximateOnPlatform(Platform* platforms);
 
@@ -279,7 +279,7 @@ void playerClimb()
 		Mario.lowerYCorner += Mario.speedY;	
 }
 
-void approximateGravity()
+void approximateOnGround()
 {
 	if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT)
 	{
@@ -325,7 +325,7 @@ void graivityApply(Platform* platforms)
 	{
  		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY; 
-		approximateGravity();
+		approximateOnGround();
 		hitBottomOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
 	}
@@ -360,9 +360,7 @@ void playerMove()
 	{
 		playerWalk();
 		playerClimb();
-	}
-	/*if (SDL.event.key.keysym.sym == SDLK_SPACE)// <--wcześniej
-		checkIfPlayerIsJumping(); */
+	}		
 }
 
 void addPoints()
@@ -520,11 +518,11 @@ void playerOnGround()
 	playerNotFallingDown();
 }
 
-void isPlayerOnGround()
+void isPlayerOnGround() //przez to Mario na drugim poziome platform spada znowu do I poziomu
 {
 	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
 		playerFallingDown();
-	else if (Mario.lowerYCorner == GROUND_HEIGHT)
+	if (Mario.lowerYCorner == GROUND_HEIGHT)
 		playerOnGround();
 }
 
@@ -573,7 +571,7 @@ void isPlayerOnPlatform(Platform* platforms)
 		// is Mario on platform height?
 		if (Mario.lowerYCorner == platforms[i].y)
 			// how far from edges?
-			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
+			if (platforms[i].x <= Mario.lowerXCorner + +Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				playerOnPlatform();
 				return;
@@ -586,7 +584,7 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnLadder(ladders);
 	isPlayerOnPlatform(platforms);
-	isPlayerOnGround();
+	isPlayerOnGround();	
 }
 
 void isBarrelOnGround()

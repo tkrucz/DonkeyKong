@@ -52,8 +52,8 @@
 
 #define GRAVITY_SPEED 0.004
 #define JUMPING_SPEED 0.7
-#define ELASTIC_COLISION_CONST -1.18 //-1.16 for laptop
+#define ELASTIC_COLISION_CONST -0.4 
 
 #define NULL_SPEED 0
-#define WALKING_SPEED 0.125
+#define WALKING_SPEED 0.15
 #define CLIMBING_SPEED 0.1
