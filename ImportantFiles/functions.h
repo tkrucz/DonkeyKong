@@ -308,20 +308,23 @@ void approximateOnPlatform(Platform* platforms)
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();
-		}		
+		}
 	}
 }
 
 void aroundThePlatform(Platform* platforms) //nowość, gdzie to dodać
 {
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	if (Mario.endLadder) 
 	{
-		if (Mario.lowerYCorner <= platforms[i].y + HALF)
+		for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 		{
-			Mario.lowerYCorner = platforms[i].y;
-			Mario.speedY = NULL_SPEED;
-			playerNotFallingDown();
-			playerNotJumping();			
+			if (Mario.lowerYCorner <= platforms[i].y + ONE && Mario.lowerYCorner >= platforms[i].y - ONE)
+			{
+				Mario.lowerYCorner = platforms[i].y;
+				Mario.speedY = NULL_SPEED;
+				playerNotFallingDown();
+				playerNotJumping();
+			}
 		}
 	}
 }
@@ -602,6 +605,7 @@ void isPlayerOnGround() //przez to Mario na II poziome platform spada znowu do I
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnLadder(ladders);
+	aroundThePlatform(platforms);
 	isPlayerOnPlatform(platforms);
 	isPlayerOnGround();	
 }
