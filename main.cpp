@@ -41,8 +41,7 @@ int main(int argc, char** argv) {
 		readKeys();
 
 		graivityApply(platforms);
-		whereIsPLayer(platforms, ladders);
-		whereIsBarrel(platforms);
+		whereAreObjects(platforms, ladders);
 
 		moveObjects();
 	}

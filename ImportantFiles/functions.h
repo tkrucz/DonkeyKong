@@ -116,7 +116,9 @@ void isBarrelOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void whereIsBarrel(Platform* platforms);
+void whereAreBarrels(Platform* platforms);
+
+void whereAreObjects(Platform* platforms, Ladder* ladders);
 
 void barrelFallDown();
 
@@ -593,9 +595,15 @@ void isBarrelOnGround()
 		barrelsSettings();
 }
 
-void whereIsBarrel(Platform* platforms)
+void whereAreBarrels(Platform* platforms)
 {
 	isBarrelOnGround();
+}
+
+void whereAreObjects(Platform* platforms, Ladder* ladders)
+{
+	whereIsPLayer(platforms, ladders);
+	whereAreBarrels(platforms);
 }
 
 void barrelFallDown()
