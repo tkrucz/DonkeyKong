@@ -308,7 +308,7 @@ void approximateOnPlatform(Platform* platforms)
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();
-		}
+		}		
 	}
 }
 
@@ -354,11 +354,6 @@ void graivityApply(Platform* platforms)
 		approximateOnGround();
 		hitBottomOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
-		if (Mario.fallDown)
-		{
-			printf("XD");
-			return;
-		}
 	}	
 }
 
