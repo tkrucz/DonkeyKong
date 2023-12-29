@@ -38,21 +38,19 @@ void initializeBarrels();
 
 void initializeColors();
 
-void playerWalk();
+void playerWalk(); //move player in X axis by the current speedX
 
-void playerClimb();
+void playerClimb(); //move player in Y axis by the current speedY
 
-void approximateOnGround();
+void approximateOnGround(); //check if player is near the ground
 
-void approximateOnPlatform(Platform* platforms);
+void approximateOnPlatform(Platform* platforms); //check if player is near the platform
 
-void hitBottomOfThePlatform(Platform* platforms);
+void hitBottomOfThePlatform(Platform* platforms); //check if player hit the platform
 
-void graivityApply(Platform* platforms); //checks if Mario is jumping, change his position while jumping
+void graivityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
 
-void playerJump();
-
-void playerFallDown(Platform* platforms);
+void playerJump(); //give the speedY value -JumpingSpeed
 
 void checkIfPlayerIsJumping();
 
@@ -114,21 +112,21 @@ void isPlayerOnPlatform(Platform* platforms);
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void areBarrelsOnGround();
+void areBarrelsOnGround(); //TO DO
 
-void areBarrelsOnPlatform(Platform* platforms);
+void areBarrelsOnPlatform(Platform* platforms); //TO DO
 
-void whereAreBarrels(Platform* platforms);
+void whereAreBarrels(Platform* platforms); //TO DO
 
 void whereAreObjects(Platform* platforms, Ladder* ladders);
 
-void barrelBowling();
+void barrelBowling(); //TO DO
 
-void barrelFallDown();
+void barrelFallDown(); //TO DO
 
 void barrelMovement();
 
-void collision();
+void collision(); //TO CHANGE
 
 void moveObjects();
 
@@ -346,11 +344,6 @@ void playerJump()
 	Mario.speedY = -JUMPING_SPEED;
 }
 
-void playerFallDown(Platform* platforms)
-{
-	graivityApply(platforms);
-}
-
 void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 {
 	if (Mario.isJumping == true)
@@ -524,7 +517,6 @@ void playerNotJumping()
 void playerOnGround()
 {
 	Mario.onPlatform = true;
-	playerNotFallingDown();
 }
 
 void isPlayerOnGround() //przez to Mario na drugim poziome platform spada znowu do I poziomu
@@ -532,7 +524,10 @@ void isPlayerOnGround() //przez to Mario na drugim poziome platform spada znowu 
 	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerYCorner != GROUND_HEIGHT)
 		playerFallingDown();
 	if (Mario.lowerYCorner == GROUND_HEIGHT)
+	{
 		playerOnGround();
+		playerNotFallingDown();
+	}
 }
 
 void isPlayerOnLadder(Ladder* ladders)
@@ -599,7 +594,7 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 void areBarrelsOnGround()
 {
 	if (barrel.lowerYCorner + barrel.fallingSpeed >= GROUND_HEIGHT)
-		initializeBarrels();
+		barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
 void areBarrelsOnPlatform(Platform* platforms)
