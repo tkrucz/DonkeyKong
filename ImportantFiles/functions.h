@@ -349,11 +349,16 @@ void graivityApply(Platform* platforms)
 	collision();
 	if (Mario.isJumping || Mario.fallDown)
 	{
- 		Mario.speedY += GRAVITY_SPEED;
-		Mario.lowerYCorner += Mario.speedY; 
+		Mario.speedY += GRAVITY_SPEED;
+		Mario.lowerYCorner += Mario.speedY;
 		approximateOnGround();
 		hitBottomOfThePlatform(platforms);
-		approximateOnPlatform(platforms);		
+		approximateOnPlatform(platforms);
+		if (Mario.fallDown)
+		{
+			printf("XD");
+			return;
+		}
 	}	
 }
 
@@ -582,7 +587,7 @@ void isPlayerOnPlatform(Platform* platforms)
 		// is Mario on platform height?
 		if (Mario.lowerYCorner == platforms[i].y)
 			// how far from edges?
-			if (platforms[i].x <= Mario.lowerXCorner + +Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
+			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				playerOnPlatform();
 				return;
