@@ -48,7 +48,7 @@ void approximateOnPlatform(Platform* platforms); //check if player is near the p
 
 void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bottom of platform
 
-void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform, DO POPRAWY
+void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
 void gravityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
 
