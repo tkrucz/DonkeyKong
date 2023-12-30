@@ -48,7 +48,7 @@ void approximateOnPlatform(Platform* platforms); //check if player is near the p
 
 void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bottom of platform
 
-void hitSdiesOfThePlatform(Platform* platforms); //check if player hit the sides of platform, DO POPRAWY
+void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform, DO POPRAWY
 
 void gravityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
 
@@ -317,10 +317,10 @@ void approximateOnPlatform(Platform* platforms)
 
 void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit the bottom of the platform
 {
-	int upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
+	double upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner >= platforms[i].y)
+		if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
 			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
 			{
 				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
@@ -329,24 +329,22 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 	}
 }
 
-void hitSdiesOfThePlatform(Platform* platforms)
+void hitSidesOfThePlatform(Platform* platforms)
 {
-	int upperCorners[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner - Mario.realSize[1] };
+	double upperYCorner = Mario.lowerYCorner - Mario.realSize[1];
+	double LeftCorner = Mario.lowerXCorner;
+	double RightCorner = Mario.lowerXCorner + Mario.realSize[0];
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (upperCorners[1] <= platforms[i].y + platforms[i].w && upperCorners[1] >= platforms[i].y)
-		{
-			if (upperCorners[1] == platforms[i].x && upperCorners[0] >= platforms[i].x)
+		if (LeftCorner <= platforms[i].x + platforms[i].l && LeftCorner >= platforms[i].x + platforms[i].l - ONE)
+			if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
 			{
-				Mario.lowerXCorner = platforms[i].x - ONE;
-				Mario.speedY = 0.15;
+				Mario.lowerXCorner = platforms[i].x + platforms[i].l;
+				return;
 			}
-			if (Mario.lowerXCorner == platforms[i].x + platforms[i].l && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
-			{
-				Mario.lowerXCorner = platforms[i].x + platforms[i].l + ONE;
-				Mario.speedY = 0.15;
-			}
-		}
+		if (RightCorner >= platforms[i].x && RightCorner <= platforms[i].x + ONE)//co z if'em
+			if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
+				Mario.lowerXCorner = 450; //kiedy robię =platforms[i].x nie działa
 	}
 }
 
@@ -360,7 +358,7 @@ void gravityApply(Platform* platforms)
 		Mario.lowerYCorner += Mario.speedY;
 		approximateOnGround();
 		hitBottomOfThePlatform(platforms); 
-		hitSdiesOfThePlatform(platforms);
+		hitSidesOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
 	}	
 }
