@@ -46,8 +46,6 @@ void approximateOnGround(); //check if player is near the ground
 
 void approximateOnPlatform(Platform* platforms); //check if player is near the platform, while falling down
 
-void aroundThePlatform(Platform* platforms); //chcek if player is near the platform
-
 void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bottom of platform
 
 void hitSdiesOfThePlatform(Platform* platforms); //check if player hit the sides of platform, DO POPRAWY
@@ -314,23 +312,6 @@ void approximateOnPlatform(Platform* platforms)
 			playerNotFallingDown();
 			playerNotJumping();
 		}		
-	}
-}
-
-void aroundThePlatform(Platform* platforms) 
-{
-	if (Mario.endLadder) 
-	{
-		for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		{
-			if (Mario.lowerYCorner <= platforms[i].y + ONE && Mario.lowerYCorner >= platforms[i].y - ONE)
-			{
-				Mario.lowerYCorner = platforms[i].y;
-				Mario.speedY = NULL_SPEED;
-				playerNotFallingDown();
-				playerNotJumping();
-			}
-		}
 	}
 }
 
@@ -632,7 +613,6 @@ void isPlayerOnGround()
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnLadder(ladders);
-	//aroundThePlatform(platforms);
 	isPlayerOnPlatform(platforms);
 	isPlayerOnGround();	
 }
