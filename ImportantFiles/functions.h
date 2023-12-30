@@ -342,7 +342,7 @@ void hitSidesOfThePlatform(Platform* platforms)
 				Mario.lowerXCorner = platforms[i].x + platforms[i].l;
 				return;
 			}
-		if (RightCorner >= platforms[i].x && RightCorner <= platforms[i].x + ONE)//co z if'em
+		if (RightCorner >= platforms[i].x && RightCorner <= platforms[i].x + ONE)
 			if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
 				Mario.lowerXCorner = 450; //kiedy robię =platforms[i].x nie działa
 	}
@@ -357,7 +357,7 @@ void gravityApply(Platform* platforms)
 		Mario.speedY += GRAVITY_SPEED;
 		Mario.lowerYCorner += Mario.speedY;
 		approximateOnGround();
-		hitBottomOfThePlatform(platforms); 
+		hitBottomOfThePlatform(platforms);
 		hitSidesOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
 	}	
