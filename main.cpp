@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 
 		readKeys();
 
-		graivityApply(platforms);
+		gravityApply(platforms);
 		whereAreObjects(platforms, ladders);
 
 		moveObjects();
