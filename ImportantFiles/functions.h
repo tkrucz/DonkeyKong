@@ -50,9 +50,9 @@ void aroundThePlatform(Platform* platforms); //chcek if player is near the platf
 
 void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bottom of platform
 
-void hitSdiesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
+void hitSdiesOfThePlatform(Platform* platforms); //check if player hit the sides of platform, DO POPRAWY
 
-void graivityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
+void gravityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -348,7 +348,7 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 	}
 }
 
-void hitSdiesOfThePlatform(Platform* platforms) //do poprawy !!
+void hitSdiesOfThePlatform(Platform* platforms)
 {
 	int upperCorners[2] = { Mario.lowerXCorner + Mario.realSize[0], Mario.lowerYCorner - Mario.realSize[1] };
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
@@ -370,7 +370,7 @@ void hitSdiesOfThePlatform(Platform* platforms) //do poprawy !!
 }
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void graivityApply(Platform* platforms)
+void gravityApply(Platform* platforms)
 {
 	collision();
 	if (Mario.isJumping || Mario.fallDown)
@@ -632,7 +632,7 @@ void isPlayerOnGround()
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
 	isPlayerOnLadder(ladders);
-	aroundThePlatform(platforms);
+	//aroundThePlatform(platforms);
 	isPlayerOnPlatform(platforms);
 	isPlayerOnGround();	
 }
