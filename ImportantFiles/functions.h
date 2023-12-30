@@ -344,7 +344,7 @@ void hitSidesOfThePlatform(Platform* platforms)
 			}
 		if (RightCorner >= platforms[i].x && RightCorner <= platforms[i].x + ONE)
 			if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
-				Mario.lowerXCorner = 450; //kiedy robię =platforms[i].x nie działa
+				Mario.lowerXCorner = platforms[i].x - Mario.realSize[0];
 	}
 }
 
