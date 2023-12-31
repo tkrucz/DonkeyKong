@@ -712,6 +712,8 @@ void SDLSpace()
 {
 	SDL_FreeSurface(SDL.charset);
 	SDL_FreeSurface(SDL.screen);
+	SDL_FreeSurface(SDL.player);
+	SDL_FreeSurface(SDL.barrels);
 	SDL_DestroyTexture(SDL.scrtex);
 	SDL_DestroyRenderer(SDL.renderer);
 	SDL_DestroyWindow(SDL.window);
