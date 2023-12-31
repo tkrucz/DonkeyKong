@@ -80,6 +80,8 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(Ladder* ladders);
 
+void createBarrels(); //TO DO
+
 void playerOnLadderBeg();
 
 void playerNotOnLadderBeg();
@@ -476,6 +478,11 @@ void drawLadders(Ladder* ladders)
 {
 	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
 		DrawRectangle(SDL.screen, ladders[i].x, ladders[i].y, ladders[i].w, ladders[i].h, colors.black, colors.grey);
+}
+
+void createBarrels()
+{
+
 }
 
 void playerOnLadderBeg()
