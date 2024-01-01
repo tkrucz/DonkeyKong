@@ -21,7 +21,7 @@ void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels
 void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels); //możliwe, że to muszę poprawić jesli chcę wyświetlac więcej niż jedną beczkę
-//akutlanie beczka to SDL_Surface a te beczki które tworzę, nie istnieją ...
+//akutlanie beczka to SDL_Surface a te beczki które tworzę, nie istnieją? Aktualna beczka jest tworzona w createBarrels() i drawBarrels() a jej informacje to barrel.coś
 
 void refreshWindow();
 
@@ -34,8 +34,6 @@ void drawGround();
 void basicSettings();
 
 void initializePlayer();
-
-void initializeBarrels();
 
 void initializeColors();
 
@@ -83,7 +81,7 @@ void drawLadders(Ladder* ladders);
 
 void createBarrels(Barrel* barrels); 
 
-void drawBarrels(Barrel* barrels); //TO DO
+void drawBarrels(Barrel* barrels); //CHANGE
 
 void playerOnLadderBeg();
 
@@ -135,7 +133,7 @@ void areBarrelsOnGround(Barrel* barrels); //CHANGE
 
 void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //TO DO
 
-void whereAreBarrels(Platform* platforms, Barrel* barrels); //TO DO
+void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
 void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
@@ -143,7 +141,7 @@ void barrelBowling(Barrel* barrels); //TO DO
 
 void barrelFalling(Barrel* barrels); //TO DO
 
-void barrelMovement(Barrel* barrels); //CHANGE
+void barrelMovement(Barrel* barrels);
 
 void collision(); //CHANGE
 
@@ -261,7 +259,6 @@ void basicSettings()
 	gameInfo.quit = false;
 	gameInfo.gameTime = ZERO;
 	initializePlayer();
-	initializeBarrels();
 }
 
 void initializePlayer()
@@ -273,13 +270,6 @@ void initializePlayer()
 	Mario.speedX = NULL_SPEED;
 	Mario.speedY = NULL_SPEED;
 	playerOnPlatform();
-}
-
-void initializeBarrels()
-{
-	barrel.animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
-	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
-	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
 void initializeColors()
@@ -513,6 +503,9 @@ void createBarrels(Barrel* barrels)
 		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
 	};
 
+	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
+	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
+
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		barrels[i].lowerXCorner = barrelsParameters[i][0];
@@ -526,6 +519,9 @@ void createBarrels(Barrel* barrels)
 void drawBarrels(Barrel* barrels)
 {
 	int i = 0;
+
+	barrel.animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
+
 	if (gameInfo.gameTime / 2 >= ZERO && gameInfo.gameTime / 2 <= HALF)
 	{
 		barrels[i].animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
