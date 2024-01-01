@@ -80,7 +80,9 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(Ladder* ladders);
 
-void createBarrels(Barrel* barrels); //TO DO
+void createBarrels(Barrel* barrels); 
+
+void drawBarrels(Barrel* barrels); //TO DO 
 
 void playerOnLadderBeg();
 
@@ -128,7 +130,7 @@ void barrelFallDown();
 
 void barrelNotFallDown();
 
-void areBarrelsOnGround(); //TO DO
+void areBarrelsOnGround(); //CHANGE
 
 void areBarrelsOnPlatform(Platform* platforms); //TO DO
 
@@ -142,7 +144,7 @@ void barrelFalling(); //TO DO
 
 void barrelMovement();
 
-void collision(); //TO CHANGE
+void collision(); //CHANGE
 
 void moveObjects();
 
@@ -511,12 +513,18 @@ void createBarrels(Barrel* barrels)
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
+		barrels[i].animation = {NULL,NULL,barrel.realSize[0],barrel.realSize[1]};
 		barrels[i].lowerXCorner = barrelsParameters[i][0];
 		barrels[i].lowerYCorner = barrelsParameters[i][1];
 		barrels[i].fallDown = barrelsParameters[i][2];
 		barrels[i].onPlatform = barrelsParameters[i][3];
 		barrels[i].onGround = barrelsParameters[i][4];
 	}
+}
+
+void drawBarrels(Barrel* barrels)
+{
+
 }
 
 void playerOnLadderBeg()
