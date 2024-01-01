@@ -93,8 +93,8 @@ int loadBMPs()
 {
 	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
 	SDL.player = SDL_LoadBMP("./BMP/mario.bmp");
-	SDL.barrels = SDL_LoadBMP("./BMP/barrels.bmp");
-	if (SDL.charset == NULL)
+	SDL.barrel = SDL_LoadBMP("./BMP/barrels.bmp");
+	if (SDL.charset == ZERO)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
 		SDL_FreeSurface(SDL.screen);

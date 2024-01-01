@@ -13,7 +13,7 @@
 #define AUTHOR_INFO_ROW SCREEN_HEIGHT - 12
 #define GROUND_HEIGHT SCREEN_HEIGHT - 20
 
-#define NULL 0
+#define ZERO 0
 #define HALF 0.5
 #define ONE 1
 

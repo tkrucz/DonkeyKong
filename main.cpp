@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 		gameInfo.t2 = SDL_GetTicks();
 		timeCounting();
 
-		displayWindow(platforms, ladders);
+		displayWindow(platforms, ladders, barrels);
 		refreshWindow();
 
 		readKeys();
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 		gravityApply(platforms);
 		whereAreObjects(platforms, ladders,barrels);
 
-		moveObjects();
+		moveObjects(barrels);
 	}
 	return 0;
 }

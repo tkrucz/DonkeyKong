@@ -60,7 +60,7 @@ struct SDLConst
 {
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
-	SDL_Surface* player, * barrels;
+	SDL_Surface* player, * barrel;
 	SDL_Texture* scrtex;
 	SDL_Window* window;
 	SDL_Renderer* renderer;

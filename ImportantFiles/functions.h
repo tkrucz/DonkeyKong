@@ -18,9 +18,10 @@ void drawInfo();
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void drawScene(Platform* platforms, Ladder* ladders);
+void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void displayWindow(Platform* platforms, Ladder* ladders);
+void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels); //możliwe, że to muszę poprawić jesli chcę wyświetlac więcej niż jedną beczkę
+//akutlanie beczka to SDL_Surface a te beczki które tworzę, nie istnieją ...
 
 void refreshWindow();
 
@@ -82,7 +83,7 @@ void drawLadders(Ladder* ladders);
 
 void createBarrels(Barrel* barrels); 
 
-void drawBarrels(Barrel* barrels); //TO DO 
+void drawBarrels(Barrel* barrels); //TO DO
 
 void playerOnLadderBeg();
 
@@ -130,23 +131,23 @@ void barrelFallDown();
 
 void barrelNotFallDown();
 
-void areBarrelsOnGround(); //CHANGE
+void areBarrelsOnGround(Barrel* barrels); //CHANGE
 
-void areBarrelsOnPlatform(Platform* platforms); //TO DO
+void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //TO DO
 
-void whereAreBarrels(Platform* platforms); //TO DO
+void whereAreBarrels(Platform* platforms, Barrel* barrels); //TO DO
 
 void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void barrelBowling(); //TO DO
+void barrelBowling(Barrel* barrels); //TO DO
 
-void barrelFalling(); //TO DO
+void barrelFalling(Barrel* barrels); //TO DO
 
-void barrelMovement();
+void barrelMovement(Barrel* barrels); //CHANGE
 
 void collision(); //CHANGE
 
-void moveObjects();
+void moveObjects(Barrel* barrels);
 
 void readKeys(); //read key input
 
@@ -193,25 +194,26 @@ void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels
 	createBarrels(barrels);
 }
 
-void drawScene(Platform* platforms, Ladder* ladders) {
+void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels) {
 	drawGround();
 	drawPlatforms(platforms);
 	drawLadders(ladders);
+	drawBarrels(barrels);
 }
 
-void displayWindow(Platform* platforms, Ladder* ladders)
+void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels)
 {
-	SDL_FillRect(SDL.screen, NULL, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(platforms, ladders);
+	SDL_FillRect(SDL.screen, ZERO, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+	drawScene(platforms, ladders, barrels);
 	drawInfo();
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
-	DrawSurface(SDL.screen, SDL.barrels, barrel.lowerXCorner + BARRELS_DIFFERENCE_IN_X, barrel.lowerYCorner + BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
+	DrawSurface(SDL.screen, SDL.barrel, barrel.lowerXCorner + BARRELS_DIFFERENCE_IN_X, barrel.lowerYCorner + BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
 }
 
 void refreshWindow()
 {
-	SDL_UpdateTexture(SDL.scrtex, NULL, SDL.screen->pixels, SDL.screen->pitch);
-	SDL_RenderCopy(SDL.renderer, SDL.scrtex, NULL, NULL);
+	SDL_UpdateTexture(SDL.scrtex, ZERO, SDL.screen->pixels, SDL.screen->pitch);
+	SDL_RenderCopy(SDL.renderer, SDL.scrtex, ZERO, ZERO);
 	SDL_RenderPresent(SDL.renderer);
 }
 
@@ -257,7 +259,7 @@ void basicSettings()
 	playerInfo.score = PLAYER_START_POINTS;
 	playerInfo.lives = PLAYER_LIVES;
 	gameInfo.quit = false;
-	gameInfo.gameTime = NULL;
+	gameInfo.gameTime = ZERO;
 	initializePlayer();
 	initializeBarrels();
 }
@@ -275,7 +277,7 @@ void initializePlayer()
 
 void initializeBarrels()
 {
-	barrel.animation = { NULL,NULL,barrel.realSize[0],barrel.realSize[1] };
+	barrel.animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
 	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
 	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
@@ -437,7 +439,7 @@ void addScore()
 void loseLive()
 {
 	playerInfo.lives -= 1;
-	if (playerInfo.lives == NULL)
+	if (playerInfo.lives == ZERO)
 		quit();
 }
 
@@ -513,7 +515,6 @@ void createBarrels(Barrel* barrels)
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		barrels[i].animation = {NULL,NULL,barrel.realSize[0],barrel.realSize[1]};
 		barrels[i].lowerXCorner = barrelsParameters[i][0];
 		barrels[i].lowerYCorner = barrelsParameters[i][1];
 		barrels[i].fallDown = barrelsParameters[i][2];
@@ -524,7 +525,13 @@ void createBarrels(Barrel* barrels)
 
 void drawBarrels(Barrel* barrels)
 {
-
+	int i = 0;
+	if (gameInfo.gameTime / 2 >= ZERO && gameInfo.gameTime / 2 <= HALF)
+	{
+		barrels[i].animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
+		while (i != NUMBER_OF_BARRELS)
+			i++;
+	}
 }
 
 void playerOnLadderBeg()
@@ -694,43 +701,46 @@ void barrelNotFallDown()
 	barrel.fallDown = false;
 }
 
-void areBarrelsOnGround()
+void areBarrelsOnGround(Barrel* barrels)
 {
 	if (barrel.lowerYCorner + barrel.fallingSpeed >= GROUND_HEIGHT)
 		barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 }
 
-void areBarrelsOnPlatform(Platform* platforms)
+void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels)
 {
 
 }
 
-void whereAreBarrels(Platform* platforms)
+void whereAreBarrels(Platform* platforms, Barrel* barrels)
 {
-	areBarrelsOnGround();
-	areBarrelsOnPlatform(platforms);
+	areBarrelsOnGround(barrels);
+	areBarrelsOnPlatform(platforms,barrels);
 }
 
 void whereAreObjects(Platform* platforms, Ladder* ladders,Barrel* barrels)
 {
 	whereIsPLayer(platforms, ladders);
-	whereAreBarrels(platforms);
+	whereAreBarrels(platforms, barrels);
 }
 
-void barrelBowling()
+void barrelBowling(Barrel* barrels)
 {
 
 }
 
-void barrelFalling()
+void barrelFalling(Barrel* barrels)
 {
 	barrel.lowerYCorner += barrel.fallingSpeed;
+
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+		barrels[i].lowerYCorner += barrel.fallingSpeed;
 }
 
-void barrelMovement()
+void barrelMovement(Barrel* barrels)
 {
-	barrelBowling();
-	barrelFalling();
+	barrelBowling(barrels);
+	barrelFalling(barrels);
 }
 
 void collision()//should add something like "one barrel can substract only one life", so I have to start numerate them
@@ -741,10 +751,10 @@ void collision()//should add something like "one barrel can substract only one l
 	}
 }
 
-void moveObjects()
+void moveObjects(Barrel* barrels)
 {
 	playerMovement();
-	barrelMovement();
+	barrelMovement(barrels);
 }
 
 
@@ -792,7 +802,7 @@ void SDLSpace()
 	SDL_FreeSurface(SDL.charset);
 	SDL_FreeSurface(SDL.screen);
 	SDL_FreeSurface(SDL.player);
-	SDL_FreeSurface(SDL.barrels);
+	SDL_FreeSurface(SDL.barrel);
 	SDL_DestroyTexture(SDL.scrtex);
 	SDL_DestroyRenderer(SDL.renderer);
 	SDL_DestroyWindow(SDL.window);

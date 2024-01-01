@@ -160,7 +160,7 @@
 
 /* Apparently this is needed by several Windows compilers */
 #if !defined(__MACH__)
-#ifndef NULL
+#ifndef ZERO
 #ifdef __cplusplus
 #define NULL 0
 #else
