@@ -488,14 +488,14 @@ void createBarrels(Barrel* barrels)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
-		{BARRELS_SPAWN_POINT_X+100,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X+200,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X+300,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X+400,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X-50,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X-100,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X-150,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X + 100,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X + 200,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X + 300,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X + 400,BARRELS_SPAWN_POINT_Y,false,true,false},
 		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,BARRELS_SPAWN_POINT_Y + BARRELS_DIFFERENCE_IN_Y,false,true,false}
 	};
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
