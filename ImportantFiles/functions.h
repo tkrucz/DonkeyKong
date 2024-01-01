@@ -16,7 +16,7 @@ void createWindow();
 
 void drawInfo();
 
-void initializeGameObjects(Platform* platforms, Ladder* ladders);
+void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void drawScene(Platform* platforms, Ladder* ladders);
 
@@ -80,7 +80,7 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(Ladder* ladders);
 
-void createBarrels(); //TO DO
+void createBarrels(Barrel* barrels); //TO DO
 
 void playerOnLadderBeg();
 
@@ -116,17 +116,29 @@ void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
+void barrelOnPlatform();
+
+void barrelNotOnPlatform();
+
+void barrelOnGround();
+
+void barrelNotOnGround();
+
+void barrelFallDown();
+
+void barrelNotFallDown();
+
 void areBarrelsOnGround(); //TO DO
 
 void areBarrelsOnPlatform(Platform* platforms); //TO DO
 
 void whereAreBarrels(Platform* platforms); //TO DO
 
-void whereAreObjects(Platform* platforms, Ladder* ladders);
+void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void barrelBowling(); //TO DO
 
-void barrelFallDown(); //TO DO
+void barrelFalling(); //TO DO
 
 void barrelMovement();
 
@@ -173,9 +185,10 @@ void drawInfo() {
 	printPlayerInfo();
 }
 
-void initializeGameObjects(Platform* platforms, Ladder* ladders) {
+void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels) {
 	createPlatforms(platforms);
 	createLadders(ladders);
+	createBarrels(barrels);
 }
 
 void drawScene(Platform* platforms, Ladder* ladders) {
@@ -304,12 +317,12 @@ void approximateOnPlatform(Platform* platforms)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (Mario.speedY > 0 && Mario.lowerYCorner > platforms[i].y &&
-			Mario.lowerYCorner < platforms[i].y + platforms[i].w &&
-			Mario.lowerXCorner<platforms[i].x + platforms[i].l &&
-			Mario.lowerXCorner + Mario.realSize[0]>platforms[i].x)
+		if (Mario.speedY > 0 && Mario.lowerYCorner > platforms[i].upperYCorner &&
+			Mario.lowerYCorner < platforms[i].upperYCorner + platforms[i].width &&
+			Mario.lowerXCorner<platforms[i].upperXCorner + platforms[i].length &&
+			Mario.lowerXCorner + Mario.realSize[0]>platforms[i].upperXCorner)
 		{
-			Mario.lowerYCorner = platforms[i].y;
+			Mario.lowerYCorner = platforms[i].upperYCorner;
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();
@@ -322,8 +335,8 @@ void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit t
 	double upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
-			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
+		if (upperYCorner <= platforms[i].upperYCorner + platforms[i].width && upperYCorner > platforms[i].upperYCorner)
+			if (platforms[i].upperXCorner <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].upperXCorner + platforms[i].length)
 			{
 				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
 				Mario.speedY = elasticColision; //dodać elastic colision do sturktury skok kiedyś?
@@ -338,15 +351,15 @@ void hitSidesOfThePlatform(Platform* platforms)
 	double RightCorner = Mario.lowerXCorner + Mario.realSize[0];
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (LeftCorner <= platforms[i].x + platforms[i].l && LeftCorner >= platforms[i].x + platforms[i].l - ONE)
-			if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
+		if (LeftCorner <= platforms[i].upperXCorner + platforms[i].length && LeftCorner >= platforms[i].upperXCorner + platforms[i].length - ONE)
+			if (upperYCorner <= platforms[i].upperYCorner + platforms[i].width && upperYCorner > platforms[i].upperYCorner)
 			{
-				Mario.lowerXCorner = platforms[i].x + platforms[i].l;
+				Mario.lowerXCorner = platforms[i].upperXCorner + platforms[i].length;
 				return;
 			}
-		if (RightCorner >= platforms[i].x && RightCorner <= platforms[i].x + ONE)
-			if (upperYCorner <= platforms[i].y + platforms[i].w && upperYCorner > platforms[i].y)
-				Mario.lowerXCorner = platforms[i].x - Mario.realSize[0];
+		if (RightCorner >= platforms[i].upperXCorner && RightCorner <= platforms[i].upperXCorner + ONE)
+			if (upperYCorner <= platforms[i].upperYCorner + platforms[i].width && upperYCorner > platforms[i].upperYCorner)
+				Mario.lowerXCorner = platforms[i].upperXCorner - Mario.realSize[0];
 	}
 }
 
@@ -435,6 +448,7 @@ void timeCounting()
 
 void createPlatforms(Platform* platforms)
 {
+	//platformsParameters{ X cordinate, Y cordinate, length }
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
 		{60,PLATFORM_I_HEIGHT,350}, {520,PLATFORM_I_HEIGHT,160},
 		{440,PLATFORM_II_HEIGHT,160}, { 40,PLATFORM_II_HEIGHT,350 },
@@ -445,44 +459,64 @@ void createPlatforms(Platform* platforms)
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		platforms[i].x = platformsParameters[i][0];
-		platforms[i].y = platformsParameters[i][1];
-		platforms[i].l = platformsParameters[i][2];
+		platforms[i].upperXCorner = platformsParameters[i][0];
+		platforms[i].upperYCorner = platformsParameters[i][1];
+		platforms[i].length = platformsParameters[i][2];
 	}
 }
 
 void drawPlatforms(Platform* platforms) {
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL.screen, platforms[i].x, platforms[i].y, platforms[i].l, platforms[i].w, colors.black, colors.pink);
+		DrawRectangle(SDL.screen, platforms[i].upperXCorner, platforms[i].upperYCorner, platforms[i].length, platforms[i].width, colors.black, colors.pink);
 
 }
 
 void createLadders(Ladder* ladders)
 {
-	int laddersParameters[NUMBERS_OF_LADDERS][3] = {
+	//laddersParameters {X cordinate, Y cordinate, ladder height}
+	int laddersParameters[NUMBER_OF_LADDERS][3] = {
 		{365,PLATFORM_V_HEIGHT,160}, {600,PLATFORM_IV_HEIGHT,LADDER_HEIGHT},
 		{150,PLATFORM_III_HEIGHT,LADDER_HEIGHT}, {550,PLATFORM_II_HEIGHT,LADDER_HEIGHT},
 		{110,PLATFORM_I_HEIGHT,60}
 	};
 
-	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		ladders[i].x = laddersParameters[i][0];
-		ladders[i].y = laddersParameters[i][1];
-		ladders[i].h = laddersParameters[i][2];
+		ladders[i].upperXCorner = laddersParameters[i][0];
+		ladders[i].upperYCorner = laddersParameters[i][1];
+		ladders[i].height = laddersParameters[i][2];
 	}
 }
 
 void drawLadders(Ladder* ladders)
 {
-	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
-		DrawRectangle(SDL.screen, ladders[i].x, ladders[i].y, ladders[i].w, ladders[i].h, colors.black, colors.grey);
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
+		DrawRectangle(SDL.screen, ladders[i].upperXCorner, ladders[i].upperYCorner, ladders[i].width, ladders[i].height, colors.black, colors.grey);
 }
 
-void createBarrels()
+void createBarrels(Barrel* barrels)
 {
+	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
+	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+	};
 
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	{
+		barrels[i].lowerXCorner = barrelsParameters[i][0];
+		barrels[i].lowerYCorner = barrelsParameters[i][1];
+		barrels[i].fallDown = barrelsParameters[i][2];
+		barrels[i].onPlatform = barrelsParameters[i][3];
+		barrels[i].onGround = barrelsParameters[i][4];
+	}
 }
 
 void playerOnLadderBeg()
@@ -553,12 +587,12 @@ void playerOnGround()
 void isPlayerOnLadder(Ladder* ladders)
 {
 	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
-	for (int i = 0; i < NUMBERS_OF_LADDERS; i++)
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		if (ladders[i].x <= Mario.lowerXCorner && Mario.lowerXCorner <= ladders[i].x + ladders[i].w) //x increses in right direciton
+		if (ladders[i].upperXCorner <= Mario.lowerXCorner && Mario.lowerXCorner <= ladders[i].upperXCorner + ladders[i].width) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
-			if (leftLowerCorner[1] == ladders[i].y + ladders[i].h)
+			if (leftLowerCorner[1] == ladders[i].upperYCorner + ladders[i].height)
 			{
 				playerOnLadderBeg();
 				playerNotOnLadderEnd();
@@ -566,7 +600,7 @@ void isPlayerOnLadder(Ladder* ladders)
 				return;
 			}
 			//is Mario at the end of ladder?
-			else if (leftLowerCorner[1] == ladders[i].y)
+			else if (leftLowerCorner[1] == ladders[i].upperYCorner)
 			{
 				playerOnLadderEnd();
 				playerNotOnLadderBeg();
@@ -574,7 +608,7 @@ void isPlayerOnLadder(Ladder* ladders)
 				return;
 			}
 			//is Mario in the "middle" of ladder?
-			else if (ladders[i].y < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].y + ladders[i].h)//y increases in down direction 
+			else if (ladders[i].upperYCorner < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].upperYCorner + ladders[i].height)//y increases in down direction 
 			{
 				playerOnLadder();
 				playerNotOnLadderEnd();
@@ -593,9 +627,9 @@ void isPlayerOnPlatform(Platform* platforms)
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		// is Mario on platform height?
-		if (Mario.lowerYCorner == platforms[i].y)
+		if (Mario.lowerYCorner == platforms[i].upperYCorner)
 			// how far from edges?
-			if (platforms[i].x <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].x + platforms[i].l)
+			if (platforms[i].upperXCorner <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].upperXCorner + platforms[i].length)
 			{
 				playerOnPlatform();
 				return;
@@ -622,6 +656,36 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnGround();	
 }
 
+void barrelOnPlatform()
+{
+	barrel.onPlatform = true;
+}
+
+void barrelNotOnPlatform()
+{
+	barrel.onPlatform = false;
+}
+
+void barrelOnGround()
+{
+	barrel.onGround = true;
+}
+
+void barrelNotOnGround()
+{
+	barrel.onGround = false;
+}
+
+void barrelFallDown()
+{
+	barrel.fallDown = true;
+}
+
+void barrelNotFallDown()
+{
+	barrel.fallDown = false;
+}
+
 void areBarrelsOnGround()
 {
 	if (barrel.lowerYCorner + barrel.fallingSpeed >= GROUND_HEIGHT)
@@ -639,7 +703,7 @@ void whereAreBarrels(Platform* platforms)
 	areBarrelsOnPlatform(platforms);
 }
 
-void whereAreObjects(Platform* platforms, Ladder* ladders)
+void whereAreObjects(Platform* platforms, Ladder* ladders,Barrel* barrels)
 {
 	whereIsPLayer(platforms, ladders);
 	whereAreBarrels(platforms);
@@ -650,7 +714,7 @@ void barrelBowling()
 
 }
 
-void barrelFallDown()
+void barrelFalling()
 {
 	barrel.lowerYCorner += barrel.fallingSpeed;
 }
@@ -658,7 +722,7 @@ void barrelFallDown()
 void barrelMovement()
 {
 	barrelBowling();
-	barrelFallDown();
+	barrelFalling();
 }
 
 void collision()//should add something like "one barrel can substract only one life", so I have to start numerate them

@@ -18,7 +18,8 @@ extern "C"
 //TODO main to mainGameLoop()
 int main(int argc, char** argv) {
 	Platform platforms[NUMBER_OF_PLATFORMS];
-	Ladder ladders[NUMBERS_OF_LADDERS];
+	Ladder ladders[NUMBER_OF_LADDERS];
+	Barrel barrels[NUMBER_OF_BARRELS];
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -26,7 +27,7 @@ int main(int argc, char** argv) {
 	initializeColors();
 	loadBMPs();
 	basicSettings();
-	initializeGameObjects(platforms, ladders);
+	initializeGameObjects(platforms, ladders, barrels);
 
 	gameInfo.t1 = SDL_GetTicks();
 
@@ -41,7 +42,7 @@ int main(int argc, char** argv) {
 		readKeys();
 
 		gravityApply(platforms);
-		whereAreObjects(platforms, ladders);
+		whereAreObjects(platforms, ladders,barrels);
 
 		moveObjects();
 	}

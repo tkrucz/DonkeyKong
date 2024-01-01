@@ -28,13 +28,16 @@ struct Player
 	bool endLadder = false; //player at the end of ladder
 }Mario;
 
-struct Barrels
+struct Barrel
 {
 	SDL_Rect animation; //sets the look of barrels
 	double lowerXCorner;
-	double lowerYCorner; //must be double 
-	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE };
+	double lowerYCorner;
+	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
 	double fallingSpeed = GRAVITY_SPEED * 5;
+	bool onGround = false;
+	bool onPlatform = false;
+	bool fallDown = false;
 }barrel;
 
 struct GameInfo
@@ -76,18 +79,18 @@ struct Colors
 	int grey; //for ladders
 }colors;
 
-struct Platform //Arguemnts: x,y (upper corners), l-length, w-width is const=PlatformWidth
+struct Platform 
 {
-	double x; 
-	double y;
-	double l; 
-	double w=PLATFORM_WIDTH; 
+	double upperXCorner; 
+	double upperYCorner;
+	double length; 
+	double width=PLATFORM_WIDTH; 
 };
 
-struct Ladder //Arguemnts: x,y (upper corners), w-width is const=LadderWidth, h-height is const=LadderHeight
+struct Ladder
 {
-	double x; 
-	double y;
-	double w = LADDER_WIDTH; 
-	double h = LADDER_HEIGHT; 
+	double upperXCorner; 
+	double upperYCorner;
+	double width = LADDER_WIDTH; 
+	double height = LADDER_HEIGHT; 
 };
