@@ -518,16 +518,11 @@ void createBarrels(Barrel* barrels)
 
 void drawBarrels(Barrel* barrels)
 {
-	int i = 0;
-
-	barrel.animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
-
-	if (gameInfo.gameTime / 2 >= ZERO && gameInfo.gameTime / 2 <= HALF)
-	{
-		barrels[i].animation = { ZERO,ZERO,barrel.realSize[0],barrel.realSize[1] };
-		while (i != NUMBER_OF_BARRELS)
-			i++;
-	}
+		barrel.animation = { ZERO, ZERO, barrel.realSize[0], barrel.realSize[1] };
+		for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+		{
+			DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerXCorner, barrels[i].lowerYCorner, &barrel.animation);
+		}
 }
 
 void playerOnLadderBeg()
