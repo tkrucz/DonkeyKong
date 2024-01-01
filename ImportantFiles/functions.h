@@ -20,8 +20,7 @@ void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels
 
 void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels); //możliwe, że to muszę poprawić jesli chcę wyświetlac więcej niż jedną beczkę
-//akutlanie beczka to SDL_Surface a te beczki które tworzę, nie istnieją? Aktualna beczka jest tworzona w createBarrels() i drawBarrels() a jej informacje to barrel.coś
+void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void refreshWindow();
 
@@ -81,7 +80,7 @@ void drawLadders(Ladder* ladders);
 
 void createBarrels(Barrel* barrels); 
 
-void drawBarrels(Barrel* barrels); //CHANGE
+void drawBarrels(Barrel* barrels); 
 
 void playerOnLadderBeg();
 
@@ -129,7 +128,7 @@ void barrelFallDown();
 
 void barrelNotFallDown();
 
-void areBarrelsOnGround(Barrel* barrels); //CHANGE
+void areBarrelsOnGround(Barrel* barrels);
 
 void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //TO DO
 
@@ -205,7 +204,6 @@ void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels)
 	drawScene(platforms, ladders, barrels);
 	drawInfo();
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
-	DrawSurface(SDL.screen, SDL.barrel, barrel.lowerXCorner + BARRELS_DIFFERENCE_IN_X, barrel.lowerYCorner + BARRELS_DIFFERENCE_IN_Y, &barrel.animation);
 }
 
 void refreshWindow()
@@ -493,18 +491,15 @@ void createBarrels(Barrel* barrels)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X+100,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X+200,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X+300,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X+400,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X-50,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X-100,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X-150,BARRELS_SPAWN_POINT_Y,false,true,false},
 		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
 	};
-
-	barrel.lowerXCorner = BARRELS_SPAWN_POINT_X;
-	barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
@@ -513,16 +508,14 @@ void createBarrels(Barrel* barrels)
 		barrels[i].fallDown = barrelsParameters[i][2];
 		barrels[i].onPlatform = barrelsParameters[i][3];
 		barrels[i].onGround = barrelsParameters[i][4];
+		barrels[i].animation = { ZERO, ZERO, barrel.realSize[0], barrel.realSize[1] };
 	}
 }
 
 void drawBarrels(Barrel* barrels)
 {
-		barrel.animation = { ZERO, ZERO, barrel.realSize[0], barrel.realSize[1] };
-		for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-		{
-			DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerXCorner, barrels[i].lowerYCorner, &barrel.animation);
-		}
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+		DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerXCorner, barrels[i].lowerYCorner, &barrels[i].animation);
 }
 
 void playerOnLadderBeg()
@@ -694,8 +687,11 @@ void barrelNotFallDown()
 
 void areBarrelsOnGround(Barrel* barrels)
 {
-	if (barrel.lowerYCorner + barrel.fallingSpeed >= GROUND_HEIGHT)
-		barrel.lowerYCorner = BARRELS_SPAWN_POINT_Y;
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	{
+		if (barrels[i].lowerYCorner + barrels[i].fallingSpeed >= GROUND_HEIGHT)
+			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
+	}
 }
 
 void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels)
@@ -722,8 +718,6 @@ void barrelBowling(Barrel* barrels)
 
 void barrelFalling(Barrel* barrels)
 {
-	barrel.lowerYCorner += barrel.fallingSpeed;
-
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 		barrels[i].lowerYCorner += barrel.fallingSpeed;
 }
