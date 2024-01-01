@@ -240,9 +240,6 @@ void printPlayerInfo()
 	sprintf(gameInfo.text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %.0f", barrel.lowerXCorner);
-	DrawString(SDL.screen, TEN_ROW, 190, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerYCorner: %.4f", barrel.lowerYCorner);
-	DrawString(SDL.screen, TEN_ROW, 210, gameInfo.text, SDL.charset);
 }
 
 void drawGround()
