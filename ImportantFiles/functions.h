@@ -48,7 +48,7 @@ void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bott
 
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
-void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms); //check if player is jumping||falling down, then change his position by the current speedY 
+void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Barrel* barrels); //check if player is jumping||falling down, then change his position by the current speedY 
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -132,7 +132,7 @@ void barrelFalling(Barrel* barrels); //CHANGE?
 
 void barrelMovement(Barrel* barrels);
 
-void collision(GameInfo* gameInfo, PlayerInfo* playerInfo); //CHANGE
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); //CHANGE
 
 void moveObjects(Barrel* barrels);
 
@@ -343,9 +343,9 @@ void hitSidesOfThePlatform(Platform* platforms)
 }
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms)
+void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Barrel* barrels)
 {
-	collision(gameInfo, playerInfo);
+	collision(gameInfo, playerInfo,barrels);
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
@@ -728,11 +728,16 @@ void barrelMovement(Barrel* barrels)
 	barrelFalling(barrels);
 }
 
-void collision(GameInfo* gameInfo, PlayerInfo* playerInfo)//should add something like "one barrel can substract only one life", so I have to start numerate them
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)//should add something like "one barrel can substract only one life", so I have to start numerate them
 {
-	if (barrel.lowerXCorner == Mario.lowerXCorner && barrel.lowerYCorner + 0.1 >= Mario.lowerYCorner && barrel.lowerYCorner - 0.1 <= Mario.lowerYCorner)
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		loseLive(gameInfo, playerInfo);
+		if (barrels[i].lowerYCorner >= Mario.lowerYCorner - ONE && barrels[i].lowerYCorner <= Mario.lowerYCorner + ONE)
+			if (barrels[i].lowerXCorner >= Mario.lowerXCorner - ONE && barrels[i].lowerXCorner <= Mario.lowerXCorner + ONE)
+			{
+				loseLive(gameInfo, playerInfo);
+				return;
+			}
 	}
 }
 
