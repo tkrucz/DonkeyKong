@@ -66,7 +66,7 @@ void endTheStage();//not used
 
 void addScore(); //not used
 
-void loseLive(); //for test
+void loseLive();
 
 void timeCounting(); //counting the game time
 
@@ -118,9 +118,9 @@ void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void areBarrelsOnGround(Barrel* barrels);
+void areBarrelsOnGround(Barrel* barrels); //CHANGE?
 
-void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //TO DO
+void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //CHANGE!!!
 
 void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
@@ -485,7 +485,7 @@ void createBarrels(Barrel* barrels)
 		{BARRELS_SPAWN_POINT_X + 250,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 300,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 350,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,BARRELS_SPAWN_POINT_Y + BARRELS_DIFFERENCE_IN_Y,false,false,false}
+		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,PLATFORM_V_HEIGHT,false,true,false}
 	};
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -656,23 +656,44 @@ void areBarrelsOnGround(Barrel* barrels)
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].lowerYCorner + barrels[i].fallingSpeed >= GROUND_HEIGHT)
-		{
 			barrels[i].onGround = true;
+		else 
+			barrels[i].onGround = false;
+
+		if (barrels[i].onGround)
 			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
-		}
-		else barrels[i].onGround = false;
 	}
 }
 
 void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels)
 {
-
+		for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+		{
+			for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
+			{
+				if (barrels[i].lowerYCorner + barrels[i].fallingSpeed >= platforms[j].upperYCorner)				
+					barrels[i].lowerYCorner = platforms[j].upperYCorner+BARRELS_DIFFERENCE_IN_Y;				
+				
+				if (platforms[j].upperXCorner <= barrels[i].lowerXCorner + barrels[i].realSize[0] && barrels[i].lowerXCorner - barrels[i].realSize[0] <= platforms[j].upperXCorner + platforms[j].length)
+				{
+					barrels[i].onPlatform = true;
+					barrels[i].fallDown = false;
+					return;
+				}
+				else
+				{
+					barrels[i].onPlatform = false;
+					barrels[i].fallDown = true;
+					return;
+				}
+			}
+		}
 }
 
 void whereAreBarrels(Platform* platforms, Barrel* barrels)
 {
-	areBarrelsOnGround(barrels);
 	areBarrelsOnPlatform(platforms,barrels);
+	areBarrelsOnGround(barrels);
 }
 
 void whereAreObjects(Platform* platforms, Ladder* ladders,Barrel* barrels)
@@ -694,7 +715,8 @@ void barrelFalling(Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if(!barrels[i].onPlatform && !barrels[i].onGround)
+		if (!barrels[i].onPlatform && !barrels[i].onGround)
+			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
 			barrels[i].lowerYCorner += barrel.fallingSpeed;
 	}
@@ -733,9 +755,9 @@ void readKeys()
 				quit();
 			else if (keyPressed == SDLK_n)
 				basicSettings();
-			else if (keyPressed == SDLK_p)
+			else if (keyPressed == SDLK_p) //usunąć
 				addPoints();
-			else if (keyPressed == SDLK_l)
+			else if (keyPressed == SDLK_l) //usunąć
 				loseLive();
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;

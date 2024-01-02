@@ -43,7 +43,6 @@ int main(int argc, char** argv) {
 
 		gravityApply(platforms);
 		whereAreObjects(platforms, ladders,barrels);
-
 		moveObjects(barrels);
 	}
 	return 0;
