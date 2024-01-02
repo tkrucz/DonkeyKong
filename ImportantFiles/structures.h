@@ -34,10 +34,11 @@ struct Barrel
 	double lowerXCorner;
 	double lowerYCorner;
 	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
-	double fallingSpeed = GRAVITY_SPEED * 5;
-	bool onGround = false;
-	bool onPlatform = false;
+	double bowlingSpeed=BARRELS_BOWLING_SPEED;
+	double fallingSpeed = BARRELS_FALLING_SPEED;
 	bool fallDown = false;
+	bool onPlatform = false;
+	bool onGround = false;
 }barrel;
 
 struct GameInfo

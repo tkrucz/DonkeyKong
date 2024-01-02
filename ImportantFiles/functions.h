@@ -48,7 +48,7 @@ void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bott
 
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
-void gravityApply(Platform* platforms); //check if Mario is jumping||falling down, then change his position by the current speedY 
+void gravityApply(Platform* platforms); //check if player is jumping||falling down, then change his position by the current speedY 
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -108,6 +108,8 @@ void playerNotJumping();
 
 void playerOnGround();
 
+void isPlayerOutsideTheBorders(); //check if player isn't outside of the screen borders
+
 void isPlayerOnLadder(Ladder* ladders);
 
 void isPlayerOnPlatform(Platform* platforms);
@@ -115,18 +117,6 @@ void isPlayerOnPlatform(Platform* platforms);
 void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
-
-void barrelOnPlatform();
-
-void barrelNotOnPlatform();
-
-void barrelOnGround();
-
-void barrelNotOnGround();
-
-void barrelFallDown();
-
-void barrelNotFallDown();
 
 void areBarrelsOnGround(Barrel* barrels);
 
@@ -488,14 +478,14 @@ void createBarrels(Barrel* barrels)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
-		{BARRELS_SPAWN_POINT_X + 100,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X + 200,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X + 300,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X + 400,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,BARRELS_SPAWN_POINT_Y + BARRELS_DIFFERENCE_IN_Y,false,true,false}
+		{100,PLATFORM_I_HEIGHT,false,true,false},
+		{BARRELS_SPAWN_POINT_X + 100,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 150,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 200,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 250,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 300,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 350,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,BARRELS_SPAWN_POINT_Y + BARRELS_DIFFERENCE_IN_Y,false,false,false}
 	};
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -580,6 +570,14 @@ void playerOnGround()
 	Mario.onPlatform = true;
 }
 
+void isPlayerOutsideTheBorders()
+{
+	if (Mario.lowerXCorner <= ZERO)
+		Mario.lowerXCorner = ZERO;
+	if (Mario.lowerXCorner + Mario.realSize[0] >= SCREEN_WIDTH)
+		Mario.lowerXCorner = SCREEN_WIDTH - Mario.realSize[0];
+}
+
 void isPlayerOnLadder(Ladder* ladders)
 {
 	int leftLowerCorner[2] = { Mario.lowerXCorner, Mario.lowerYCorner };
@@ -647,39 +645,10 @@ void isPlayerOnGround()
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders)
 {
+	isPlayerOutsideTheBorders();
 	isPlayerOnLadder(ladders);
 	isPlayerOnPlatform(platforms);
 	isPlayerOnGround();	
-}
-
-void barrelOnPlatform()
-{
-	barrel.onPlatform = true;
-}
-
-void barrelNotOnPlatform()
-{
-	barrel.onPlatform = false;
-}
-
-void barrelOnGround()
-{
-	barrel.onGround = true;
-}
-
-void barrelNotOnGround()
-{
-	barrel.onGround = false;
-}
-
-void barrelFallDown()
-{
-	barrel.fallDown = true;
-}
-
-void barrelNotFallDown()
-{
-	barrel.fallDown = false;
 }
 
 void areBarrelsOnGround(Barrel* barrels)
@@ -687,7 +656,11 @@ void areBarrelsOnGround(Barrel* barrels)
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].lowerYCorner + barrels[i].fallingSpeed >= GROUND_HEIGHT)
+		{
+			barrels[i].onGround = true;
 			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
+		}
+		else barrels[i].onGround = false;
 	}
 }
 
@@ -710,13 +683,21 @@ void whereAreObjects(Platform* platforms, Ladder* ladders,Barrel* barrels)
 
 void barrelBowling(Barrel* barrels)
 {
-
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	{
+		if (barrels[i].onPlatform)
+			barrels[i].lowerXCorner += barrel.bowlingSpeed;
+	}
 }
 
 void barrelFalling(Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-		barrels[i].lowerYCorner += barrel.fallingSpeed;
+	{
+		if(!barrels[i].onPlatform && !barrels[i].onGround)
+		if (barrels[i].fallDown)
+			barrels[i].lowerYCorner += barrel.fallingSpeed;
+	}
 }
 
 void barrelMovement(Barrel* barrels)
