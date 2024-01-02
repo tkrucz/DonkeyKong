@@ -11,7 +11,7 @@ typedef struct PlayerInfo
 	int lives;
 };
 
-// TODO struct flags, maybe barrel will require flags.
+// TODO struct flags.
 // That how it should look like?
 
 typedef struct Flags
@@ -54,14 +54,14 @@ struct Barrel
 	bool onGround = false;
 }barrel;
 
-struct GameInfo
+typedef struct GameInfo
 {
 	double t1, t2;
 	double gameTime, deltaTime;
 	bool quit;
 	int err;
 	char text[128];
-}gameInfo;
+};
 
 typedef struct Score
 {

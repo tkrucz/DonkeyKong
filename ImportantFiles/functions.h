@@ -12,25 +12,25 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
 
-void createWindow();
+void createWindow(GameInfo* gameInfo);
 
-void drawInfo(PlayerInfo* playerInfo);
+void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void displayWindow(PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels);
+void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void refreshWindow();
 
-void printGameInfo();
+void printGameInfo(GameInfo* gameInfo);
 
-void printPlayerInfo(PlayerInfo* playerInfo);
+void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
 void drawGround();
 
-void basicSettings(PlayerInfo* playerInfo);
+void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
 void initializePlayer();
 
@@ -48,7 +48,7 @@ void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bott
 
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
-void gravityApply(Platform* platforms, PlayerInfo* playerInfo); //check if player is jumping||falling down, then change his position by the current speedY 
+void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms); //check if player is jumping||falling down, then change his position by the current speedY 
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -66,9 +66,9 @@ void endTheStage(PlayerInfo* playerInfo, Score* punkty);//not used
 
 void addScore(PlayerInfo* playerInfo, Score* punkty); //not used
 
-void loseLive(PlayerInfo* playerInfo); 
+void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
-void timeCounting(); //counting the game time
+void timeCounting(GameInfo* gameInfo); //counting the game time
 
 void createPlatforms(Platform* platforms);
 
@@ -132,25 +132,25 @@ void barrelFalling(Barrel* barrels); //CHANGE?
 
 void barrelMovement(Barrel* barrels);
 
-void collision(PlayerInfo* playerInfo); //CHANGE
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo); //CHANGE
 
 void moveObjects(Barrel* barrels);
 
-void readKeys(PlayerInfo* playerInfo, Score* punkty); //read key input
+void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* punkty); //read key input
 
 void SDLSpace(); //freeing all surfaces
 
-void quit();
+void quit(GameInfo* gameInfo);
 
 /*Functions definitions
 ===================================================================
 */
 
-void createWindow() // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
+void createWindow(GameInfo* gameInfo) // Create a window with specified size. Also create renderer for this window, renderer meaning a thing actually showing/drawing/rendering stuff
 {
-	gameInfo.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+	gameInfo->err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&SDL.window, &SDL.renderer);
-	if (gameInfo.err != 0)
+	if (gameInfo->err != 0)
 	{
 		SDL_Quit();
 		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
@@ -170,9 +170,9 @@ void createWindow() // Create a window with specified size. Also create renderer
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawInfo(PlayerInfo* playerInfo) {
-	printGameInfo();
-	printPlayerInfo(playerInfo);
+void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo) {
+	printGameInfo(gameInfo);
+	printPlayerInfo(gameInfo, playerInfo);
 }
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels) {
@@ -188,11 +188,11 @@ void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels) {
 	drawBarrels(barrels);
 }
 
-void displayWindow(PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels)
+void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels)
 {
 	SDL_FillRect(SDL.screen, ZERO, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms, ladders, barrels);
-	drawInfo(playerInfo);
+	drawInfo(gameInfo, playerInfo);
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
 
@@ -203,33 +203,33 @@ void refreshWindow()
 	SDL_RenderPresent(SDL.renderer);
 }
 
-void printGameInfo()
+void printGameInfo(GameInfo* gameInfo)
 {
 	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, 70, colors.white, colors.black);
-	sprintf(gameInfo.text, "King Donkey");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 8, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "Time from beginning: %.1lf s", gameInfo.gameTime);
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 25, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "Esc - quit, n - new game ");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 40, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo.text) * 8 / 2, 55, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "Author: Tomasz Kruczalak 198049");
-	DrawString(SDL.screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo.text, SDL.charset);
+	sprintf(gameInfo->text, "King Donkey");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 8, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "Time from beginning: %.1lf s", gameInfo->gameTime);
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 25, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "Esc - quit, n - new game ");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 40, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 55, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "Author: Tomasz Kruczalak 198049");
+	DrawString(SDL.screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 }
 
-void printPlayerInfo(PlayerInfo* playerInfo)
+void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
 	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 36, colors.white, colors.black);
-	sprintf(gameInfo.text, "Score: %.6d", playerInfo->score);
-	DrawString(SDL.screen, TEN_ROW, 75, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "Lives: %d", playerInfo->lives);
-	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerXCorner: %.0f", Mario.lowerXCorner);
-	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
-	DrawString(SDL.screen, TEN_ROW, 170, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "LeftLowerXCorner: %.0f", barrel.lowerXCorner);
+	sprintf(gameInfo->text, "Score: %.6d", playerInfo->score);
+	DrawString(SDL.screen, TEN_ROW, 75, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
+	DrawString(SDL.screen, TEN_ROW, 90, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", Mario.lowerXCorner);
+	DrawString(SDL.screen, TEN_ROW, 150, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
+	DrawString(SDL.screen, TEN_ROW, 170, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", barrel.lowerXCorner);
 }
 
 void drawGround()
@@ -237,12 +237,12 @@ void drawGround()
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
 
-void basicSettings(PlayerInfo* playerInfo)
+void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
 	playerInfo->score = PLAYER_START_POINTS;
 	playerInfo->lives = PLAYER_LIVES;
-	gameInfo.quit = false;
-	gameInfo.gameTime = ZERO;
+	gameInfo->quit = false;
+	gameInfo->gameTime = ZERO;
 	initializePlayer();
 }
 
@@ -343,9 +343,9 @@ void hitSidesOfThePlatform(Platform* platforms)
 }
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void gravityApply(Platform* platforms, PlayerInfo* playerInfo)
+void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms)
 {
-	collision(playerInfo);
+	collision(gameInfo, playerInfo);
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
@@ -411,18 +411,18 @@ void addScore(PlayerInfo* playerInfo, Score* punkty)
 	endTheStage(playerInfo, punkty);
 }
 
-void loseLive(PlayerInfo* playerInfo)
+void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
 	playerInfo->lives -= 1;
 	if (playerInfo->lives == ZERO)
-		quit();
+		quit(gameInfo);
 }
 
-void timeCounting()
+void timeCounting(GameInfo* gameInfo)
 {
-	gameInfo.deltaTime = (gameInfo.t2 - gameInfo.t1) * 0.001;
-	gameInfo.t1 = gameInfo.t2;
-	gameInfo.gameTime += gameInfo.deltaTime;
+	gameInfo->deltaTime = (gameInfo->t2 - gameInfo->t1) * 0.001;
+	gameInfo->t1 = gameInfo->t2;
+	gameInfo->gameTime += gameInfo->deltaTime;
 }
 
 void createPlatforms(Platform* platforms)
@@ -728,11 +728,11 @@ void barrelMovement(Barrel* barrels)
 	barrelFalling(barrels);
 }
 
-void collision(PlayerInfo* playerInfo)//should add something like "one barrel can substract only one life", so I have to start numerate them
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo)//should add something like "one barrel can substract only one life", so I have to start numerate them
 {
 	if (barrel.lowerXCorner == Mario.lowerXCorner && barrel.lowerYCorner + 0.1 >= Mario.lowerYCorner && barrel.lowerYCorner - 0.1 <= Mario.lowerYCorner)
 	{
-		loseLive(playerInfo);
+		loseLive(gameInfo, playerInfo);
 	}
 }
 
@@ -743,7 +743,7 @@ void moveObjects(Barrel* barrels)
 }
 
 
-void readKeys(PlayerInfo* playerInfo, Score* punkty)
+void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* punkty)
 {
 	while (SDL_PollEvent(&SDL.event))
 	{
@@ -752,13 +752,13 @@ void readKeys(PlayerInfo* playerInfo, Score* punkty)
 		{
 		case SDL_KEYDOWN:
 			if (keyPressed == SDLK_ESCAPE)
-				quit();
+				quit(gameInfo);
 			else if (keyPressed == SDLK_n)
-				basicSettings(playerInfo);
+				basicSettings(gameInfo, playerInfo);
 			else if (keyPressed == SDLK_p) //usunąć
 				addPoints(playerInfo,punkty);
 			else if (keyPressed == SDLK_l) //usunąć
-				loseLive(playerInfo);
+				loseLive(gameInfo,playerInfo);
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;
 			else if (keyPressed == SDLK_LEFT)
@@ -776,7 +776,7 @@ void readKeys(PlayerInfo* playerInfo, Score* punkty)
 				Mario.speedY = 0;
 			break;		
 		case SDL_QUIT: //X button in right up corner
-			quit();
+			quit(gameInfo);
 			break;
 		}
 	}
@@ -793,9 +793,9 @@ void SDLSpace()
 	SDL_DestroyWindow(SDL.window);
 }
 
-void quit()
+void quit(GameInfo* gameInfo)
 {
-	gameInfo.quit = true;
+	gameInfo->quit = true;
 	SDLSpace();
 	SDL_Quit();
 }
