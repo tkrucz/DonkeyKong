@@ -14,27 +14,27 @@ extern "C" {
 
 void createWindow(GameInfo* gameInfo);
 
-void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo);
+void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels);
+void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels);
+void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void refreshWindow();
 
-void printGameInfo(GameInfo* gameInfo);
+void printGameInfo(GameInfo* gameInfo, Color* colors);
 
-void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo);
+void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
-void drawGround();
+void drawGround(Color* colors);
 
 void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
 void initializePlayer();
 
-void initializeColors();
+void initializeColors(Color* colors);
 
 void playerWalk(); //move player in X axis by the current speedX
 
@@ -72,11 +72,11 @@ void timeCounting(GameInfo* gameInfo); //counting the game time
 
 void createPlatforms(Platform* platforms);
 
-void drawPlatforms(Platform* platforms);
+void drawPlatforms(Color* colors, Platform* platforms);
 
 void createLadders(Ladder* ladders);
 
-void drawLadders(Ladder* ladders);
+void drawLadders(Color* colors, Ladder* ladders);
 
 void createBarrels(Barrel* barrels); 
 
@@ -170,9 +170,9 @@ void createWindow(GameInfo* gameInfo) // Create a window with specified size. Al
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo) {
-	printGameInfo(gameInfo);
-	printPlayerInfo(gameInfo, playerInfo);
+void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors) {
+	printGameInfo(gameInfo,colors);
+	printPlayerInfo(gameInfo, playerInfo, colors);
 }
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels) {
@@ -181,18 +181,18 @@ void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels
 	createBarrels(barrels);
 }
 
-void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels) {
-	drawGround();
-	drawPlatforms(platforms);
-	drawLadders(ladders);
+void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels) {
+	drawGround(colors);
+	drawPlatforms(colors, platforms);
+	drawLadders(colors, ladders);
 	drawBarrels(barrels);
 }
 
-void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels)
+void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels)
 {
-	SDL_FillRect(SDL.screen, ZERO, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(platforms, ladders, barrels);
-	drawInfo(gameInfo, playerInfo);
+	SDL_FillRect(SDL.screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+	drawScene(colors, platforms, ladders, barrels);
+	drawInfo(gameInfo, playerInfo,colors);
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
 
@@ -203,9 +203,9 @@ void refreshWindow()
 	SDL_RenderPresent(SDL.renderer);
 }
 
-void printGameInfo(GameInfo* gameInfo)
+void printGameInfo(GameInfo* gameInfo, Color* colors)
 {
-	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, 70, colors.white, colors.black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, 70, colors->white, colors->black);
 	sprintf(gameInfo->text, "King Donkey");
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 8, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Time from beginning: %.1lf s", gameInfo->gameTime);
@@ -218,9 +218,9 @@ void printGameInfo(GameInfo* gameInfo)
 	DrawString(SDL.screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 }
 
-void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo)
+void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 {
-	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 36, colors.white, colors.black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 36, colors->white, colors->black);
 	sprintf(gameInfo->text, "Score: %.6d", playerInfo->score);
 	DrawString(SDL.screen, TEN_ROW, 75, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
@@ -232,9 +232,9 @@ void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo)
 	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", barrel.lowerXCorner);
 }
 
-void drawGround()
+void drawGround(Color* colors)
 {
-	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
+	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
 void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
@@ -257,17 +257,17 @@ void initializePlayer()
 	playerOnPlatform();
 }
 
-void initializeColors()
+void initializeColors(Color* colors)
 {
-	colors.black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
-	colors.white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
-	colors.blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
-	colors.green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
-	colors.red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
-	colors.pink = SDL_MapRGB(SDL.screen->format, 214, 136, 150);
-	colors.indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
-	colors.lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
-	colors.grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
+	colors->black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
+	colors->white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
+	colors->blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
+	colors->green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
+	colors->red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
+	colors->pink = SDL_MapRGB(SDL.screen->format, 214, 136, 150);
+	colors->indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
+	colors->lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
+	colors->grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
 }
 
 void playerWalk()
@@ -444,10 +444,10 @@ void createPlatforms(Platform* platforms)
 	}
 }
 
-void drawPlatforms(Platform* platforms) {
+void drawPlatforms(Color* colors, Platform* platforms) {
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL.screen, platforms[i].upperXCorner, platforms[i].upperYCorner, platforms[i].length, platforms[i].width, colors.black, colors.pink);
+		DrawRectangle(SDL.screen, platforms[i].upperXCorner, platforms[i].upperYCorner, platforms[i].length, platforms[i].width, colors->black, colors->pink);
 
 }
 
@@ -468,10 +468,10 @@ void createLadders(Ladder* ladders)
 	}
 }
 
-void drawLadders(Ladder* ladders)
+void drawLadders(Color* colors, Ladder* ladders)
 {
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
-		DrawRectangle(SDL.screen, ladders[i].upperXCorner, ladders[i].upperYCorner, ladders[i].width, ladders[i].height, colors.black, colors.grey);
+		DrawRectangle(SDL.screen, ladders[i].upperXCorner, ladders[i].upperYCorner, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
 void createBarrels(Barrel* barrels)

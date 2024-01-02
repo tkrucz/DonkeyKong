@@ -81,7 +81,7 @@ struct SDLConst
 	SDL_Renderer* renderer;
 }SDL;
 
-struct Colors
+typedef struct Color
 {
 	int black;
 	int white;
@@ -92,7 +92,7 @@ struct Colors
 	int indygo; //for 2nd stage platforms
 	int lime; //for 3th stage platforms	
 	int grey; //for ladders
-}colors;
+};
 
 struct Platform 
 {

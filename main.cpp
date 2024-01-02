@@ -20,14 +20,15 @@ int main(int argc, char** argv) {
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];
 	Barrel barrels[NUMBER_OF_BARRELS];
-	Score punkty;
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;
+	Color colors;
+	Score punkty;
 
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow(&gameInfo);
-	initializeColors();
+	initializeColors(&colors);
 	loadBMPs();
 	basicSettings(&gameInfo, &playerInfo);
 	initializeGameObjects(platforms, ladders, barrels);
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
 		gameInfo.t2 = SDL_GetTicks();
 		timeCounting(&gameInfo);
 
-		displayWindow(&gameInfo, &playerInfo, platforms, ladders, barrels);
+		displayWindow(&gameInfo, &playerInfo, &colors, platforms, ladders, barrels);
 		refreshWindow();
 
 		readKeys(&gameInfo, &playerInfo, &punkty);
