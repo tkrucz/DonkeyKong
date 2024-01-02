@@ -21,13 +21,14 @@ int main(int argc, char** argv) {
 	Ladder ladders[NUMBER_OF_LADDERS];
 	Barrel barrels[NUMBER_OF_BARRELS];
 	Score punkty;
+	PlayerInfo playerInfo;
 
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow();
 	initializeColors();
 	loadBMPs();
-	basicSettings();
+	basicSettings(&playerInfo);
 	initializeGameObjects(platforms, ladders, barrels);
 
 	gameInfo.t1 = SDL_GetTicks();
@@ -37,12 +38,12 @@ int main(int argc, char** argv) {
 		gameInfo.t2 = SDL_GetTicks();
 		timeCounting();
 
-		displayWindow(platforms, ladders, barrels);
+		displayWindow(&playerInfo, platforms, ladders, barrels);
 		refreshWindow();
 
-		readKeys(&punkty);
+		readKeys(&playerInfo, &punkty);
 
-		gravityApply(platforms);
+		gravityApply(platforms, &playerInfo);
 		whereAreObjects(platforms, ladders,barrels);
 		moveObjects(barrels);
 	}

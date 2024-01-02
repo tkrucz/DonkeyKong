@@ -5,13 +5,26 @@ extern "C" {
 }
 #include "define.h"
 
-struct PlayerInfo
+typedef struct PlayerInfo
 {
 	int score;
-	int lives;	
-}playerInfo;
+	int lives;
+};
 
-// TODO struct flags, maybe barrel will require flags?
+// TODO struct flags, maybe barrel will require flags.
+// That how it should look like?
+
+typedef struct Flags
+{
+
+	bool onPlatform = true;
+	bool notOnPlatform = false;
+	bool fallDown = true;
+	bool notFallDown = false;
+	bool onGround = true;
+	bool notOnGround = false;
+};
+
 struct Player
 {
 	SDL_Rect animation; //sets the look of player

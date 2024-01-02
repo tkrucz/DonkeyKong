@@ -14,23 +14,23 @@ extern "C" {
 
 void createWindow();
 
-void drawInfo();
+void drawInfo(PlayerInfo* playerInfo);
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels);
+void displayWindow(PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void refreshWindow();
 
 void printGameInfo();
 
-void printPlayerInfo();
+void printPlayerInfo(PlayerInfo* playerInfo);
 
 void drawGround();
 
-void basicSettings();
+void basicSettings(PlayerInfo* playerInfo);
 
 void initializePlayer();
 
@@ -48,7 +48,7 @@ void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bott
 
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
-void gravityApply(Platform* platforms); //check if player is jumping||falling down, then change his position by the current speedY 
+void gravityApply(Platform* platforms, PlayerInfo* playerInfo); //check if player is jumping||falling down, then change his position by the current speedY 
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -56,17 +56,17 @@ void checkIfPlayerIsJumping();
 
 void playerMovement();
 
-void addPoints(Score* punkty); //for test
+void addPoints(PlayerInfo* playerInfo, Score* punkty); //for test
 
-void jumpOverBarrel(Score* punkty);//not used
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* punkty);//not used
 
-void getTrophy(Score* punkty);//not used
+void getTrophy(PlayerInfo* playerInfo, Score* punkty);//not used
 
-void endTheStage(Score* punkty);//not used
+void endTheStage(PlayerInfo* playerInfo, Score* punkty);//not used
 
-void addScore(Score* punkty); //not used
+void addScore(PlayerInfo* playerInfo, Score* punkty); //not used
 
-void loseLive();
+void loseLive(PlayerInfo* playerInfo); 
 
 void timeCounting(); //counting the game time
 
@@ -126,17 +126,17 @@ void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
 void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void barrelBowling(Barrel* barrels); //TO DO
+void barrelBowling(Barrel* barrels); //CHANGE?
 
-void barrelFalling(Barrel* barrels); //TO DO
+void barrelFalling(Barrel* barrels); //CHANGE?
 
 void barrelMovement(Barrel* barrels);
 
-void collision(); //CHANGE
+void collision(PlayerInfo* playerInfo); //CHANGE
 
 void moveObjects(Barrel* barrels);
 
-void readKeys(Score* punkty); //read key input
+void readKeys(PlayerInfo* playerInfo, Score* punkty); //read key input
 
 void SDLSpace(); //freeing all surfaces
 
@@ -170,9 +170,9 @@ void createWindow() // Create a window with specified size. Also create renderer
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawInfo() {
+void drawInfo(PlayerInfo* playerInfo) {
 	printGameInfo();
-	printPlayerInfo();
+	printPlayerInfo(playerInfo);
 }
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels) {
@@ -188,11 +188,11 @@ void drawScene(Platform* platforms, Ladder* ladders, Barrel* barrels) {
 	drawBarrels(barrels);
 }
 
-void displayWindow(Platform* platforms, Ladder* ladders, Barrel* barrels)
+void displayWindow(PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels)
 {
 	SDL_FillRect(SDL.screen, ZERO, colors.black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(platforms, ladders, barrels);
-	drawInfo();
+	drawInfo(playerInfo);
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
 
@@ -218,12 +218,12 @@ void printGameInfo()
 	DrawString(SDL.screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo.text, SDL.charset);
 }
 
-void printPlayerInfo()
+void printPlayerInfo(PlayerInfo* playerInfo)
 {
 	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 36, colors.white, colors.black);
-	sprintf(gameInfo.text, "Score: %.6d", playerInfo.score);
+	sprintf(gameInfo.text, "Score: %.6d", playerInfo->score);
 	DrawString(SDL.screen, TEN_ROW, 75, gameInfo.text, SDL.charset);
-	sprintf(gameInfo.text, "Lives: %d", playerInfo.lives);
+	sprintf(gameInfo.text, "Lives: %d", playerInfo->lives);
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo.text, SDL.charset);
 	sprintf(gameInfo.text, "LeftLowerXCorner: %.0f", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo.text, SDL.charset);
@@ -237,10 +237,10 @@ void drawGround()
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors.white);
 }
 
-void basicSettings()
+void basicSettings(PlayerInfo* playerInfo)
 {
-	playerInfo.score = PLAYER_START_POINTS;
-	playerInfo.lives = PLAYER_LIVES;
+	playerInfo->score = PLAYER_START_POINTS;
+	playerInfo->lives = PLAYER_LIVES;
 	gameInfo.quit = false;
 	gameInfo.gameTime = ZERO;
 	initializePlayer();
@@ -343,9 +343,9 @@ void hitSidesOfThePlatform(Platform* platforms)
 }
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void gravityApply(Platform* platforms)
+void gravityApply(Platform* platforms, PlayerInfo* playerInfo)
 {
-	collision();
+	collision(playerInfo);
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
@@ -384,37 +384,37 @@ void playerMovement()
 	}		
 }
 
-void addPoints(Score *punkty)
+void addPoints(PlayerInfo* playerInfo, Score* punkty)
 {
-	playerInfo.score += punkty->score;
+	playerInfo->score += punkty->score;
 }
 
-void jumpOverBarrel(Score *punkty)
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* punkty)
 {
-	playerInfo.score += punkty->jumpOverBarrel;
+	playerInfo->score += punkty->jumpOverBarrel;
 }
 
-void getTrophy(Score *punkty)
+void getTrophy(PlayerInfo* playerInfo, Score* punkty)
 {
-	playerInfo.score += punkty->getTrophy;
+	playerInfo->score += punkty->getTrophy;
 }
 
-void endTheStage(Score *punkty)
+void endTheStage(PlayerInfo* playerInfo, Score* punkty)
 {
-	playerInfo.score += punkty->endTheStage;
+	playerInfo->score += punkty->endTheStage;
 }
 
-void addScore(Score *punkty)
+void addScore(PlayerInfo* playerInfo, Score* punkty)
 {
-	jumpOverBarrel(punkty);
-	getTrophy(punkty);
-	endTheStage(punkty);
+	jumpOverBarrel(playerInfo,punkty);
+	getTrophy(playerInfo, punkty);
+	endTheStage(playerInfo, punkty);
 }
 
-void loseLive()
+void loseLive(PlayerInfo* playerInfo)
 {
-	playerInfo.lives -= 1;
-	if (playerInfo.lives == ZERO)
+	playerInfo->lives -= 1;
+	if (playerInfo->lives == ZERO)
 		quit();
 }
 
@@ -728,11 +728,11 @@ void barrelMovement(Barrel* barrels)
 	barrelFalling(barrels);
 }
 
-void collision()//should add something like "one barrel can substract only one life", so I have to start numerate them
+void collision(PlayerInfo* playerInfo)//should add something like "one barrel can substract only one life", so I have to start numerate them
 {
 	if (barrel.lowerXCorner == Mario.lowerXCorner && barrel.lowerYCorner + 0.1 >= Mario.lowerYCorner && barrel.lowerYCorner - 0.1 <= Mario.lowerYCorner)
 	{
-		loseLive();
+		loseLive(playerInfo);
 	}
 }
 
@@ -743,7 +743,7 @@ void moveObjects(Barrel* barrels)
 }
 
 
-void readKeys(Score* punkty)
+void readKeys(PlayerInfo* playerInfo, Score* punkty)
 {
 	while (SDL_PollEvent(&SDL.event))
 	{
@@ -754,11 +754,11 @@ void readKeys(Score* punkty)
 			if (keyPressed == SDLK_ESCAPE)
 				quit();
 			else if (keyPressed == SDLK_n)
-				basicSettings();
+				basicSettings(playerInfo);
 			else if (keyPressed == SDLK_p) //usunąć
-				addPoints(punkty);
+				addPoints(playerInfo,punkty);
 			else if (keyPressed == SDLK_l) //usunąć
-				loseLive();
+				loseLive(playerInfo);
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;
 			else if (keyPressed == SDLK_LEFT)
