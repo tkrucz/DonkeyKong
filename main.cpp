@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];
 	Barrel barrels[NUMBER_OF_BARRELS];
+	Score punkty;
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
 		displayWindow(platforms, ladders, barrels);
 		refreshWindow();
 
-		readKeys();
+		readKeys(&punkty);
 
 		gravityApply(platforms);
 		whereAreObjects(platforms, ladders,barrels);

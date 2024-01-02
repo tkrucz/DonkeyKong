@@ -50,12 +50,13 @@ struct GameInfo
 	char text[128];
 }gameInfo;
 
-struct Score
+typedef struct Score
 {
+	int score = 10;
 	int jumpOverBarrel = 500;
 	int getTrophy = 1000;
 	int endTheStage = 10000;
-}score;
+};
 
 struct SDLConst
 {

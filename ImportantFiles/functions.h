@@ -56,15 +56,15 @@ void checkIfPlayerIsJumping();
 
 void playerMovement();
 
-void addPoints(); //for test
+void addPoints(Score* punkty); //for test
 
-void jumpOverBarrel();//not used
+void jumpOverBarrel(Score* punkty);//not used
 
-void getTrophy();//not used
+void getTrophy(Score* punkty);//not used
 
-void endTheStage();//not used
+void endTheStage(Score* punkty);//not used
 
-void addScore(); //not used
+void addScore(Score* punkty); //not used
 
 void loseLive();
 
@@ -136,7 +136,7 @@ void collision(); //CHANGE
 
 void moveObjects(Barrel* barrels);
 
-void readKeys(); //read key input
+void readKeys(Score* punkty); //read key input
 
 void SDLSpace(); //freeing all surfaces
 
@@ -384,31 +384,31 @@ void playerMovement()
 	}		
 }
 
-void addPoints()
+void addPoints(Score *punkty)
 {
-	playerInfo.score += 10;
+	playerInfo.score += punkty->score;
 }
 
-void jumpOverBarrel()
+void jumpOverBarrel(Score *punkty)
 {
-	playerInfo.score += score.jumpOverBarrel;
+	playerInfo.score += punkty->jumpOverBarrel;
 }
 
-void getTrophy()
+void getTrophy(Score *punkty)
 {
-	playerInfo.score += score.getTrophy;
+	playerInfo.score += punkty->getTrophy;
 }
 
-void endTheStage()
+void endTheStage(Score *punkty)
 {
-	playerInfo.score += score.endTheStage;
+	playerInfo.score += punkty->endTheStage;
 }
 
-void addScore()
+void addScore(Score *punkty)
 {
-	jumpOverBarrel();
-	getTrophy();
-	endTheStage();
+	jumpOverBarrel(punkty);
+	getTrophy(punkty);
+	endTheStage(punkty);
 }
 
 void loseLive()
@@ -743,7 +743,7 @@ void moveObjects(Barrel* barrels)
 }
 
 
-void readKeys()
+void readKeys(Score* punkty)
 {
 	while (SDL_PollEvent(&SDL.event))
 	{
@@ -756,7 +756,7 @@ void readKeys()
 			else if (keyPressed == SDLK_n)
 				basicSettings();
 			else if (keyPressed == SDLK_p) //usunąć
-				addPoints();
+				addPoints(punkty);
 			else if (keyPressed == SDLK_l) //usunąć
 				loseLive();
 			else if (keyPressed == SDLK_RIGHT)
