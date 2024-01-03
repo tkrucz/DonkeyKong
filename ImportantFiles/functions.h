@@ -137,7 +137,7 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); //T
 
 void moveObjects(Barrel* barrels);
 
-void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score); //read key input
+void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
 
 void SDLSpace(); //freeing all surfaces
 
@@ -231,7 +231,7 @@ void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 	DrawString(SDL.screen, TEN_ROW, 75, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo->text, SDL.charset);
-	sprintf(gameInfo->text, "Trophies: ", playerInfo->lives);
+	sprintf(gameInfo->text, "Trophies:");
 	DrawString(SDL.screen, 500, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo->text, SDL.charset);
@@ -246,8 +246,8 @@ void drawGround(Color* colors)
 
 void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
-	playerInfo->score = PLAYER_START_POINTS;
-	playerInfo->lives = PLAYER_LIVES;
+	playerInfo->score = PLAYER_DEFAULT_POINTS;
+	playerInfo->lives = PLAYER_DEFAULT_LIVES;
 	gameInfo->quit = false;
 	gameInfo->gameTime = ZERO;
 	initializePlayer();
@@ -382,6 +382,7 @@ void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Plat
 		hitBottomOfThePlatform(platforms);
 		hitSidesOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
+
 	}	
 }
 
@@ -416,13 +417,17 @@ void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - Mario.realSize[1] &&
-			barrels[i].lowerYCorner - BARRELS_HITBOX_SIZE <= Mario.lowerYCorner &&
-			barrels[i].lowerXCorner <= Mario.lowerXCorner + Mario.realSize[0] &&
-			barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE >= Mario.lowerXCorner)
+		score->jumpOverBarrel = JUMP_OVER_BARREL_POINTS;
+		if (Mario.isJumping || Mario.fallDown)
 		{
-			playerInfo->score += score->jumpOverBarrel;
-			return;
+			if (Mario.lowerYCorner <= barrels[i].lowerYCorner - BARRELS_DIFFERENCE_IN_Y  &&
+				barrels[i].lowerXCorner >= Mario.lowerXCorner  &&
+				barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE <= Mario.lowerXCorner + Mario.realSize[0])
+			{
+				playerInfo->score += score->jumpOverBarrel;
+				score->jumpOverBarrel = ZERO; //chcę żeby dodało punkt tylko raz kiedy jestem nad beczką... a akutalnie tak nie działa
+				break;
+			}
 		}
 	}
 }
@@ -454,7 +459,7 @@ void endTheStage(PlayerInfo* playerInfo, Score* score)
 
 void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
 {
-	//jumpOverBarrel(playerInfo, score, barrels);
+	jumpOverBarrel(playerInfo, score, barrels);
 	getTrophy(playerInfo, score, trophies);
 	endTheStage(playerInfo, score);
 }
@@ -774,6 +779,7 @@ void barrelFalling(Barrel* barrels)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
 			barrels[i].lowerYCorner += barrels[i].fallingSpeed;
+			
 	}
 }
 
@@ -806,7 +812,7 @@ void moveObjects(Barrel* barrels)
 }
 
 
-void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score)
+void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL.event))
 	{
@@ -817,7 +823,10 @@ void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score)
 			if (keyPressed == SDLK_ESCAPE)
 				quit(gameInfo);
 			else if (keyPressed == SDLK_n)
+			{
 				basicSettings(gameInfo, playerInfo);
+				initializeGameObjects(platforms, ladders, barrels, trophies);
+			}
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;
 			else if (keyPressed == SDLK_LEFT)

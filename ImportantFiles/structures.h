@@ -65,11 +65,10 @@ struct GameInfo
 };
 
 struct Score
-{
-	int score = 10;
-	int jumpOverBarrel = 1000;
-	int getTrophy = 500;
-	int endTheStage = 10000;
+{	
+	int jumpOverBarrel = JUMP_OVER_BARREL_POINTS;
+	int getTrophy = GET_TROPHY_POINTS;
+	int endTheStage = END_THE_STAGE_POINTS;
 };
 
 struct SDLConst

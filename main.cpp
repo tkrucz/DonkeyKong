@@ -41,10 +41,10 @@ int main(int argc, char** argv) {
 		gameInfo.t2 = SDL_GetTicks();
 		timeCounting(&gameInfo);
 
-		displayWindow(&gameInfo, &playerInfo, &colors, platforms, ladders, barrels,trophies);
+		displayWindow(&gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
 		refreshWindow();
 
-		readKeys(&gameInfo, &playerInfo, &score);
+		readKeys(&gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
 		gravityApply(&gameInfo, &playerInfo, &score, platforms, barrels, trophies);
 		whereAreObjects(platforms, ladders, barrels);
