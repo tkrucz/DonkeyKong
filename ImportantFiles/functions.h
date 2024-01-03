@@ -56,15 +56,15 @@ void checkIfPlayerIsJumping();
 
 void playerMovement();
 
-void addPoints(PlayerInfo* playerInfo, Score* punkty); //for test
+void addPoints(PlayerInfo* playerInfo, Score* score); //for test
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* punkty);//not used
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* score);//not used
 
-void getTrophy(PlayerInfo* playerInfo, Score* punkty);//not used
+void getTrophy(PlayerInfo* playerInfo, Score* score);//not used
 
-void endTheStage(PlayerInfo* playerInfo, Score* punkty);//not used
+void endTheStage(PlayerInfo* playerInfo, Score* score);//not used
 
-void addScore(PlayerInfo* playerInfo, Score* punkty); //not used
+void addScore(PlayerInfo* playerInfo, Score* score); //not used
 
 void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
@@ -138,7 +138,7 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); //T
 
 void moveObjects(Barrel* barrels);
 
-void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* punkty); //read key input
+void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score); //read key input
 
 void SDLSpace(); //freeing all surfaces
 
@@ -410,31 +410,31 @@ void playerMovement()
 	}		
 }
 
-void addPoints(PlayerInfo* playerInfo, Score* punkty)
+void addPoints(PlayerInfo* playerInfo, Score* score)
 {
-	playerInfo->score += punkty->score;
+	playerInfo->score += score->score;
 }
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* punkty)
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* score)
 {
-	playerInfo->score += punkty->jumpOverBarrel;
+	playerInfo->score += score->jumpOverBarrel;
 }
 
-void getTrophy(PlayerInfo* playerInfo, Score* punkty)
+void getTrophy(PlayerInfo* playerInfo, Score* score)
 {
-	playerInfo->score += punkty->getTrophy;
+	playerInfo->score += score->getTrophy;
 }
 
-void endTheStage(PlayerInfo* playerInfo, Score* punkty)
+void endTheStage(PlayerInfo* playerInfo, Score* score)
 {
-	playerInfo->score += punkty->endTheStage;
+	playerInfo->score += score->endTheStage;
 }
 
-void addScore(PlayerInfo* playerInfo, Score* punkty)
+void addScore(PlayerInfo* playerInfo, Score* score)
 {
-	jumpOverBarrel(playerInfo,punkty);
-	getTrophy(playerInfo, punkty);
-	endTheStage(playerInfo, punkty);
+	jumpOverBarrel(playerInfo, score);
+	getTrophy(playerInfo, score);
+	endTheStage(playerInfo, score);
 }
 
 void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo)
@@ -784,7 +784,7 @@ void moveObjects(Barrel* barrels)
 }
 
 
-void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* punkty)
+void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score)
 {
 	while (SDL_PollEvent(&SDL.event))
 	{
@@ -797,7 +797,7 @@ void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* punkty)
 			else if (keyPressed == SDLK_n)
 				basicSettings(gameInfo, playerInfo);
 			else if (keyPressed == SDLK_p) //usunąć w ostatecznej wersji
-				addPoints(playerInfo,punkty);
+				addPoints(playerInfo,score);
 			else if (keyPressed == SDLK_l) //usunąć w ostatecznej wersji
 				loseLive(gameInfo,playerInfo);
 			else if (keyPressed == SDLK_RIGHT)

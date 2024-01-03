@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;
 	Color colors;
-	Score punkty;
+	Score score;
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 		displayWindow(&gameInfo, &playerInfo, &colors, platforms, ladders, barrels,trophies);
 		refreshWindow();
 
-		readKeys(&gameInfo, &playerInfo, &punkty);
+		readKeys(&gameInfo, &playerInfo, &score);
 
 		gravityApply(&gameInfo, &playerInfo, platforms, barrels);
 		whereAreObjects(platforms, ladders, barrels);
