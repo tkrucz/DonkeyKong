@@ -437,8 +437,8 @@ void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 	{
 		if (Mario.lowerYCorner == trophies[i].lowerYCorner + TROPHIES_DIFFERENCE_IN_Y &&
-			Mario.lowerXCorner >= trophies[i].lowerXCorner &&
-			Mario.lowerXCorner <= trophies[i].lowerXCorner + HALF)
+			Mario.lowerXCorner >= trophies[i].lowerXCorner - trophies[i].realSize[0] &&
+			Mario.lowerXCorner <= trophies[i].lowerXCorner + trophies[i].realSize[0])
 		{
 			playerInfo->score += score->getTrophy;
 			trophies[i].lowerXCorner = 590 + (i * 20);
@@ -577,9 +577,7 @@ void createTrophies(Trophy* trophies)
 void drawTrophies(Trophy* trophies)
 {
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-	{		
-		DrawSurface(SDL.screen, SDL.trophy, trophies[i].lowerXCorner, trophies[i].lowerYCorner, &trophies[i].animation);
-	}
+		DrawSurface(SDL.screen, SDL.trophy, trophies[i].lowerXCorner, trophies[i].lowerYCorner, &trophies[i].animation);	
 }
 
 void playerOnLadderBeg()
@@ -663,7 +661,7 @@ void isPlayerOnLadder(Ladder* ladders)
 		if (ladders[i].upperXCorner <= Mario.lowerXCorner && Mario.lowerXCorner <= ladders[i].upperXCorner + ladders[i].width) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
-			if (leftLowerCorner[1] == ladders[i].upperYCorner + ladders[i].height)
+			if (leftLowerCorner[1] == ladders[i].upperYCorner + ladders[i].height) //y increases in down direction
 			{
 				playerOnLadderBeg();
 				playerNotOnLadderEnd();
@@ -679,7 +677,7 @@ void isPlayerOnLadder(Ladder* ladders)
 				return;
 			}
 			//is Mario in the "middle" of ladder?
-			else if (ladders[i].upperYCorner < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].upperYCorner + ladders[i].height)//y increases in down direction 
+			else if (ladders[i].upperYCorner < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].upperYCorner + ladders[i].height) 
 			{
 				playerOnLadder();
 				playerNotOnLadderEnd();
@@ -778,8 +776,7 @@ void barrelFalling(Barrel* barrels)
 		if (!barrels[i].onPlatform && !barrels[i].onGround)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
-			barrels[i].lowerYCorner += barrels[i].fallingSpeed;
-			
+			barrels[i].lowerYCorner += barrels[i].fallingSpeed;			
 	}
 }
 
@@ -794,14 +791,14 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - Mario.realSize[1] &&
-			barrels[i].lowerYCorner - BARRELS_HITBOX_SIZE <= Mario.lowerYCorner && 
+			barrels[i].lowerYCorner - BARRELS_HITBOX_SIZE <= Mario.lowerYCorner &&
 			barrels[i].lowerXCorner <= Mario.lowerXCorner + Mario.realSize[0] &&
 			barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE >= Mario.lowerXCorner)
-			{
+		{
 				loseLive(gameInfo, playerInfo);
 				barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
 				break;
-			}
+		}
 	}
 }
 
