@@ -451,7 +451,7 @@ void createPlatforms(Platform* platforms)
 		{440,PLATFORM_II_HEIGHT,160}, { 40,PLATFORM_II_HEIGHT,350 },
 		{ 480,PLATFORM_III_HEIGHT,200 }, { 340,PLATFORM_III_HEIGHT,80 },
 		{ 60,PLATFORM_III_HEIGHT,240 }, { 100,PLATFORM_IV_HEIGHT,240 },
-		{ 470,PLATFORM_IV_HEIGHT,240 }, { 280,PLATFORM_V_HEIGHT,160 }
+		{ 470,PLATFORM_IV_HEIGHT,245 }, { 280,PLATFORM_V_HEIGHT,160 }
 	};
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
@@ -498,12 +498,12 @@ void createBarrels(Barrel* barrels)
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
 		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
 		{BARRELS_SPAWN_POINT_X + 50,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + 150,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + 200,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + 250,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 220,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 300,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + 350,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,PLATFORM_V_HEIGHT,false,false,false}
+		{BARRELS_SPAWN_POINT_X - 160,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X - 200,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X - 120,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X + 380,PLATFORM_V_HEIGHT,false,false,false}
 	};
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -679,7 +679,13 @@ void areBarrelsOnGround(Barrel* barrels)
 			barrels[i].onGround = false;
 
 		if (barrels[i].onGround)
-			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
+		{
+			if (barrels[i].lowerXCorner < SCREEN_WIDTH / 2)
+				barrels[i].speedX = barrel.bowlingSpeed;
+			if (barrels[i].lowerXCorner < SCREEN_WIDTH)
+				barrels[i].speedX = -barrel.bowlingSpeed;
+			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;		
+		}
 	}
 }
 
@@ -700,7 +706,9 @@ void barrelBowling(Barrel* barrels)
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].onPlatform)
-			barrels[i].lowerXCorner += barrel.bowlingSpeed;
+			barrels[i].lowerXCorner += barrels[i].speedX;
+		if (barrels[i].lowerXCorner >= SCREEN_WIDTH)
+			barrels[i].speedX = -barrel.bowlingSpeed;
 	}
 }
 
@@ -711,7 +719,7 @@ void barrelFalling(Barrel* barrels)
 		if (!barrels[i].onPlatform && !barrels[i].onGround)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
-			barrels[i].lowerYCorner += barrels[i].fallingSpeed;
+			barrels[i].lowerYCorner += barrel.fallingSpeed;
 	}
 }
 
@@ -721,16 +729,18 @@ void barrelMovement(Barrel* barrels)
 	barrelFalling(barrels);
 }
 
-void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)//should add something like "one barrel can substract only one life", so I have to start numerate them
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - ONE && barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y <= Mario.lowerYCorner + ONE)
-			if (barrels[i].lowerXCorner >= Mario.lowerXCorner - ONE && barrels[i].lowerXCorner <= Mario.lowerXCorner + ONE)
+		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - Mario.realSize[1] &&
+			barrels[i].lowerYCorner - BARRELS_HITBOX_IN_X <= Mario.lowerYCorner &&
+			barrels[i].lowerXCorner <= Mario.lowerXCorner + Mario.realSize[0] &&
+			barrels[i].lowerXCorner + BARRELS_HITBOX_IN_X >= Mario.lowerXCorner)
 			{
 				loseLive(gameInfo, playerInfo);
 				barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
-				return;
+				break;
 			}
 	}
 }
