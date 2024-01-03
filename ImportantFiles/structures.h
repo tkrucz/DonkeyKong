@@ -5,7 +5,7 @@ extern "C" {
 }
 #include "define.h"
 
-typedef struct PlayerInfo
+struct PlayerInfo
 {
 	int score;
 	int lives;
@@ -14,7 +14,7 @@ typedef struct PlayerInfo
 // TODO struct flags.
 // That how it should look like?
 
-typedef struct Flags
+struct Flags
 {
 
 	bool onPlatform = true;
@@ -53,9 +53,9 @@ struct Barrel
 	bool fallDown = false;
 	bool onPlatform = false;
 	bool onGround = false;
-}barrel;
+};
 
-typedef struct GameInfo
+struct GameInfo
 {
 	double t1, t2;
 	double gameTime, deltaTime;
@@ -64,7 +64,7 @@ typedef struct GameInfo
 	char text[128];
 };
 
-typedef struct Score
+struct Score
 {
 	int score = 10;
 	int jumpOverBarrel = 500;
@@ -76,13 +76,13 @@ struct SDLConst
 {
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
-	SDL_Surface* player, * barrel;
+	SDL_Surface* player, * barrel, * trophy;
 	SDL_Texture* scrtex;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 }SDL;
 
-typedef struct Color
+struct Color
 {
 	int black;
 	int white;
@@ -109,4 +109,12 @@ struct Ladder
 	double upperYCorner;
 	double width = LADDER_WIDTH; 
 	double height = LADDER_HEIGHT; 
+};
+
+struct Trophy
+{
+	SDL_Rect animation; //sets look of the trophy
+	double lowerXCorner;
+	double lowerYCorner;
+	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };

@@ -16,11 +16,11 @@ void createWindow(GameInfo* gameInfo);
 
 void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
-void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
+void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
-void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels);
+void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
-void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels);
+void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 void refreshWindow();
 
@@ -80,7 +80,11 @@ void drawLadders(Color* colors, Ladder* ladders);
 
 void createBarrels(Barrel* barrels); 
 
-void drawBarrels(Barrel* barrels); 
+void drawBarrels(Barrel* barrels);
+
+void createTrophies(Trophy* trophies);
+
+void drawTrophies(Trophy* trophies);
 
 void playerOnLadderBeg();
 
@@ -168,28 +172,33 @@ void createWindow(GameInfo* gameInfo) // Create a window with specified size. Al
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors) {
+void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
+{
 	printGameInfo(gameInfo,colors);
 	printPlayerInfo(gameInfo, playerInfo, colors);
 }
 
-void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels) {
+void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+{
 	createPlatforms(platforms);
 	createLadders(ladders);
 	createBarrels(barrels);
+	createTrophies(trophies);
 }
 
-void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels) {
+void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
+{
 	drawGround(colors);
 	drawPlatforms(colors, platforms);
 	drawLadders(colors, ladders);
+	drawTrophies(trophies);
 	drawBarrels(barrels);
 }
 
-void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels)
+void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	SDL_FillRect(SDL.screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(colors, platforms, ladders, barrels);
+	drawScene(colors, platforms, ladders, barrels,trophies);
 	drawInfo(gameInfo, playerInfo,colors);
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerXCorner + PLAYER_DIFFERENCE_IN_X, Mario.lowerYCorner + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
@@ -227,7 +236,6 @@ void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo->text, SDL.charset);
-	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", barrel.lowerXCorner);
 }
 
 void drawGround(Color* colors)
@@ -513,7 +521,7 @@ void createBarrels(Barrel* barrels)
 		barrels[i].fallDown = barrelsParameters[i][2];
 		barrels[i].onPlatform = barrelsParameters[i][3];
 		barrels[i].onGround = barrelsParameters[i][4];
-		barrels[i].animation = { ZERO, ZERO, barrel.realSize[0], barrel.realSize[1] };
+		barrels[i].animation = { ZERO, ZERO, barrels[i].realSize[0], barrels[i].realSize[1]};
 	}
 }
 
@@ -521,6 +529,30 @@ void drawBarrels(Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 		DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerXCorner, barrels[i].lowerYCorner, &barrels[i].animation);
+}
+
+void createTrophies(Trophy* trophies)
+{
+	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
+		{TROPHIES_I_SPAWN_POINT_X,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{TROPHIES_II_SPAWN_POINT_X,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{TROPHIES_III_SPAWN_POINT_X,PLATFORM_IV_HEIGHT - TROPHIES_DIFFERENCE_IN_Y}
+	};
+
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	{
+		trophies[i].lowerXCorner = trophiesParameters[i][0];
+		trophies[i].lowerYCorner = trophiesParameters[i][1];
+		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+	}
+}
+
+void drawTrophies(Trophy* trophies)
+{
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	{		
+		DrawSurface(SDL.screen, SDL.trophy, trophies[i].lowerXCorner, trophies[i].lowerYCorner, &trophies[i].animation);
+	}
 }
 
 void playerOnLadderBeg()
@@ -681,9 +713,9 @@ void areBarrelsOnGround(Barrel* barrels)
 		if (barrels[i].onGround)
 		{
 			if (barrels[i].lowerXCorner < SCREEN_WIDTH / 2)
-				barrels[i].speedX = barrel.bowlingSpeed;
+				barrels[i].speedX = barrels[i].bowlingSpeed;
 			if (barrels[i].lowerXCorner < SCREEN_WIDTH)
-				barrels[i].speedX = -barrel.bowlingSpeed;
+				barrels[i].speedX = -barrels[i].bowlingSpeed;
 			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;		
 		}
 	}
@@ -708,7 +740,7 @@ void barrelBowling(Barrel* barrels)
 		if (barrels[i].onPlatform)
 			barrels[i].lowerXCorner += barrels[i].speedX;
 		if (barrels[i].lowerXCorner >= SCREEN_WIDTH)
-			barrels[i].speedX = -barrel.bowlingSpeed;
+			barrels[i].speedX = -barrels[i].bowlingSpeed;
 	}
 }
 
@@ -719,7 +751,7 @@ void barrelFalling(Barrel* barrels)
 		if (!barrels[i].onPlatform && !barrels[i].onGround)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
-			barrels[i].lowerYCorner += barrel.fallingSpeed;
+			barrels[i].lowerYCorner += barrels[i].fallingSpeed;
 	}
 }
 
