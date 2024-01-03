@@ -48,7 +48,8 @@ void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bott
 
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
-void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Barrel* barrels); //check if player is jumping||falling down, then change his position by the current speedY 
+//check if player is jumping||falling down change his position by the current speedY, check if there is collision or if player should get points 
+void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies);
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -58,13 +59,13 @@ void playerMovement();
 
 void addPoints(PlayerInfo* playerInfo, Score* score); //for test
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score);//not used
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels);//not used
 
-void getTrophy(PlayerInfo* playerInfo, Score* score);//not used
+void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies);//not used
 
 void endTheStage(PlayerInfo* playerInfo, Score* score);//not used
 
-void addScore(PlayerInfo* playerInfo, Score* score); //not used
+void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies); //not used
 
 void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
@@ -227,11 +228,13 @@ void printGameInfo(GameInfo* gameInfo, Color* colors)
 
 void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 {
-	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 36, colors->white, colors->black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 35, colors->white, colors->black);
 	sprintf(gameInfo->text, "Score: %.6d", playerInfo->score);
 	DrawString(SDL.screen, TEN_ROW, 75, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
 	DrawString(SDL.screen, TEN_ROW, 90, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "Trophies: ", playerInfo->lives);
+	DrawString(SDL.screen, 500, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", Mario.lowerXCorner);
 	DrawString(SDL.screen, TEN_ROW, 150, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerYCorner: %.0f", Mario.lowerYCorner);
@@ -254,8 +257,8 @@ void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 
 void initializePlayer()
 {
-	Mario.lowerXCorner = PLAYER_START_X_COORDINATE;
-	Mario.lowerYCorner = PLAYER_START_Y_COORDINATE;
+	Mario.lowerXCorner = PLAYER_SPAWN_POINT_X;
+	Mario.lowerYCorner = PLAYER_SPAWN_POINT_Y;
 	//TODO comments
 	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speedX = NULL_SPEED;
@@ -369,9 +372,10 @@ void hitSidesOfThePlatform(Platform* platforms)
 }
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Barrel* barrels)
+void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies)
 {
 	collision(gameInfo, playerInfo,barrels);
+	getTrophy(playerInfo, score, trophies);
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
@@ -415,14 +419,26 @@ void addPoints(PlayerInfo* playerInfo, Score* score)
 	playerInfo->score += score->score;
 }
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score)
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 {
 	playerInfo->score += score->jumpOverBarrel;
 }
 
-void getTrophy(PlayerInfo* playerInfo, Score* score)
+void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 {
-	playerInfo->score += score->getTrophy;
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	{
+		if (Mario.lowerYCorner == trophies[i].lowerYCorner + TROPHIES_DIFFERENCE_IN_Y &&
+			Mario.lowerXCorner >= trophies[i].lowerXCorner &&
+			Mario.lowerXCorner <= trophies[i].lowerXCorner + HALF)
+		{
+			playerInfo->score += score->getTrophy;
+			trophies[i].lowerXCorner = 590 + (i * 20);
+			trophies[i].lowerYCorner = AUTHOR_INFO_ROW + 4;
+			return;			
+		}
+	}
+
 }
 
 void endTheStage(PlayerInfo* playerInfo, Score* score)
@@ -430,10 +446,10 @@ void endTheStage(PlayerInfo* playerInfo, Score* score)
 	playerInfo->score += score->endTheStage;
 }
 
-void addScore(PlayerInfo* playerInfo, Score* score)
+void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
 {
-	jumpOverBarrel(playerInfo, score);
-	getTrophy(playerInfo, score);
+	jumpOverBarrel(playerInfo, score, barrels);
+	getTrophy(playerInfo, score, trophies);
 	endTheStage(playerInfo, score);
 }
 
@@ -829,6 +845,7 @@ void SDLSpace()
 	SDL_FreeSurface(SDL.screen);
 	SDL_FreeSurface(SDL.player);
 	SDL_FreeSurface(SDL.barrel);
+	SDL_FreeSurface(SDL.trophy);
 	SDL_DestroyTexture(SDL.scrtex);
 	SDL_DestroyRenderer(SDL.renderer);
 	SDL_DestroyWindow(SDL.window);

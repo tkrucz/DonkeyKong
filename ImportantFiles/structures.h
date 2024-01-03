@@ -67,8 +67,8 @@ struct GameInfo
 struct Score
 {
 	int score = 10;
-	int jumpOverBarrel = 500;
-	int getTrophy = 1000;
+	int jumpOverBarrel = 1000;
+	int getTrophy = 500;
 	int endTheStage = 10000;
 };
 
