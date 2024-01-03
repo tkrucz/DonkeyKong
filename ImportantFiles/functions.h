@@ -57,15 +57,13 @@ void checkIfPlayerIsJumping();
 
 void playerMovement();
 
-void addPoints(PlayerInfo* playerInfo, Score* score); //for test
-
 void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels);//not used
 
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies);//not used
+void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies);
 
-void endTheStage(PlayerInfo* playerInfo, Score* score);//not used
+void endTheStage(PlayerInfo* playerInfo, Score* score);
 
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies); //not used
+void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies); 
 
 void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo);
 
@@ -375,7 +373,7 @@ void hitSidesOfThePlatform(Platform* platforms)
 void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies)
 {
 	collision(gameInfo, playerInfo,barrels);
-	getTrophy(playerInfo, score, trophies);
+	addScore(playerInfo, score, barrels, trophies);
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += GRAVITY_SPEED;
@@ -414,14 +412,19 @@ void playerMovement()
 	}		
 }
 
-void addPoints(PlayerInfo* playerInfo, Score* score)
-{
-	playerInfo->score += score->score;
-}
-
 void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 {
-	playerInfo->score += score->jumpOverBarrel;
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	{
+		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - Mario.realSize[1] &&
+			barrels[i].lowerYCorner - BARRELS_HITBOX_SIZE <= Mario.lowerYCorner &&
+			barrels[i].lowerXCorner <= Mario.lowerXCorner + Mario.realSize[0] &&
+			barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE >= Mario.lowerXCorner)
+		{
+			playerInfo->score += score->jumpOverBarrel;
+			return;
+		}
+	}
 }
 
 void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
@@ -438,17 +441,20 @@ void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 			return;			
 		}
 	}
-
 }
 
 void endTheStage(PlayerInfo* playerInfo, Score* score)
 {
-	playerInfo->score += score->endTheStage;
+	if (Mario.lowerYCorner == PLATFORM_V_HEIGHT)
+	{
+		playerInfo->score += score->endTheStage;
+		score->endTheStage = ZERO;
+	}
 }
 
 void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
 {
-	jumpOverBarrel(playerInfo, score, barrels);
+	//jumpOverBarrel(playerInfo, score, barrels);
 	getTrophy(playerInfo, score, trophies);
 	endTheStage(playerInfo, score);
 }
@@ -782,9 +788,9 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - Mario.realSize[1] &&
-			barrels[i].lowerYCorner - BARRELS_HITBOX_IN_X <= Mario.lowerYCorner &&
+			barrels[i].lowerYCorner - BARRELS_HITBOX_SIZE <= Mario.lowerYCorner && 
 			barrels[i].lowerXCorner <= Mario.lowerXCorner + Mario.realSize[0] &&
-			barrels[i].lowerXCorner + BARRELS_HITBOX_IN_X >= Mario.lowerXCorner)
+			barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE >= Mario.lowerXCorner)
 			{
 				loseLive(gameInfo, playerInfo);
 				barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
@@ -812,10 +818,6 @@ void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score)
 				quit(gameInfo);
 			else if (keyPressed == SDLK_n)
 				basicSettings(gameInfo, playerInfo);
-			else if (keyPressed == SDLK_p) //usunąć w ostatecznej wersji
-				addPoints(playerInfo,score);
-			else if (keyPressed == SDLK_l) //usunąć w ostatecznej wersji
-				loseLive(gameInfo,playerInfo);
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;
 			else if (keyPressed == SDLK_LEFT)
