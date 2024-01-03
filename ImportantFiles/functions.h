@@ -118,9 +118,7 @@ void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void areBarrelsOnGround(Barrel* barrels); //TO CHANGE?
-
-void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //CHANGE!!!
+void areBarrelsOnGround(Barrel* barrels); 
 
 void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
@@ -309,17 +307,21 @@ void approximateOnPlatform(Platform* platforms)
 	}
 }
 
-void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels)
+void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels) //do skasowania?
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
+		barrels[i].onPlatform = false;
 		for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
 		{
-			if (barrels[i].lowerYCorner + barrels[i].fallingSpeed + BARRELS_DIFFERENCE_IN_Y >= platforms[j].upperYCorner)
+			if (barrels[i].lowerYCorner + barrels[i].fallingSpeed + BARRELS_DIFFERENCE_IN_Y >= platforms[j].upperYCorner &&
+				barrels[i].lowerYCorner - barrels[i].realSize[1]  <= platforms[j].upperYCorner + platforms[j].width &&
+				platforms[j].upperXCorner <= barrels[i].lowerXCorner &&
+				barrels[i].lowerXCorner - barrels[i].realSize[0] <= platforms[j].upperXCorner + platforms[j].length)
 			{
 				barrels[i].lowerYCorner = platforms[j].upperYCorner + BARRELS_DIFFERENCE_IN_Y;
 				barrels[i].onPlatform = true;
-				return;
+				break;
 			}
 		}
 	}
@@ -494,14 +496,14 @@ void createBarrels(Barrel* barrels)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
-		{100,PLATFORM_I_HEIGHT,false,true,false},
-		{BARRELS_SPAWN_POINT_X + 100,BARRELS_SPAWN_POINT_Y,true,false,false},
+		{BARRELS_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
+		{BARRELS_SPAWN_POINT_X + 50,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 150,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 200,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 250,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 300,BARRELS_SPAWN_POINT_Y,true,false,false},
 		{BARRELS_SPAWN_POINT_X + 350,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,PLATFORM_V_HEIGHT,false,true,false}
+		{BARRELS_SPAWN_POINT_X + BARRELS_DIFFERENCE_IN_X,PLATFORM_V_HEIGHT,false,false,false}
 	};
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -681,38 +683,9 @@ void areBarrelsOnGround(Barrel* barrels)
 	}
 }
 
-void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels)
-{
-		for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-		{
-			for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
-			{
-				if (barrels[i].fallDown || barrels[i].onPlatform)
-				{
-					if (platforms[j].upperXCorner <= barrels[i].lowerXCorner && barrels[i].lowerXCorner < platforms[j].upperXCorner + platforms[j].length)
-					{
-						barrels[i].onPlatform = true;
-						barrels[i].fallDown = false;
-						return;
-					}
-					if (platforms[i].upperXCorner + platforms[i].length <= barrels[i].lowerXCorner - barrels[i].realSize[0])
-					{
-						barrels[i].onPlatform = false;
-						barrels[i].fallDown = true;
-						return;
-					}
-					return;
-				}
-				return;
-			}
-			return;
-		}
-}
-
 void whereAreBarrels(Platform* platforms, Barrel* barrels)
 {
 	barrelsApproximateOnPlatform(platforms, barrels);
-	areBarrelsOnPlatform(platforms,barrels);
 	areBarrelsOnGround(barrels);
 }
 
