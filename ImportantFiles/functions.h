@@ -118,7 +118,7 @@ void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void areBarrelsOnGround(Barrel* barrels); //CHANGE?
+void areBarrelsOnGround(Barrel* barrels); //TO CHANGE?
 
 void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels); //CHANGE!!!
 
@@ -126,13 +126,13 @@ void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
 void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void barrelBowling(Barrel* barrels); //CHANGE?
+void barrelBowling(Barrel* barrels); //TO CHANGE?
 
-void barrelFalling(Barrel* barrels); //CHANGE?
+void barrelFalling(Barrel* barrels); //TO CHANGE?
 
 void barrelMovement(Barrel* barrels);
 
-void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); //CHANGE
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); //TO CHANGE?
 
 void moveObjects(Barrel* barrels);
 
@@ -305,7 +305,23 @@ void approximateOnPlatform(Platform* platforms)
 			Mario.speedY = NULL_SPEED;
 			playerNotFallingDown();
 			playerNotJumping();
-		}		
+		}
+	}
+}
+
+void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels)
+{
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	{
+		for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
+		{
+			if (barrels[i].lowerYCorner + barrels[i].fallingSpeed + BARRELS_DIFFERENCE_IN_Y >= platforms[j].upperYCorner)
+			{
+				barrels[i].lowerYCorner = platforms[j].upperYCorner + BARRELS_DIFFERENCE_IN_Y;
+				barrels[i].onPlatform = true;
+				return;
+			}
+		}
 	}
 }
 
@@ -671,27 +687,31 @@ void areBarrelsOnPlatform(Platform* platforms, Barrel* barrels)
 		{
 			for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
 			{
-				if (barrels[i].lowerYCorner + barrels[i].fallingSpeed >= platforms[j].upperYCorner)				
-					barrels[i].lowerYCorner = platforms[j].upperYCorner+BARRELS_DIFFERENCE_IN_Y;				
-				
-				if (platforms[j].upperXCorner <= barrels[i].lowerXCorner + barrels[i].realSize[0] && barrels[i].lowerXCorner - barrels[i].realSize[0] <= platforms[j].upperXCorner + platforms[j].length)
+				if (barrels[i].fallDown || barrels[i].onPlatform)
 				{
-					barrels[i].onPlatform = true;
-					barrels[i].fallDown = false;
+					if (platforms[j].upperXCorner <= barrels[i].lowerXCorner && barrels[i].lowerXCorner < platforms[j].upperXCorner + platforms[j].length)
+					{
+						barrels[i].onPlatform = true;
+						barrels[i].fallDown = false;
+						return;
+					}
+					if (platforms[i].upperXCorner + platforms[i].length <= barrels[i].lowerXCorner - barrels[i].realSize[0])
+					{
+						barrels[i].onPlatform = false;
+						barrels[i].fallDown = true;
+						return;
+					}
 					return;
 				}
-				else
-				{
-					barrels[i].onPlatform = false;
-					barrels[i].fallDown = true;
-					return;
-				}
+				return;
 			}
+			return;
 		}
 }
 
 void whereAreBarrels(Platform* platforms, Barrel* barrels)
 {
+	barrelsApproximateOnPlatform(platforms, barrels);
 	areBarrelsOnPlatform(platforms,barrels);
 	areBarrelsOnGround(barrels);
 }
@@ -718,7 +738,7 @@ void barrelFalling(Barrel* barrels)
 		if (!barrels[i].onPlatform && !barrels[i].onGround)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
-			barrels[i].lowerYCorner += barrel.fallingSpeed;
+			barrels[i].lowerYCorner += barrels[i].fallingSpeed;
 	}
 }
 
@@ -732,10 +752,11 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)//sho
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].lowerYCorner >= Mario.lowerYCorner - ONE && barrels[i].lowerYCorner <= Mario.lowerYCorner + ONE)
+		if (barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerYCorner - ONE && barrels[i].lowerYCorner + BARRELS_DIFFERENCE_IN_Y <= Mario.lowerYCorner + ONE)
 			if (barrels[i].lowerXCorner >= Mario.lowerXCorner - ONE && barrels[i].lowerXCorner <= Mario.lowerXCorner + ONE)
 			{
 				loseLive(gameInfo, playerInfo);
+				barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
 				return;
 			}
 	}
@@ -760,9 +781,9 @@ void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* punkty)
 				quit(gameInfo);
 			else if (keyPressed == SDLK_n)
 				basicSettings(gameInfo, playerInfo);
-			else if (keyPressed == SDLK_p) //usunąć
+			else if (keyPressed == SDLK_p) //usunąć w ostatecznej wersji
 				addPoints(playerInfo,punkty);
-			else if (keyPressed == SDLK_l) //usunąć
+			else if (keyPressed == SDLK_l) //usunąć w ostatecznej wersji
 				loseLive(gameInfo,playerInfo);
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;

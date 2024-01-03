@@ -44,7 +44,7 @@ struct Player
 struct Barrel
 {
 	SDL_Rect animation; //sets the look of barrels
-	double lowerXCorner;
+	double lowerXCorner; //right corner?
 	double lowerYCorner;
 	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
 	double bowlingSpeed=BARRELS_BOWLING_SPEED;
