@@ -13,8 +13,6 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
 
-//Od linijki 
-
 void createWindow(GameInfo* gameInfo);
 
 void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
@@ -117,7 +115,7 @@ void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
 void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); 
 
-void moveObjects(Barrel* barrels, GameInfo* gameInfo);
+void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
 
 void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
@@ -334,7 +332,6 @@ void hitSidesOfThePlatform(Platform* platforms)
 // collision, addScore?
 void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies)
 {
-	collision(gameInfo, playerInfo,barrels);
 	addScore(playerInfo, score, barrels, trophies);
 	if (Mario.isJumping || Mario.fallDown)
 	{
@@ -609,8 +606,9 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 	}
 }
 
-void moveObjects(Barrel* barrels, GameInfo* gameInfo)
+void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 {
+	collision(gameInfo, playerInfo, barrels);
 	playerMovement(gameInfo);
 	barrelMovement(barrels, gameInfo);
 }

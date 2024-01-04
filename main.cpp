@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 
 		gravityApply(&gameInfo, &playerInfo, &score, platforms, barrels, trophies);
 		whereAreObjects(platforms, ladders, barrels);
-		moveObjects(barrels, &gameInfo);
+		moveObjects(&gameInfo, &playerInfo, barrels);
 	}
 	return 0;
 }
