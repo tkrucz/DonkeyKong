@@ -13,6 +13,8 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
 
+//Od 40-72 + 78-102 linijka -->plik PlayerFunctions.h
+
 void createWindow(GameInfo* gameInfo);
 
 void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
@@ -51,7 +53,7 @@ void hitBottomOfThePlatform(Platform* platforms, GameInfo* gameInfo); //check if
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
 //check if player is jumping||falling down change his position by the current speedY, check if there is collision or if player should get points 
-void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies);
+void gravityApply(GameInfo* gameInfo, Platform* platforms, Barrel* barrels);
 
 void playerJump(); //give the speedY value -JumpingSpeed
 
@@ -110,8 +112,7 @@ void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-
-void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
+void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); 
 
@@ -330,9 +331,8 @@ void hitSidesOfThePlatform(Platform* platforms)
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
 // collision, addScore?
-void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies)
+void gravityApply(GameInfo* gameInfo, Platform* platforms, Barrel* barrels)
 {
-	addScore(playerInfo, score, barrels, trophies);
 	if (Mario.isJumping || Mario.fallDown)
 	{
 		Mario.speedY += (GRAVITY_SPEED * gameInfo->deltaTime);
@@ -584,10 +584,11 @@ void whereIsPLayer(Platform* platforms, Ladder* ladders)
 	isPlayerOnGround();	
 }
 
-void whereAreObjects(Platform* platforms, Ladder* ladders,Barrel* barrels)
+void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	whereIsPLayer(platforms, ladders);
 	whereAreBarrels(platforms, barrels);
+	addScore(playerInfo, score, barrels, trophies);
 }
 
 void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
@@ -610,10 +611,10 @@ void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 {
 	collision(gameInfo, playerInfo, barrels);
 	playerMovement(gameInfo);
-	barrelMovement(barrels, gameInfo);
+	barrelMovement(barrels, gameInfo);	
 }
 
-// TODO przejrzystosc kodu, pamietaj o tym, ze 
+// TODO przejrzystosc kodu
 void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL.event))

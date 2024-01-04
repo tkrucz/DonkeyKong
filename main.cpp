@@ -48,8 +48,8 @@ int main(int argc, char** argv) {
 
 		readKeys(&gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
-		gravityApply(&gameInfo, &playerInfo, &score, platforms, barrels, trophies);
-		whereAreObjects(platforms, ladders, barrels);
+		gravityApply(&gameInfo, platforms, barrels);
+		whereAreObjects(&playerInfo, &score, platforms, ladders, barrels, trophies);
 		moveObjects(&gameInfo, &playerInfo, barrels);
 	}
 	return 0;

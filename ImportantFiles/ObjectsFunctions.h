@@ -12,31 +12,27 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-void initializeColors(Color* colors);
+int loadBMPs();
 
+void initializeColors(Color* colors);
 
 void createPlatforms(Platform* platforms);
 
 void drawPlatforms(Color* colors, Platform* platforms);
 
-
 void createLadders(Ladder* ladders);
 
 void drawLadders(Color* colors, Ladder* ladders);
-
 
 void createBarrels(Barrel* barrels);
 
 void drawBarrels(Barrel* barrels);
 
-
 void createTrophies(Trophy* trophies);
 
 void drawTrophies(Trophy* trophies);
 
-
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
-
 
 void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels);
 
@@ -44,13 +40,31 @@ void areBarrelsOnGround(Barrel* barrels);
 
 void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
-
 void barrelBowling(Barrel* barrels, GameInfo* gameInfo);
 
 void barrelFalling(Barrel* barrels, GameInfo* gameInfo);
 
 void barrelMovement(Barrel* barrels, GameInfo* gameInfo);
 
+
+//load BMPs from files
+int loadBMPs()
+{
+	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
+	SDL.player = SDL_LoadBMP("./BMP/mario.bmp");
+	SDL.barrel = SDL_LoadBMP("./BMP/barrels.bmp");
+	SDL.trophy = SDL_LoadBMP("./BMP/trophy.bmp");
+	if (SDL.charset == ZERO)
+	{
+		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
+		SDL_FreeSurface(SDL.screen);
+		SDL_DestroyTexture(SDL.scrtex);
+		SDL_DestroyWindow(SDL.window);
+		SDL_DestroyRenderer(SDL.renderer);
+		SDL_Quit();
+		return 1;
+	}
+}
 
 void initializeColors(Color* colors)
 {
