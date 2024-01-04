@@ -439,7 +439,7 @@ void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 		score->jumpOverBarrel = JUMP_OVER_BARREL_POINTS;
 		if (Mario.isJumping || Mario.fallDown)
 		{
-			if (Mario.lowerYCorner <= barrels[i].lowerYCorner - BARRELS_DIFFERENCE_IN_Y  &&
+			if (Mario.lowerYCorner <= barrels[i].lowerYCorner - BARRELS_DIFFERENCE_IN_Y  &&				
 				barrels[i].lowerXCorner >= Mario.lowerXCorner  &&
 				barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE <= Mario.lowerXCorner + Mario.realSize[0])
 			{
