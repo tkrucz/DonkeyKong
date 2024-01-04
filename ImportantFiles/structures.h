@@ -53,6 +53,7 @@ struct Barrel
 	bool fallDown = false;
 	bool onPlatform = false;
 	bool onGround = false;
+	int barrelScore = JUMP_OVER_BARREL_POINTS;
 };
 
 struct GameInfo
@@ -66,7 +67,6 @@ struct GameInfo
 
 struct Score
 {	
-	int jumpOverBarrel = JUMP_OVER_BARREL_POINTS;
 	int getTrophy = GET_TROPHY_POINTS;
 	int endTheStage = END_THE_STAGE_POINTS;
 };

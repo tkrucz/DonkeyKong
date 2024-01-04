@@ -436,18 +436,18 @@ void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		score->jumpOverBarrel = JUMP_OVER_BARREL_POINTS;
 		if (Mario.isJumping || Mario.fallDown)
 		{
 			if (Mario.lowerYCorner <= barrels[i].lowerYCorner - BARRELS_DIFFERENCE_IN_Y  &&				
 				barrels[i].lowerXCorner >= Mario.lowerXCorner  &&
 				barrels[i].lowerXCorner + BARRELS_HITBOX_SIZE <= Mario.lowerXCorner + Mario.realSize[0])
 			{
-				playerInfo->score += score->jumpOverBarrel;
-				score->jumpOverBarrel = ZERO; //chcę żeby dodało punkt tylko raz kiedy jestem nad beczką... a akutalnie tak nie działa
+				playerInfo->score += barrels[i].barrelScore;
+				barrels[i].barrelScore = ZERO; 
 				break;
 			}
 		}
+		barrels[i].barrelScore = JUMP_OVER_BARREL_POINTS;
 	}
 }
 
