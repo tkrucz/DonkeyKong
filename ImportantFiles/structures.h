@@ -6,6 +6,18 @@ extern "C" {
 #include "define.h"
 
 
+struct Coordinates
+{
+	double x;
+	double y;
+};
+
+struct Speed
+{
+	double speedX;
+	double speedY;
+};
+
 struct PlayerInfo
 {
 	int score;
@@ -15,11 +27,9 @@ struct PlayerInfo
 struct Player
 {
 	SDL_Rect animation; //sets the look of player
-	double lowerXCorner;
-	double lowerYCorner;
+	Coordinates lowerCoordinates;
+	Speed speed;	
 	int realSize[2] = { PLAYER_REAL_SIZE,PLAYER_REAL_SIZE }; //pixels size of Mario
-	double speedX;
-	double speedY;	
 	bool isJumping = false;
 	bool onPlatform = false;
 	bool onLadder = false;
@@ -31,12 +41,9 @@ struct Player
 struct Barrel
 {
 	SDL_Rect animation; //sets the look of barrels
-	double lowerXCorner; //right corner !
-	double lowerYCorner;
+	Coordinates lowerRightCoordinates;
+	Speed speed = { BARRELS_BOWLING_SPEED,BARRELS_FALLING_SPEED };
 	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
-	double speedX=BARRELS_BOWLING_SPEED;	
-	double bowlingSpeed = BARRELS_BOWLING_SPEED;
-	double fallingSpeed = BARRELS_FALLING_SPEED;
 	bool fallDown = false;
 	bool onPlatform = false;
 	bool onGround = false;
@@ -83,16 +90,14 @@ struct Color
 
 struct Platform 
 {
-	double upperXCorner; 
-	double upperYCorner;
+	Coordinates upperCorner;
 	double length; 
 	double width=PLATFORM_WIDTH; 
 };
 
 struct Ladder
 {
-	double upperXCorner; 
-	double upperYCorner;
+	Coordinates upperCorner;
 	double width = LADDER_WIDTH; 
 	double height = LADDER_HEIGHT; 
 };
@@ -100,8 +105,7 @@ struct Ladder
 struct Trophy
 {
 	SDL_Rect animation; //sets look of the trophy
-	double lowerXCorner;
-	double lowerYCorner;
+	Coordinates lowerCoordinates;
 	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };
 
@@ -122,8 +126,6 @@ struct Stage {
 	Ladder ladders;
 };
 
-// struct position X, Y
-// struct vector speedX, speedY
 // struct animator {
 	SDL_Rect * spritesArray;
 	int actualAnimation;

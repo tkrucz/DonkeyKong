@@ -92,8 +92,8 @@ void createPlatforms(Platform* platforms)
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		platforms[i].upperXCorner = platformsParameters[i][0];
-		platforms[i].upperYCorner = platformsParameters[i][1];
+		platforms[i].upperCorner.x = platformsParameters[i][0];
+		platforms[i].upperCorner.y = platformsParameters[i][1];
 		platforms[i].length = platformsParameters[i][2];
 	}
 }
@@ -101,7 +101,7 @@ void createPlatforms(Platform* platforms)
 void drawPlatforms(Color* colors, Platform* platforms) {
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL.screen, platforms[i].upperXCorner, platforms[i].upperYCorner, platforms[i].length, platforms[i].width, colors->black, colors->pink);
+		DrawRectangle(SDL.screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->pink);
 
 }
 
@@ -116,8 +116,8 @@ void createLadders(Ladder* ladders)
 
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		ladders[i].upperXCorner = laddersParameters[i][0];
-		ladders[i].upperYCorner = laddersParameters[i][1];
+		ladders[i].upperCorner.x = laddersParameters[i][0];
+		ladders[i].upperCorner.y = laddersParameters[i][1];
 		ladders[i].height = laddersParameters[i][2];
 	}
 }
@@ -125,7 +125,7 @@ void createLadders(Ladder* ladders)
 void drawLadders(Color* colors, Ladder* ladders)
 {
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
-		DrawRectangle(SDL.screen, ladders[i].upperXCorner, ladders[i].upperYCorner, ladders[i].width, ladders[i].height, colors->black, colors->grey);
+		DrawRectangle(SDL.screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
 void createBarrels(Barrel* barrels)
@@ -144,8 +144,8 @@ void createBarrels(Barrel* barrels)
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		barrels[i].lowerXCorner = barrelsParameters[i][0];
-		barrels[i].lowerYCorner = barrelsParameters[i][1];
+		barrels[i].lowerRightCoordinates.x = barrelsParameters[i][0];
+		barrels[i].lowerRightCoordinates.y = barrelsParameters[i][1];
 		barrels[i].fallDown = barrelsParameters[i][2];
 		barrels[i].onPlatform = barrelsParameters[i][3];
 		barrels[i].onGround = barrelsParameters[i][4];
@@ -156,7 +156,7 @@ void createBarrels(Barrel* barrels)
 void drawBarrels(Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-		DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerXCorner, barrels[i].lowerYCorner, &barrels[i].animation);
+		DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerRightCoordinates.x, barrels[i].lowerRightCoordinates.y, &barrels[i].animation);
 }
 
 void createTrophies(Trophy* trophies)
@@ -169,8 +169,8 @@ void createTrophies(Trophy* trophies)
 
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 	{
-		trophies[i].lowerXCorner = trophiesParameters[i][0];
-		trophies[i].lowerYCorner = trophiesParameters[i][1];
+		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
 		trophies[i].animation = { ZERO, ZERO, 20, 20 };
 	}
 }
@@ -178,7 +178,7 @@ void createTrophies(Trophy* trophies)
 void drawTrophies(Trophy* trophies)
 {
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-		DrawSurface(SDL.screen, SDL.trophy, trophies[i].lowerXCorner, trophies[i].lowerYCorner, &trophies[i].animation);
+		DrawSurface(SDL.screen, SDL.trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
 }
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
@@ -196,12 +196,12 @@ void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels)
 		barrels[i].onPlatform = false;
 		for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
 		{
-			if (barrels[i].lowerYCorner + barrels[i].fallingSpeed + BARRELS_DIFFERENCE_IN_Y >= platforms[j].upperYCorner &&
-				barrels[i].lowerYCorner - barrels[i].realSize[1] <= platforms[j].upperYCorner + platforms[j].width &&
-				platforms[j].upperXCorner <= barrels[i].lowerXCorner &&
-				barrels[i].lowerXCorner - barrels[i].realSize[0] <= platforms[j].upperXCorner + platforms[j].length)
+			if (barrels[i].lowerRightCoordinates.y + barrels[i].speed.speedY + BARRELS_DIFFERENCE_IN_Y >= platforms[j].upperCorner.y &&
+				barrels[i].lowerRightCoordinates.y - barrels[i].realSize[1] <= platforms[j].upperCorner.y + platforms[j].width &&
+				platforms[j].upperCorner.x <= barrels[i].lowerRightCoordinates.x &&
+				barrels[i].lowerRightCoordinates.x - barrels[i].realSize[0] <= platforms[j].upperCorner.x + platforms[j].length)
 			{
-				barrels[i].lowerYCorner = platforms[j].upperYCorner + BARRELS_DIFFERENCE_IN_Y;
+				barrels[i].lowerRightCoordinates.y = platforms[j].upperCorner.y + BARRELS_DIFFERENCE_IN_Y;
 				barrels[i].onPlatform = true;
 				break;
 			}
@@ -213,18 +213,18 @@ void areBarrelsOnGround(Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].lowerYCorner + barrels[i].fallingSpeed >= GROUND_HEIGHT)
+		if (barrels[i].lowerRightCoordinates.y + barrels[i].speed.speedY >= GROUND_HEIGHT)
 			barrels[i].onGround = true;
 		else
 			barrels[i].onGround = false;
 
 		if (barrels[i].onGround)
 		{
-			if (barrels[i].lowerXCorner < SCREEN_WIDTH / 2)
-				barrels[i].speedX = barrels[i].bowlingSpeed;
-			if (barrels[i].lowerXCorner < SCREEN_WIDTH)
-				barrels[i].speedX = -barrels[i].bowlingSpeed;
-			barrels[i].lowerYCorner = BARRELS_SPAWN_POINT_Y;
+			if (barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH / 2)
+				barrels[i].speed.speedX = BARRELS_BOWLING_SPEED;
+			if (barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH)
+				barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED;
+			barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
 		}
 	}
 }
@@ -240,9 +240,9 @@ void barrelBowling(Barrel* barrels, GameInfo* gameInfo)
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].onPlatform)
-			barrels[i].lowerXCorner += barrels[i].speedX * gameInfo->deltaTime;
-		if (barrels[i].lowerXCorner >= SCREEN_WIDTH)
-			barrels[i].speedX = -barrels[i].bowlingSpeed;
+			barrels[i].lowerRightCoordinates.x += barrels[i].speed.speedX * gameInfo->deltaTime;
+		if (barrels[i].lowerRightCoordinates.x >= SCREEN_WIDTH)
+			barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED;
 	}
 }
 
@@ -253,7 +253,7 @@ void barrelFalling(Barrel* barrels, GameInfo* gameInfo)
 		if (!barrels[i].onPlatform && !barrels[i].onGround)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
-			barrels[i].lowerYCorner += barrels[i].fallingSpeed * gameInfo->deltaTime;
+			barrels[i].lowerRightCoordinates.y += barrels[i].speed.speedY * gameInfo->deltaTime;
 	}
 }
 
