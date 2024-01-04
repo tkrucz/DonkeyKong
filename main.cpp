@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	createWindow(&gameInfo);
 	initializeColors(&colors);
 	loadBMPs();
-	basicSettings(&gameInfo, &playerInfo);
+	defaultSettings(&gameInfo, &playerInfo);
 	initializeGameObjects(platforms, ladders, barrels,trophies);
 
 	gameInfo.t1 = SDL_GetTicks();

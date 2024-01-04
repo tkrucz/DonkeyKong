@@ -30,7 +30,11 @@ void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
 void drawGround(Color* colors);
 
-void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo);
+void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo); //set up the game at the beginning
+
+void newGameSettings(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //set up settings after pressing "n"
+
+void loadStageSettings(GameInfo* gameInfo, PlayerInfo* playerInfo); //TO CHANGE
 
 void initializePlayer();
 
@@ -244,14 +248,29 @@ void drawGround(Color* colors)
 	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
-void basicSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
+void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
-	playerInfo->score = PLAYER_DEFAULT_POINTS;
-	playerInfo->lives = PLAYER_DEFAULT_LIVES;
 	gameInfo->quit = false;
 	gameInfo->gameTime = ZERO;
+	playerInfo->score = PLAYER_DEFAULT_POINTS;
+	playerInfo->lives = PLAYER_DEFAULT_LIVES;
 	initializePlayer();
 }
+
+void newGameSettings(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+{
+	defaultSettings(gameInfo, playerInfo);
+	initializeGameObjects(platforms, ladders, barrels, trophies);
+}
+
+void loadStageSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
+{
+	gameInfo->quit = false;
+	playerInfo->score = playerInfo->score;
+	playerInfo->lives = playerInfo->lives;
+	initializePlayer();
+}
+
 
 void initializePlayer()
 {
@@ -820,10 +839,7 @@ void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform
 			if (keyPressed == SDLK_ESCAPE)
 				quit(gameInfo);
 			else if (keyPressed == SDLK_n)
-			{
-				basicSettings(gameInfo, playerInfo);
-				initializeGameObjects(platforms, ladders, barrels, trophies);
-			}
+				newGameSettings(gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 			else if (keyPressed == SDLK_RIGHT)
 				Mario.speedX = WALKING_SPEED;
 			else if (keyPressed == SDLK_LEFT)
