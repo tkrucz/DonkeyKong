@@ -15,7 +15,6 @@ extern "C" {
 extern "C"
 #endif
 
-//TODO main to mainGameLoop()
 int main(int argc, char** argv) {
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];
@@ -26,6 +25,9 @@ int main(int argc, char** argv) {
 	Color colors;
 	Score score;
 
+	//stageSpecifier specifier;
+	//specifier = handleSpecifier();
+	//Stage tmp = whichStage(specifier, game);
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow(&gameInfo);
@@ -48,7 +50,36 @@ int main(int argc, char** argv) {
 
 		gravityApply(&gameInfo, &playerInfo, &score, platforms, barrels, trophies);
 		whereAreObjects(platforms, ladders, barrels);
-		moveObjects(barrels);
+		moveObjects(barrels, &gameInfo);
 	}
 	return 0;
 }
+
+/*enum stageSpecifier {
+	STAGE1,
+	STAGE2
+};
+
+// przyjmuje feedback od przyciskow w menu albo gry
+stageSpecifier handleSpecifier() {
+}
+
+Stage whichStage(stageSpecifier* specifier, Game game) {
+
+	switch (specifier) {
+	case STAGE1:
+		return game.stage1;
+	}
+}
+
+void animations(Player* player, Barell* barells) {
+	playerAnimation(player)
+	barrelsAnimations(barells);
+}
+
+void playerAnimation(Player * player) {
+	player->animator.actualAnimation++;
+	player->animator.spirtesArray[player->animator.actualAnimation]
+	(display spritesArray[actualAnimation)
+}
+*/

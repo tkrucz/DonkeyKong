@@ -5,24 +5,11 @@ extern "C" {
 }
 #include "define.h"
 
+
 struct PlayerInfo
 {
 	int score;
 	int lives;
-};
-
-// TODO struct flags.
-// That how it should look like?
-
-struct Flags
-{
-
-	bool onPlatform = true;
-	bool notOnPlatform = false;
-	bool fallDown = true;
-	bool notFallDown = false;
-	bool onGround = true;
-	bool notOnGround = false;
 };
 
 struct Player
@@ -117,3 +104,28 @@ struct Trophy
 	double lowerYCorner;
 	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };
+
+
+// TODO
+/*
+// ODDZIELNY PLIK DLA STRUCT GAME (BEDZIE ZA DUZA), ROZDZIEL FUNCTIONS.H na mniejsze "podpliki"
+// SPRAWDZ CZY WSZEDZIE JEST TIMEDELTA
+struct Game {
+	Stage stage1 {
+		player = mario ....
+	}
+	Stage stage2 ...
+}
+struct Stage {
+	Player player;
+	Platform platforms;
+	Ladder ladders;
+};
+
+// struct position X, Y
+// struct vector speedX, speedY
+// struct animator {
+	SDL_Rect * spritesArray;
+	int actualAnimation;
+}
+*/

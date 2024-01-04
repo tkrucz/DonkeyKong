@@ -40,15 +40,15 @@ void initializePlayer();
 
 void initializeColors(Color* colors);
 
-void playerWalk(); //move player in X axis by the current speedX
+void playerWalk(GameInfo* gameInfo); //move player in X axis by the current speedX
 
-void playerClimb(); //move player in Y axis by the current speedY
+void playerClimb(GameInfo* gameInfo); //move player in Y axis by the current speedY
 
-void approximateOnGround(); //check if player is near the ground
+void approximateOnGround(GameInfo* gameInfo); //check if player is near the ground
 
 void approximateOnPlatform(Platform* platforms); //check if player is near the platform, while falling down
 
-void hitBottomOfThePlatform(Platform* platforms); //check if player hit the bottom of platform
+void hitBottomOfThePlatform(Platform* platforms, GameInfo* gameInfo); //check if player hit the bottom of platform
 
 void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
 
@@ -59,7 +59,7 @@ void playerJump(); //give the speedY value -JumpingSpeed
 
 void checkIfPlayerIsJumping();
 
-void playerMovement();
+void playerMovement(GameInfo* gameInfo);
 
 void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels);//not used
 
@@ -131,15 +131,15 @@ void whereAreBarrels(Platform* platforms, Barrel* barrels);
 
 void whereAreObjects(Platform* platforms, Ladder* ladders, Barrel* barrels);
 
-void barrelBowling(Barrel* barrels); //TO CHANGE?
+void barrelBowling(Barrel* barrels, GameInfo* gameInfo); //TO CHANGE?
 
-void barrelFalling(Barrel* barrels); //TO CHANGE?
+void barrelFalling(Barrel* barrels, GameInfo* gameInfo); //TO CHANGE?
 
-void barrelMovement(Barrel* barrels);
+void barrelMovement(Barrel* barrels, GameInfo* gameInfo);
 
 void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels); //TO CHANGE?
 
-void moveObjects(Barrel* barrels);
+void moveObjects(Barrel* barrels, GameInfo* gameInfo);
 
 void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
 
@@ -296,21 +296,23 @@ void initializeColors(Color* colors)
 	colors->grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
 }
 
-void playerWalk()
+void playerWalk(GameInfo* gameInfo)
 {
-	Mario.lowerXCorner += Mario.speedX;
+	Mario.lowerXCorner += (Mario.speedX * gameInfo->deltaTime);
 }
 
-void playerClimb()
+void playerClimb(GameInfo* gameInfo)
 {
 	if (Mario.begLadder && Mario.speedY >= 0)
 		Mario.speedY = NULL_SPEED;
-	Mario.lowerYCorner += Mario.speedY;
+	if (Mario.endLadder && Mario.speedY <= 0)
+		Mario.speedY = NULL_SPEED;
+	Mario.lowerYCorner += (Mario.speedY * gameInfo->deltaTime);
 }
 
-void approximateOnGround()
+void approximateOnGround(GameInfo* gameInfo)
 {
-	if (Mario.lowerYCorner + Mario.speedY + GRAVITY_SPEED >= GROUND_HEIGHT)
+	if (Mario.lowerYCorner + Mario.speedY + (GRAVITY_SPEED*gameInfo->deltaTime) >= GROUND_HEIGHT)
 	{
 		Mario.lowerYCorner = GROUND_HEIGHT;
 		playerNotFallingDown();
@@ -335,7 +337,7 @@ void approximateOnPlatform(Platform* platforms)
 	}
 }
 
-void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels) //do skasowania?
+void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
@@ -355,15 +357,17 @@ void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels) //do ska
 	}
 }
 
-void hitBottomOfThePlatform(Platform* platforms) //check if player doesn't hit the bottom of the platform
+void hitBottomOfThePlatform(Platform* platforms, GameInfo* gameInfo) //check if player doesn't hit the bottom of the platform
 {
 	double upperYCorner = Mario.lowerYCorner - Mario.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (upperYCorner <= platforms[i].upperYCorner + platforms[i].width && upperYCorner > platforms[i].upperYCorner)
-			if (platforms[i].upperXCorner <= Mario.lowerXCorner + Mario.realSize[0] && Mario.lowerXCorner <= platforms[i].upperXCorner + platforms[i].length)
+		if (upperYCorner <= platforms[i].upperYCorner + platforms[i].width &&
+			upperYCorner > platforms[i].upperYCorner)
+			if (platforms[i].upperXCorner <= Mario.lowerXCorner + Mario.realSize[0] && 
+				Mario.lowerXCorner <= platforms[i].upperXCorner + platforms[i].length)
 			{
-				double elasticColision = ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED);
+				double elasticColision = gameInfo->deltaTime * ELASTIC_COLISION_CONST * (Mario.speedY + GRAVITY_SPEED * gameInfo->deltaTime);
 				Mario.speedY = elasticColision; //dodać elastic colision do sturktury skok kiedyś?
 			}
 	}
@@ -389,22 +393,24 @@ void hitSidesOfThePlatform(Platform* platforms)
 }
 
 //TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
+// collision, addScore?
 void gravityApply(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Barrel* barrels, Trophy* trophies)
 {
 	collision(gameInfo, playerInfo,barrels);
 	addScore(playerInfo, score, barrels, trophies);
 	if (Mario.isJumping || Mario.fallDown)
 	{
-		Mario.speedY += GRAVITY_SPEED;
+		Mario.speedY += (GRAVITY_SPEED * gameInfo->deltaTime);
 		Mario.lowerYCorner += Mario.speedY;
-		approximateOnGround();
-		hitBottomOfThePlatform(platforms);
+		approximateOnGround(gameInfo);
+		hitBottomOfThePlatform(platforms, gameInfo);
 		hitSidesOfThePlatform(platforms);
 		approximateOnPlatform(platforms);
 
 	}	
 }
 
+// TODO playerJumping to readKeys?
 void playerJump()
 {
 	playerJumping();
@@ -419,16 +425,16 @@ void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 		playerJump();
 }
 
-void playerMovement()
+void playerMovement(GameInfo* gameInfo)
 {
 	if (Mario.onPlatform || Mario.isJumping || Mario.fallDown)
-		playerWalk();
+		playerWalk(gameInfo);
 	if (Mario.onLadder)
-		playerClimb();
+		playerClimb(gameInfo);
 	if (Mario.begLadder || Mario.endLadder)
 	{
-		playerWalk();
-		playerClimb();
+		playerWalk(gameInfo);
+		playerClimb(gameInfo);
 	}		
 }
 
@@ -777,32 +783,32 @@ void whereAreObjects(Platform* platforms, Ladder* ladders,Barrel* barrels)
 	whereAreBarrels(platforms, barrels);
 }
 
-void barrelBowling(Barrel* barrels)
+void barrelBowling(Barrel* barrels, GameInfo* gameInfo)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (barrels[i].onPlatform)
-			barrels[i].lowerXCorner += barrels[i].speedX;
+			barrels[i].lowerXCorner += barrels[i].speedX * gameInfo->deltaTime;
 		if (barrels[i].lowerXCorner >= SCREEN_WIDTH)
 			barrels[i].speedX = -barrels[i].bowlingSpeed;
 	}
 }
 
-void barrelFalling(Barrel* barrels)
+void barrelFalling(Barrel* barrels, GameInfo* gameInfo)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
 		if (!barrels[i].onPlatform && !barrels[i].onGround)
 			barrels[i].fallDown = true;
 		if (barrels[i].fallDown)
-			barrels[i].lowerYCorner += barrels[i].fallingSpeed;			
+			barrels[i].lowerYCorner += barrels[i].fallingSpeed * gameInfo->deltaTime;
 	}
 }
 
-void barrelMovement(Barrel* barrels)
+void barrelMovement(Barrel* barrels, GameInfo* gameInfo)
 {
-	barrelBowling(barrels);
-	barrelFalling(barrels);
+	barrelBowling(barrels, gameInfo);
+	barrelFalling(barrels, gameInfo);
 }
 
 void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
@@ -821,13 +827,13 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 	}
 }
 
-void moveObjects(Barrel* barrels)
+void moveObjects(Barrel* barrels, GameInfo* gameInfo)
 {
-	playerMovement();
-	barrelMovement(barrels);
+	playerMovement(gameInfo);
+	barrelMovement(barrels, gameInfo);
 }
 
-
+// TODO przejrzystosc kodu, pamietaj o tym, ze 
 void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL.event))
