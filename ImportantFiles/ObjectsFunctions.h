@@ -13,27 +13,27 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-int loadBMPs();
+int loadBMPs(SDLConst* SDL);
 
-void initializeColors(Color* colors);
+void initializeColors(SDLConst* SDL, Color* colors);
 
-void drawGround(Color* colors);
+void drawGround(SDLConst* SDL, Color* colors);
 
 void createPlatforms(Platform* platforms);
 
-void drawPlatforms(Color* colors, Platform* platforms);
+void drawPlatforms(SDLConst* SDL, Color* colors, Platform* platforms);
 
 void createLadders(Ladder* ladders);
 
-void drawLadders(Color* colors, Ladder* ladders);
+void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders);
 
 void createBarrels(Barrel* barrels);
 
-void drawBarrels(Barrel* barrels);
+void drawBarrels(SDLConst* SDL, Barrel* barrels);
 
 void createTrophies(Trophy* trophies);
 
-void drawTrophies(Trophy* trophies);
+void drawTrophies(SDLConst* SDL, Trophy* trophies);
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
@@ -49,47 +49,47 @@ void barrelFalling(Barrel* barrels, GameInfo* gameInfo);
 
 void barrelMovement(Barrel* barrels, GameInfo* gameInfo);
 
-void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
+void collision(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
 void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
-void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
+void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
 //load BMPs from files
-int loadBMPs()
+int loadBMPs(SDLConst* SDL)
 {
-	SDL.charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
-	SDL.player = SDL_LoadBMP("./BMP/mario.bmp");
-	SDL.barrel = SDL_LoadBMP("./BMP/barrels.bmp");
-	SDL.trophy = SDL_LoadBMP("./BMP/trophy.bmp");
-	if (SDL.charset == ZERO)
+	SDL->charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
+	SDL->player = SDL_LoadBMP("./BMP/mario.bmp");
+	SDL->barrel = SDL_LoadBMP("./BMP/barrels.bmp");
+	SDL->trophy = SDL_LoadBMP("./BMP/trophy.bmp");
+	if (SDL->charset == ZERO)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
-		SDL_FreeSurface(SDL.screen);
-		SDL_DestroyTexture(SDL.scrtex);
-		SDL_DestroyWindow(SDL.window);
-		SDL_DestroyRenderer(SDL.renderer);
+		SDL_FreeSurface(SDL->screen);
+		SDL_DestroyTexture(SDL->scrtex);
+		SDL_DestroyWindow(SDL->window);
+		SDL_DestroyRenderer(SDL->renderer);
 		SDL_Quit();
 		return 1;
 	}
 }
 
-void initializeColors(Color* colors)
+void initializeColors(SDLConst* SDL, Color* colors)
 {
-	colors->black = SDL_MapRGB(SDL.screen->format, 0x00, 0x00, 0x00);
-	colors->white = SDL_MapRGB(SDL.screen->format, 255, 255, 255);
-	colors->blue = SDL_MapRGB(SDL.screen->format, 0x11, 0x11, 0xCC);
-	colors->green = SDL_MapRGB(SDL.screen->format, 0x00, 0xFF, 0x00);
-	colors->red = SDL_MapRGB(SDL.screen->format, 0xFF, 0x00, 0x00);
-	colors->pink = SDL_MapRGB(SDL.screen->format, 214, 136, 150);
-	colors->indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
-	colors->lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
-	colors->grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
+	colors->black = SDL_MapRGB(SDL->screen->format, 0x00, 0x00, 0x00);
+	colors->white = SDL_MapRGB(SDL->screen->format, 255, 255, 255);
+	colors->blue = SDL_MapRGB(SDL->screen->format, 0x11, 0x11, 0xCC);
+	colors->green = SDL_MapRGB(SDL->screen->format, 0x00, 0xFF, 0x00);
+	colors->red = SDL_MapRGB(SDL->screen->format, 0xFF, 0x00, 0x00);
+	colors->pink = SDL_MapRGB(SDL->screen->format, 214, 136, 150);
+	colors->indygo = SDL_MapRGB(SDL->screen->format, 85, 120, 200);
+	colors->lime = SDL_MapRGB(SDL->screen->format, 152, 190, 100);
+	colors->grey = SDL_MapRGB(SDL->screen->format, 160, 160, 160);
 }
 
-void drawGround(Color* colors)
+void drawGround(SDLConst* SDL, Color* colors)
 {
-	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
+	DrawLine(SDL->screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
 void createPlatforms(Platform* platforms)
@@ -111,10 +111,10 @@ void createPlatforms(Platform* platforms)
 	}
 }
 
-void drawPlatforms(Color* colors, Platform* platforms) {
+void drawPlatforms(SDLConst* SDL, Color* colors, Platform* platforms) {
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL.screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->pink);
+		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->pink);
 
 }
 
@@ -135,10 +135,10 @@ void createLadders(Ladder* ladders)
 	}
 }
 
-void drawLadders(Color* colors, Ladder* ladders)
+void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders)
 {
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
-		DrawRectangle(SDL.screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
+		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
 void createBarrels(Barrel* barrels)
@@ -166,10 +166,10 @@ void createBarrels(Barrel* barrels)
 	}
 }
 
-void drawBarrels(Barrel* barrels)
+void drawBarrels(SDLConst* SDL, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-		DrawSurface(SDL.screen, SDL.barrel, barrels[i].lowerRightCoordinates.x, barrels[i].lowerRightCoordinates.y, &barrels[i].animation);
+		DrawSurface(SDL->screen, SDL->barrel, barrels[i].lowerRightCoordinates.x, barrels[i].lowerRightCoordinates.y, &barrels[i].animation);
 }
 
 void createTrophies(Trophy* trophies)
@@ -188,10 +188,10 @@ void createTrophies(Trophy* trophies)
 	}
 }
 
-void drawTrophies(Trophy* trophies)
+void drawTrophies(SDLConst* SDL, Trophy* trophies)
 {
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-		DrawSurface(SDL.screen, SDL.trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
+		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
 }
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
@@ -276,7 +276,7 @@ void barrelMovement(Barrel* barrels, GameInfo* gameInfo)
 	barrelFalling(barrels, gameInfo);
 }
 
-void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
+void collision(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
@@ -285,7 +285,7 @@ void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 			barrels[i].lowerRightCoordinates.x <= Mario.lowerCoordinates.x + Mario.realSize[0] &&
 			barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE >= Mario.lowerCoordinates.x)
 		{
-			loseLive(gameInfo, playerInfo);
+			loseLive(SDL, gameInfo, playerInfo);
 			barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
 			break;
 		}
@@ -299,9 +299,9 @@ void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, 
 	addScore(playerInfo, score, barrels, trophies);
 }
 
-void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
+void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 {
-	collision(gameInfo, playerInfo, barrels);
+	collision(SDL, gameInfo, playerInfo, barrels);
 	playerMovement(gameInfo);
 	barrelMovement(barrels, gameInfo);
 }

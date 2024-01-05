@@ -77,7 +77,7 @@ struct SDLConst
 	SDL_Texture* scrtex;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-}SDL;
+};
 
 struct Color
 {

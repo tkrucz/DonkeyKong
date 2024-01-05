@@ -16,6 +16,7 @@ extern "C"
 #endif
 
 int main(int argc, char** argv) {
+	SDLConst SDL;
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];
 	Barrel barrels[NUMBER_OF_BARRELS];
@@ -30,9 +31,9 @@ int main(int argc, char** argv) {
 	//Stage tmp = whichStage(specifier, game);
 	SDL_ShowCursor(SDL_DISABLE);
 
-	createWindow(&gameInfo);
-	initializeColors(&colors);
-	loadBMPs();
+	createWindow(&SDL, &gameInfo);
+	initializeColors(&SDL, &colors);
+	loadBMPs(&SDL);
 	defaultSettings(&gameInfo, &playerInfo);
 	initializeGameObjects(platforms, ladders, barrels,trophies);
 
@@ -43,14 +44,14 @@ int main(int argc, char** argv) {
 		gameInfo.t2 = SDL_GetTicks();
 		timeCounting(&gameInfo);
 
-		displayWindow(&gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
-		refreshWindow();
+		refreshWindow(&SDL);
+		displayWindow(&SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
 
-		readKeys(&gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
+		readKeys(&SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
 		gravityApply(&gameInfo, platforms, barrels);
 		whereAreObjects(&playerInfo, &score, platforms, ladders, barrels, trophies);
-		moveObjects(&gameInfo, &playerInfo, barrels);
+		moveObjects(&SDL, &gameInfo, &playerInfo, barrels);
 	}
 	return 0;
 }

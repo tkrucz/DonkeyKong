@@ -48,7 +48,7 @@ void endTheStage(PlayerInfo* playerInfo, Score* score);
 
 void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
 
-void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo);
+void loseLive(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo);
 
 void isPlayerOutsideTheBorders(); //check if player isn't outside of the screen borders
 
@@ -60,7 +60,7 @@ void isPlayerOnGround();
 
 void whereIsPLayer(Platform* platforms, Ladder* ladders);
 
-void quit(GameInfo* gameInfo);
+void quit(SDLConst* SDL, GameInfo* gameInfo);
 
 void initializePlayer()
 {
@@ -264,11 +264,11 @@ void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* tro
 	endTheStage(playerInfo, score);
 }
 
-void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo)
+void loseLive(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
 	playerInfo->lives -= 1;
 	if (playerInfo->lives == ZERO)
-		quit(gameInfo);
+		quit(SDL, gameInfo);
 }
 
 void isPlayerOutsideTheBorders()
