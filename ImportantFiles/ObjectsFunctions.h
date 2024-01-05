@@ -5,6 +5,7 @@
 #include<string.h>
 #include "structures.h"
 #include "define.h"
+#include "functions.h"
 #include "PlayerFunctions.h"
 #include "SDLFunctions.h"
 
@@ -55,7 +56,9 @@ void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, 
 
 void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
-//load BMPs from files
+void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
+
+
 int loadBMPs(SDLConst* SDL)
 {
 	SDL->charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
@@ -293,7 +296,7 @@ void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, 
 {
 	whereIsPLayer(platforms, ladders);
 	whereAreBarrels(platforms, barrels);
-	addScore(playerInfo, score, barrels, trophies);
+	deltaScore(playerInfo, score, barrels, trophies);
 }
 
 void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)

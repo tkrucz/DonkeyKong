@@ -44,14 +44,6 @@ void checkIfPlayerIsJumping();
 
 void playerMovement(GameInfo* gameInfo);
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels);
-
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies);
-
-void endTheStage(PlayerInfo* playerInfo, Score* score);
-
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
-
 void loseLive(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo);
 
 void isPlayerOutsideTheBorders(); //check if player isn't outside of the screen borders
@@ -196,7 +188,6 @@ void gravityApply(GameInfo* gameInfo, Platform* platforms, Barrel* barrels)
 	}
 }
 
-// TODO playerJumping to readKeys?
 void playerJump()
 {
 	Mario.speed.speedY = -JUMPING_SPEED;
@@ -222,7 +213,7 @@ void playerMovement(GameInfo* gameInfo)
 	}
 	if (Mario.onLadder)
 	{
-		checkClimbDirection(gameInfo);
+		checkDirection(gameInfo); //if checkClimbDirection(), you can only climb on ladder, no moving in X axis
 		playerClimb(gameInfo);
 	}
 	if (Mario.begLadder || Mario.endLadder)
@@ -231,57 +222,6 @@ void playerMovement(GameInfo* gameInfo)
 		playerWalk(gameInfo);
 		playerClimb(gameInfo);
 	}
-}
-
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
-{
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-	{
-		if (Mario.isJumping || Mario.fallDown)
-		{
-			if (Mario.lowerCoordinates.y <= barrels[i].lowerRightCoordinates.y - BARRELS_DIFFERENCE_IN_Y &&
-				barrels[i].lowerRightCoordinates.x >= Mario.lowerCoordinates.x &&
-				barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE <= Mario.lowerCoordinates.x + Mario.realSize[0])
-			{
-				playerInfo->score += barrels[i].barrelScore;
-				barrels[i].barrelScore = ZERO;
-				break;
-			}
-		}
-		barrels[i].barrelScore = JUMP_OVER_BARREL_POINTS;
-	}
-}
-
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
-{
-	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-	{
-		if (Mario.lowerCoordinates.y == trophies[i].lowerCoordinates.y + TROPHIES_DIFFERENCE_IN_Y &&
-			Mario.lowerCoordinates.x >= trophies[i].lowerCoordinates.x - trophies[i].realSize[0] &&
-			Mario.lowerCoordinates.x <= trophies[i].lowerCoordinates.x + trophies[i].realSize[0])
-		{
-			playerInfo->score += score->getTrophy;
-			trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
-			trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
-			return;
-		}
-	}
-}
-
-void endTheStage(PlayerInfo* playerInfo, Score* score)
-{
-	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
-	{
-		playerInfo->score += score->endTheStage;
-		score->endTheStage = ZERO;
-	}
-}
-
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
-{
-	jumpOverBarrel(playerInfo, score, barrels);
-	getTrophy(playerInfo, score, trophies);
-	endTheStage(playerInfo, score);
 }
 
 void loseLive(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo)
