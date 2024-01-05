@@ -26,6 +26,8 @@ int main(int argc, char** argv) {
 	GameInfo gameInfo;
 	Color colors;
 	Score score;
+	
+	Stage stage;
 
 	//stageSpecifier specifier;
 	//specifier = handleSpecifier();
@@ -48,7 +50,7 @@ int main(int argc, char** argv) {
 		refreshWindow(&SDL);
 		displayWindow(&SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
 
-		readKeys(&SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
+		readKeys(&stage, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
 		gravityApply(&gameInfo, platforms, barrels);
 		whereAreObjects(&playerInfo, &score, platforms, ladders, barrels, trophies);

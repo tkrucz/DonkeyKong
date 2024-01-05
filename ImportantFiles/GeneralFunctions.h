@@ -47,11 +47,17 @@ void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* tro
 
 void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
 
-void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
+void readKeys(Stage* stage, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
 void quit(SDLConst* SDL, GameInfo* gameInfo);
+
+void firstStageSpecify(Stage* stage);
+
+void secondStageSpecify(Stage* stage);
+
+void thirdStageSpecify(Stage* stage);
 
 
 void createWindow(SDLConst* SDL, GameInfo* gameInfo) // Create a window with specified size.
@@ -230,7 +236,7 @@ void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* t
 }
 
 // TODO przejrzystosc kodu
-void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void readKeys(Stage* stage, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -240,6 +246,12 @@ void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* 
 		case SDL_KEYDOWN:
 			if (keyPressed == SDLK_ESCAPE)
 				quit(SDL, gameInfo);
+			else if (keyPressed == SDLK_1)
+				firstStageSpecify(stage);
+			else if (keyPressed == SDLK_2)
+				secondStageSpecify(stage);
+			else if (keyPressed == SDLK_3)
+				thirdStageSpecify(stage);
 			else if (keyPressed == SDLK_n)
 				newGameSettings(gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 			else if (keyPressed == SDLK_RIGHT)
@@ -283,8 +295,26 @@ void quit(SDLConst* SDL, GameInfo* gameInfo)
 	SDL_Quit();
 }
 
+void firstStageSpecify(Stage* stage)
+{
+	stage->stageSpecifier = STAGE1;
+}
+
+void secondStageSpecify(Stage* stage)
+{
+	stage->stageSpecifier = STAGE2;
+}
+
+void thirdStageSpecify(Stage* stage)
+{
+	stage->stageSpecifier = STAGE3;
+}
+
 /*
-StageSpecifier handleSpecifier() {
+*	Ths funtion works at the beginning and also activate, when player.lowerCordinates.y == platform_V_height.
+
+StageSpecifier handleSpecifier()
+{
 
 }
 

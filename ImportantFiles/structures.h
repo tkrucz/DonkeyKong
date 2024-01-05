@@ -120,13 +120,14 @@ struct Animator
 
 enum StageSpecifier
 {
-	STAGE1 = 1,
-	STAGE2 = 2,
-	STAGE3 = 3
+	STAGE1,
+	STAGE2,
+	STAGE3
 };
 
 struct Stage 
 {
+	StageSpecifier stageSpecifier;
 	Player player;
 	Platform platforms;
 	Ladder ladders;
