@@ -102,6 +102,8 @@ void printGameInfo(GameInfo* gameInfo, Color* colors)
 	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(gameInfo->text, "King Donkey");
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TITLE_ROW, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "Implemented requirements: mandatory, A, C, F ");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, REQUIREMENTS_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Time from beginning: %.1lf s", gameInfo->gameTime);
 	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TIME_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Esc - quit, n - new game ");
@@ -114,11 +116,11 @@ void printGameInfo(GameInfo* gameInfo, Color* colors)
 
 void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 {
-	DrawRectangle(SDL.screen, ZERO_COLUMN, SEVENTY_ROW, ONE_HUNDRED_TWENTY, THIRTY_FIVE, colors->white, colors->black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, EIGHTY_ROW, ONE_HUNDRED_TWENTY, THIRTY_FIVE, colors->white, colors->black);
 	sprintf(gameInfo->text, "Score: %.6d", playerInfo->score);
-	DrawString(SDL.screen, TEN_COLUMN, SEVENTY_FIVE_ROW, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, TEN_COLUMN, EIGHTY_FIVE_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
-	DrawString(SDL.screen, TEN_COLUMN, NINETY_ROW, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, TEN_COLUMN, HUNDRED_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Trophies:");
 	DrawString(SDL.screen, FIVE_HUNDRED_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", Mario.lowerCoordinates.x);
