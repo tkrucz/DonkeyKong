@@ -155,7 +155,7 @@ void playerNotWalking()
 void playerClimbUp()
 {
 	Mario.climbUp = true;
-	playerNotClimbDown();
+	//playerNotClimbDown();
 }
 
 void playerNotClimbUp()
@@ -166,7 +166,7 @@ void playerNotClimbUp()
 void playerClimbDown()
 {
 	Mario.climbDown = true;
-	playerNotClimbUp();
+	//playerNotClimbUp();
 }
 
 void playerNotClimbDown()

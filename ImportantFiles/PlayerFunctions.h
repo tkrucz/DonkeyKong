@@ -17,6 +17,10 @@ extern "C" {
 
 void initializePlayer();
 
+void checkWalkDirection(GameInfo* gameInfo);
+
+void checkClimbDirection(GameInfo* gameInfo);
+
 void checkDirection(GameInfo* gameInfo);
 
 void playerWalk(GameInfo* gameInfo); //move player in X axis by the current speedX
@@ -72,18 +76,28 @@ void initializePlayer()
 	playerOnPlatform();
 }
 
-void checkDirection(GameInfo* gameInfo)
+void checkWalkDirection(GameInfo* gameInfo)
 {
 	if (Mario.walkLeft || Mario.walkRight)
 	{
 		Mario.speed.speedX = WALKING_SPEED;
 		playerWalk(gameInfo);
 	}
+}
+
+void checkClimbDirection(GameInfo* gameInfo)
+{
 	if (Mario.climbUp || Mario.climbDown)
 	{
 		Mario.speed.speedY = CLIMBING_SPEED;
 		playerClimb(gameInfo);
 	}
+}
+
+void checkDirection(GameInfo* gameInfo)
+{
+	checkWalkDirection(gameInfo);
+	checkClimbDirection(gameInfo);
 }
 
 void playerWalk(GameInfo* gameInfo)
@@ -201,13 +215,19 @@ void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
 
 void playerMovement(GameInfo* gameInfo)
 {
-	checkDirection(gameInfo);
 	if (Mario.onPlatform || Mario.isJumping || Mario.fallDown)
-		playerWalk(gameInfo);
+	{
+		checkWalkDirection(gameInfo);
+		playerWalk(gameInfo);		
+	}
 	if (Mario.onLadder)
+	{
+		checkClimbDirection(gameInfo);
 		playerClimb(gameInfo);
+	}
 	if (Mario.begLadder || Mario.endLadder)
 	{
+		checkDirection(gameInfo);
 		playerWalk(gameInfo);
 		playerClimb(gameInfo);
 	}

@@ -73,12 +73,12 @@ Stage whichStage(stageSpecifier* specifier, Game game) {
 	}
 }
 
-void animations(Player* player, Barell* barells) {
+void animations(Player* player, Barrel* barrels) {
 	playerAnimation(player)
 	barrelsAnimations(barells);
 }
 
-void playerAnimation(Player * player) {
+void playerAnimation(Player* player) {
 	player->animator.actualAnimation++;
 	player->animator.spirtesArray[player->animator.actualAnimation]
 	(display spritesArray[actualAnimation)

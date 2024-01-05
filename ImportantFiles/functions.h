@@ -185,8 +185,7 @@ void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* 
 			break;
 		case SDL_KEYUP:
 			playerNotWalking();
-			if (keyPressed == SDLK_DOWN || keyPressed == SDLK_UP)
-				playerNotClimbing();
+			playerNotClimbing();			
 			break;		
 		case SDL_QUIT: //X button in right up corner
 			quit(SDL, gameInfo);

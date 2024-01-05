@@ -5,7 +5,6 @@ extern "C" {
 }
 #include "define.h"
 
-
 struct Coordinates
 {
 	double x;
@@ -18,10 +17,45 @@ struct Speed
 	double speedY;
 };
 
+struct SDLConst
+{
+	SDL_Event event;
+	SDL_Surface* screen, * charset;
+	SDL_Surface* player, * barrel, * trophy;
+	SDL_Texture* scrtex;
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+};
+
+struct Color
+{
+	int black;
+	int white;	
+	int pink; //for 1st stage platforms
+	int indygo; //for 2nd stage platforms
+	int lime; //for 3th stage platforms	
+	int grey; //for ladders
+};
+
 struct PlayerInfo
 {
 	int score;
 	int lives;
+};
+
+struct GameInfo
+{
+	double t1, t2;
+	double gameTime, deltaTime;
+	bool quit;
+	int err;
+	char text[128];
+};
+
+struct Score
+{
+	int getTrophy = GET_TROPHY_POINTS;
+	int endTheStage = END_THE_STAGE_POINTS;
 };
 
 struct Player
@@ -54,44 +88,6 @@ struct Barrel
 	int barrelScore = JUMP_OVER_BARREL_POINTS;
 };
 
-struct GameInfo
-{
-	double t1, t2;
-	double gameTime, deltaTime;
-	bool quit;
-	int err;
-	char text[128];
-};
-
-struct Score
-{	
-	int getTrophy = GET_TROPHY_POINTS;
-	int endTheStage = END_THE_STAGE_POINTS;
-};
-
-struct SDLConst
-{
-	SDL_Event event;
-	SDL_Surface* screen, * charset;
-	SDL_Surface* player, * barrel, * trophy;
-	SDL_Texture* scrtex;
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-};
-
-struct Color
-{
-	int black;
-	int white;
-	int green;
-	int red;
-	int blue;
-	int pink; //for 1st stage platforms
-	int indygo; //for 2nd stage platforms
-	int lime; //for 3th stage platforms	
-	int grey; //for ladders
-};
-
 struct Platform 
 {
 	Coordinates upperCorner;
@@ -113,6 +109,29 @@ struct Trophy
 	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };
 
+struct Animator 
+{
+	SDL_Rect* spriteArray;
+	int actualAnimation;
+};
+
+enum StageSpecifier
+{
+	STAGE1 = 1,
+	STAGE2 = 2,
+	STAGE3 = 3
+};
+
+struct Stage 
+{
+	Platform platforms;
+	Ladder ladders;
+	Barrel barrels;
+	Trophy trophies;
+	PlayerInfo playerInfo;
+	GameInfo gameInfo;
+	Player player;
+};
 
 // TODO
 /*

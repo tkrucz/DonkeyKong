@@ -78,9 +78,6 @@ void initializeColors(SDLConst* SDL, Color* colors)
 {
 	colors->black = SDL_MapRGB(SDL->screen->format, 0x00, 0x00, 0x00);
 	colors->white = SDL_MapRGB(SDL->screen->format, 255, 255, 255);
-	colors->blue = SDL_MapRGB(SDL->screen->format, 0x11, 0x11, 0xCC);
-	colors->green = SDL_MapRGB(SDL->screen->format, 0x00, 0xFF, 0x00);
-	colors->red = SDL_MapRGB(SDL->screen->format, 0xFF, 0x00, 0x00);
 	colors->pink = SDL_MapRGB(SDL->screen->format, 214, 136, 150);
 	colors->indygo = SDL_MapRGB(SDL->screen->format, 85, 120, 200);
 	colors->lime = SDL_MapRGB(SDL->screen->format, 152, 190, 100);
@@ -255,7 +252,7 @@ void barrelBowling(Barrel* barrels, GameInfo* gameInfo)
 		if (barrels[i].onPlatform)
 			barrels[i].lowerRightCoordinates.x += barrels[i].speed.speedX * gameInfo->deltaTime;
 		if (barrels[i].lowerRightCoordinates.x >= SCREEN_WIDTH)
-			barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED;
+			barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED; //change the speed "direction"
 	}
 }
 
