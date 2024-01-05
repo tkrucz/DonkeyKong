@@ -3,8 +3,9 @@
 #include<math.h>
 #include<stdio.h>
 #include<string.h>
-#include "structures.h"
 #include "define.h"
+#include "structures.h"
+#include "GameStructure.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFunctions.h"
 #include "SDLFunctions.h"
@@ -281,3 +282,22 @@ void quit(SDLConst* SDL, GameInfo* gameInfo)
 	SDLSpace(SDL);
 	SDL_Quit();
 }
+
+/*
+StageSpecifier handleSpecifier() {
+
+}
+
+Stage whichStage(StageSpecifier* specifier, Game game) {
+
+	switch (specifier) {
+	case STAGE1:
+		return game.STAGE1;
+	case STAGE2:
+		return game.STAGE2;
+	case STAGE3:
+		return game.STAGE3;
+	}
+}
+
+*/

@@ -3,8 +3,9 @@
 #include<math.h>
 #include<stdio.h>
 #include<string.h>
-#include "structures.h"
 #include "define.h"
+#include "structures.h"
+#include "GameStructure.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFlags.h"
 

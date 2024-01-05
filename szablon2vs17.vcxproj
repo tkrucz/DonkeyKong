@@ -26,7 +26,7 @@
     <Image Include="BMP\mario.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImportantFiles\GameStruct.h" />
+    <ClInclude Include="ImportantFiles\GameStructure.h" />
     <ClInclude Include="ImportantFiles\ObjectsFunctions.h" />
     <ClInclude Include="ImportantFiles\PlayerFlags.h" />
     <ClInclude Include="ImportantFiles\PlayerFunctions.h" />

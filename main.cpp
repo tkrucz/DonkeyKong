@@ -4,6 +4,7 @@
 #include<string.h>
 #include "ImportantFiles/define.h"
 #include "ImportantFiles/structures.h"
+#include "ImportantFiles/GameStructure.h"
 #include "ImportantFiles/GeneralFunctions.h"
 
 extern "C" {
