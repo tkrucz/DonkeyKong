@@ -3,8 +3,8 @@
 #include<stdio.h>
 #include<string.h>
 #include "ImportantFiles/define.h"
-#include"ImportantFiles/functions.h"
 #include "ImportantFiles/structures.h"
+#include"ImportantFiles/functions.h"
 
 extern "C" {
 #include"./SDL2-2.0.10/include/SDL.h"

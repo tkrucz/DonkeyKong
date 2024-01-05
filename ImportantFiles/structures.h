@@ -36,6 +36,10 @@ struct Player
 	bool fallDown = false;
 	bool begLadder = false; //player at the beginning of ladder
 	bool endLadder = false; //player at the end of ladder
+	bool walkRight = false;
+	bool walkLeft = false;
+	bool climbUp = false;
+	bool climbDown = false;
 }Mario;
 
 struct Barrel

@@ -5,6 +5,7 @@
 #include<string.h>
 #include "structures.h"
 #include "define.h"
+#include "PlayerFunctions.h"
 #include "SDLFunctions.h"
 
 extern "C" {
@@ -46,6 +47,11 @@ void barrelFalling(Barrel* barrels, GameInfo* gameInfo);
 
 void barrelMovement(Barrel* barrels, GameInfo* gameInfo);
 
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
+
+void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+
+void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
 //load BMPs from files
 int loadBMPs()
@@ -261,4 +267,34 @@ void barrelMovement(Barrel* barrels, GameInfo* gameInfo)
 {
 	barrelBowling(barrels, gameInfo);
 	barrelFalling(barrels, gameInfo);
+}
+
+void collision(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
+{
+	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	{
+		if (barrels[i].lowerRightCoordinates.y + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerCoordinates.y - Mario.realSize[1] &&
+			barrels[i].lowerRightCoordinates.y - BARRELS_HITBOX_SIZE <= Mario.lowerCoordinates.y &&
+			barrels[i].lowerRightCoordinates.x <= Mario.lowerCoordinates.x + Mario.realSize[0] &&
+			barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE >= Mario.lowerCoordinates.x)
+		{
+			loseLive(gameInfo, playerInfo);
+			barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
+			break;
+		}
+	}
+}
+
+void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+{
+	whereIsPLayer(platforms, ladders);
+	whereAreBarrels(platforms, barrels);
+	addScore(playerInfo, score, barrels, trophies);
+}
+
+void moveObjects(GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
+{
+	collision(gameInfo, playerInfo, barrels);
+	playerMovement(gameInfo);
+	barrelMovement(barrels, gameInfo);
 }
