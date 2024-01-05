@@ -6,6 +6,7 @@
 #include "structures.h"
 #include "define.h"
 #include "ObjectsFunctions.h"
+#include "PlayerFlags.h"
 
 
 extern "C" {
@@ -48,52 +49,6 @@ void endTheStage(PlayerInfo* playerInfo, Score* score);
 void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
 
 void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo);
-
-void playerOnLadderBeg();
-
-void playerNotOnLadderBeg();
-
-void playerOnLadderEnd();
-
-void playerNotOnLadderEnd();
-
-void playerOnLadder();
-
-void playerNotOnLadder();
-
-void playerOnPlatform();
-
-void playerNotOnPlatform();
-
-void playerFallingDown();
-
-void playerNotFallingDown();
-
-void playerJumping();
-
-void playerNotJumping();
-
-void playerOnGround();
-
-void playerWalkRight();
-
-void playerNotWalkRight();
-
-void playerWalkLeft();
-
-void playerNotWalkLeft();
-
-void playerNotWalking();
-
-void playerClimbUp();
-
-void playerNotClimbUp();
-
-void playerClimbDown();
-
-void playerNotClimbDown();
-
-void playerNotClimbing();
 
 void isPlayerOutsideTheBorders(); //check if player isn't outside of the screen borders
 
@@ -314,127 +269,6 @@ void loseLive(GameInfo* gameInfo, PlayerInfo* playerInfo)
 	playerInfo->lives -= 1;
 	if (playerInfo->lives == ZERO)
 		quit(gameInfo);
-}
-
-void playerOnLadderBeg()
-{
-	Mario.begLadder = true;
-}
-
-void playerNotOnLadderBeg()
-{
-	Mario.begLadder = false;
-}
-
-void playerOnLadderEnd()
-{
-	Mario.endLadder = true;
-}
-
-void playerNotOnLadderEnd()
-{
-	Mario.endLadder = false;
-}
-
-void playerOnLadder()
-{
-	Mario.onLadder = true;
-}
-
-void playerNotOnLadder()
-{
-	Mario.onLadder = false;
-}
-
-void playerOnPlatform()
-{
-	Mario.onPlatform = true;
-}
-
-void playerNotOnPlatform()
-{
-	Mario.onPlatform = false;
-}
-
-void playerFallingDown()
-{
-	Mario.fallDown = true;
-}
-
-void playerNotFallingDown()
-{
-	Mario.fallDown = false;
-}
-
-void playerJumping()
-{
-	Mario.isJumping = true;
-}
-
-void playerNotJumping()
-{
-	Mario.isJumping = false;
-}
-
-void playerOnGround()
-{
-	Mario.onPlatform = true;
-}
-
-void playerWalkRight()
-{
-	Mario.walkRight = true;
-	playerNotWalkLeft();
-}
-
-void playerNotWalkRight()
-{
-	Mario.walkRight = false;
-}
-
-void playerWalkLeft()
-{
-	Mario.walkLeft = true;
-	playerNotWalkRight();
-}
-
-void playerNotWalkLeft()
-{
-	Mario.walkLeft = false;
-}
-
-void playerNotWalking()
-{
-	Mario.walkLeft = false;
-	Mario.walkRight = false;
-}
-
-void playerClimbUp()
-{
-	Mario.climbUp = true;
-	playerNotClimbDown();
-}
-
-void playerNotClimbUp()
-{
-	Mario.climbUp = false;
-}
-
-void playerClimbDown()
-{
-	Mario.climbDown = true;
-	playerNotClimbUp();
-}
-
-void playerNotClimbDown()
-{
-	Mario.climbDown = false;
-}
-
-void playerNotClimbing()
-{
-	Mario.climbDown = false;
-	Mario.climbUp = false;
 }
 
 void isPlayerOutsideTheBorders()

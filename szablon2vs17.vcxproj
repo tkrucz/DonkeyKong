@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImportantFiles\ObjectsFunctions.h" />
+    <ClInclude Include="ImportantFiles\PlayerFlags.h" />
     <ClInclude Include="ImportantFiles\PlayerFunctions.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

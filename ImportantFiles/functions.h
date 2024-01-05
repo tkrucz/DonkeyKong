@@ -16,7 +16,7 @@ extern "C" {
 
 void createWindow(GameInfo* gameInfo);
 
-void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
+void printInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
 void drawScene(Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
@@ -27,8 +27,6 @@ void refreshWindow();
 void printGameInfo(GameInfo* gameInfo, Color* colors);
 
 void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
-
-void drawGround(Color* colors);
 
 void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo); //set up the game at the beginning
 
@@ -69,7 +67,7 @@ void createWindow(GameInfo* gameInfo) // Create a window with specified size. Al
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
+void printInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 {
 	printGameInfo(gameInfo,colors);
 	printPlayerInfo(gameInfo, playerInfo, colors);
@@ -88,7 +86,7 @@ void displayWindow(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Pl
 {
 	SDL_FillRect(SDL.screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	drawScene(colors, platforms, ladders, barrels,trophies);
-	drawInfo(gameInfo, playerInfo,colors);
+	printInfo(gameInfo, playerInfo,colors);
 	DrawSurface(SDL.screen, SDL.player, Mario.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, Mario.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
 
@@ -128,12 +126,6 @@ void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 	sprintf(gameInfo->text, "LeftLowerYCorner: %.0f", Mario.lowerCoordinates.y);
 	DrawString(SDL.screen, TEN_ROW, 170, gameInfo->text, SDL.charset);
 }
-
-
-void drawGround(Color* colors)
-{
-	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
-} 
 
 void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 {
@@ -180,16 +172,12 @@ void readKeys(GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform
 				newGameSettings(gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 			else if (keyPressed == SDLK_RIGHT)
 				playerWalkRight();
-			//Mario.speed.speedX = WALKING_SPEED;
 			else if (keyPressed == SDLK_LEFT)
 				playerWalkLeft();
-			//Mario.speed.speedX = -WALKING_SPEED;
 			else if (keyPressed == SDLK_DOWN)
 				playerClimbDown();
-			//Mario.speed.speedY = CLIMBING_SPEED;
 			else if (keyPressed == SDLK_UP)
 				playerClimbUp();
-			//Mario.speed.speedY = -CLIMBING_SPEED;
 			else if (keyPressed == SDLK_SPACE)
 				checkIfPlayerIsJumping();
 			break;

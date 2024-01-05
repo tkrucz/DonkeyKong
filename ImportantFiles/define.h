@@ -17,12 +17,12 @@
 #define HALF 0.5
 #define ONE 1
 
-#define GRAVITY_SPEED 1.06
+#define GRAVITY_SPEED 1
 #define JUMPING_SPEED 0.45
 #define ELASTIC_COLISION_CONST -106 
 
 #define NULL_SPEED 0
-#define WALKING_SPEED 80
+#define WALKING_SPEED 60
 #define CLIMBING_SPEED 30 
 
 #define PLAYER_SPAWN_POINT_X 360 

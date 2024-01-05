@@ -17,6 +17,8 @@ int loadBMPs();
 
 void initializeColors(Color* colors);
 
+void drawGround(Color* colors);
+
 void createPlatforms(Platform* platforms);
 
 void drawPlatforms(Color* colors, Platform* platforms);
@@ -83,6 +85,11 @@ void initializeColors(Color* colors)
 	colors->indygo = SDL_MapRGB(SDL.screen->format, 85, 120, 200);
 	colors->lime = SDL_MapRGB(SDL.screen->format, 152, 190, 100);
 	colors->grey = SDL_MapRGB(SDL.screen->format, 160, 160, 160);
+}
+
+void drawGround(Color* colors)
+{
+	DrawLine(SDL.screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
 void createPlatforms(Platform* platforms)
