@@ -99,32 +99,32 @@ void refreshWindow()
 
 void printGameInfo(GameInfo* gameInfo, Color* colors)
 {
-	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, 70, colors->white, colors->black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(gameInfo->text, "King Donkey");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 8, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TITLE_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Time from beginning: %.1lf s", gameInfo->gameTime);
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 25, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TIME_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Esc - quit, n - new game ");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 40, gameInfo->text, SDL.charset);
-	sprintf(gameInfo->text, "\30 - move up, \31 - move down, \32 - move left, \33 - move right");
-	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, 55, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, OPTIONS_ROW, gameInfo->text, SDL.charset);
+	sprintf(gameInfo->text, "\30 - move up \31 - move down \32 - move left \33 - move right SPACE - jump");
+	DrawString(SDL.screen, SDL.screen->w / 2 - strlen(gameInfo->text) * 8 / 2, KEYS_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Author: Tomasz Kruczalak 198049");
 	DrawString(SDL.screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 }
 
 void printPlayerInfo(GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
 {
-	DrawRectangle(SDL.screen, ZERO_COLUMN, 70, 120, 35, colors->white, colors->black);
+	DrawRectangle(SDL.screen, ZERO_COLUMN, SEVENTY_ROW, ONE_HUNDRED_TWENTY, THIRTY_FIVE, colors->white, colors->black);
 	sprintf(gameInfo->text, "Score: %.6d", playerInfo->score);
-	DrawString(SDL.screen, TEN_ROW, 75, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, TEN_COLUMN, SEVENTY_FIVE_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
-	DrawString(SDL.screen, TEN_ROW, 90, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, TEN_COLUMN, NINETY_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "Trophies:");
-	DrawString(SDL.screen, 500, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, FIVE_HUNDRED_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", Mario.lowerCoordinates.x);
-	DrawString(SDL.screen, TEN_ROW, 150, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, TEN_COLUMN, ONE_HUNDRED_FIFTHY_COLUMN, gameInfo->text, SDL.charset);
 	sprintf(gameInfo->text, "LeftLowerYCorner: %.0f", Mario.lowerCoordinates.y);
-	DrawString(SDL.screen, TEN_ROW, 170, gameInfo->text, SDL.charset);
+	DrawString(SDL.screen, TEN_COLUMN, ONE_HUNDRED_SEVENTY_COLUMN, gameInfo->text, SDL.charset);
 }
 
 void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
@@ -152,7 +152,7 @@ void loadStageSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 
 void timeCounting(GameInfo* gameInfo)
 {
-	gameInfo->deltaTime = (gameInfo->t2 - gameInfo->t1) * 0.001;
+	gameInfo->deltaTime = (gameInfo->t2 - gameInfo->t1) * MILI;
 	gameInfo->t1 = gameInfo->t2;
 	gameInfo->gameTime += gameInfo->deltaTime;
 }

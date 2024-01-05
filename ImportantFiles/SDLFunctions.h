@@ -72,7 +72,7 @@ void DrawLine(SDL_Surface* screen, int x, int y, int l, int dx, int dy, Uint32 c
 	}
 }
 
-// draw a rectangle of size l and k (l-length, k-width)
+// draw a rectangle of size l and k (l-length(in X), k-width(in Y)
 void DrawRectangle(SDL_Surface* screen, int x, int y, int l, int k, Uint32 outlineColor, Uint32 fillColor)
 {
 	int i;

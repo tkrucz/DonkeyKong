@@ -241,8 +241,8 @@ void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 			Mario.lowerCoordinates.x <= trophies[i].lowerCoordinates.x + trophies[i].realSize[0])
 		{
 			playerInfo->score += score->getTrophy;
-			trophies[i].lowerCoordinates.x = 590 + (i * 20);
-			trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + 4;
+			trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
+			trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
 			return;
 		}
 	}
