@@ -5,7 +5,7 @@
 #include<string.h>
 #include "structures.h"
 #include "define.h"
-#include "functions.h"
+#include "GeneralFunctions.h"
 #include "PlayerFunctions.h"
 #include "SDLFunctions.h"
 
@@ -28,13 +28,29 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders);
 
-void createBarrels(Barrel* barrels);
+void createPlatformsII(Platform* platforms);
 
-void drawBarrels(SDLConst* SDL, Barrel* barrels);
+void drawPlatformsII(SDLConst* SDL, Color* colors, Platform* platforms);
+
+void createLaddersII(Ladder* ladders);
+
+void drawLaddersII(SDLConst* SDL, Color* colors, Ladder* ladders);
+
+void createPlatformsIII(Platform* platforms);
+
+void drawPlatformsIII(SDLConst* SDL, Color* colors, Platform* platforms);
+
+void createLaddersIII(Ladder* ladders);
+
+void drawLaddersIII(SDLConst* SDL, Color* colors, Ladder* ladders);
 
 void createTrophies(Trophy* trophies);
 
 void drawTrophies(SDLConst* SDL, Trophy* trophies);
+
+void createBarrels(Barrel* barrels);
+
+void drawBarrels(SDLConst* SDL, Barrel* barrels);
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
@@ -141,6 +157,124 @@ void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders)
 		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
+void createPlatformsII(Platform* platforms)
+{
+	//platformsParameters{ X cordinate, Y cordinate, length }
+	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
+		{60,PLATFORM_I_HEIGHT,550}, {650,PLATFORM_I_HEIGHT,50},
+		{440,PLATFORM_II_HEIGHT,160}, { 40,PLATFORM_II_HEIGHT,350 },
+		{ 500,PLATFORM_III_HEIGHT,200 }, { 140,PLATFORM_III_HEIGHT,300 },
+		{ 100,PLATFORM_IV_HEIGHT,240 }, { 470,PLATFORM_IV_HEIGHT,240 },
+		{ 260,PLATFORM_V_HEIGHT,200 }
+	};
+
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		platforms[i].upperCorner.x = platformsParameters[i][0];
+		platforms[i].upperCorner.y = platformsParameters[i][1];
+		platforms[i].length = platformsParameters[i][2];
+	}
+}
+
+void drawPlatformsII(SDLConst* SDL, Color* colors, Platform* platforms) {
+
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->indygo);
+}
+
+void createLaddersII(Ladder* ladders)
+{
+	//laddersParameters {X cordinate, Y cordinate, ladder height}
+	int laddersParameters[NUMBER_OF_LADDERS][3] = {
+		{365,PLATFORM_V_HEIGHT,160}, {600,PLATFORM_IV_HEIGHT,LADDER_HEIGHT},
+		{150,PLATFORM_III_HEIGHT,LADDER_HEIGHT}, {550,PLATFORM_II_HEIGHT,LADDER_HEIGHT},
+		{110,PLATFORM_I_HEIGHT,60}
+	};
+
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
+	{
+		ladders[i].upperCorner.x = laddersParameters[i][0];
+		ladders[i].upperCorner.y = laddersParameters[i][1];
+		ladders[i].height = laddersParameters[i][2];
+	}
+}
+
+void drawLaddersII(SDLConst* SDL, Color* colors, Ladder* ladders)
+{
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
+		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
+}
+
+void createPlatformsIII(Platform* platforms)
+{
+	//platformsParameters{ X cordinate, Y cordinate, length }
+	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
+		{60,PLATFORM_I_HEIGHT,240}, {450,PLATFORM_I_HEIGHT,150},
+		{40,PLATFORM_II_HEIGHT,350}, { 440,PLATFORM_II_HEIGHT,160 }, 
+		{ 100,PLATFORM_III_HEIGHT,300 }, { 500,PLATFORM_III_HEIGHT,220 },
+		{ 100,PLATFORM_IV_HEIGHT,200 }, { 420,PLATFORM_IV_HEIGHT,250 },
+		{ 260,PLATFORM_V_HEIGHT,200 }
+	};
+
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	{
+		platforms[i].upperCorner.x = platformsParameters[i][0];
+		platforms[i].upperCorner.y = platformsParameters[i][1];
+		platforms[i].length = platformsParameters[i][2];
+	}
+}
+
+void drawPlatformsIII(SDLConst* SDL, Color* colors, Platform* platforms) {
+
+	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->lime);
+}
+
+void createLaddersIII(Ladder* ladders)
+{
+	//laddersParameters {X cordinate, Y cordinate, ladder height}
+	int laddersParameters[NUMBER_OF_LADDERS][3] = {
+		{365,PLATFORM_V_HEIGHT,160}, {600,PLATFORM_IV_HEIGHT,LADDER_HEIGHT},
+		{150,PLATFORM_III_HEIGHT,LADDER_HEIGHT}, {550,PLATFORM_II_HEIGHT,LADDER_HEIGHT},
+		{110,PLATFORM_I_HEIGHT,60}
+	};
+
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
+	{
+		ladders[i].upperCorner.x = laddersParameters[i][0];
+		ladders[i].upperCorner.y = laddersParameters[i][1];
+		ladders[i].height = laddersParameters[i][2];
+	}
+}
+
+void drawLaddersIII(SDLConst* SDL, Color* colors, Ladder* ladders)
+{
+	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
+		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
+}
+
+void createTrophies(Trophy* trophies)
+{
+	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
+		{TROPHIES_I_SPAWN_POINT_X,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{TROPHIES_II_SPAWN_POINT_X,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{TROPHIES_III_SPAWN_POINT_X,PLATFORM_IV_HEIGHT - TROPHIES_DIFFERENCE_IN_Y}
+	};
+
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	{
+		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
+		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+	}
+}
+
+void drawTrophies(SDLConst* SDL, Trophy* trophies)
+{
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
+}
+
 void createBarrels(Barrel* barrels)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
@@ -170,28 +304,6 @@ void drawBarrels(SDLConst* SDL, Barrel* barrels)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 		DrawSurface(SDL->screen, SDL->barrel, barrels[i].lowerRightCoordinates.x, barrels[i].lowerRightCoordinates.y, &barrels[i].animation);
-}
-
-void createTrophies(Trophy* trophies)
-{
-	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
-		{TROPHIES_I_SPAWN_POINT_X,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
-		{TROPHIES_II_SPAWN_POINT_X,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
-		{TROPHIES_III_SPAWN_POINT_X,PLATFORM_IV_HEIGHT - TROPHIES_DIFFERENCE_IN_Y}
-	};
-
-	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-	{
-		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
-		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		trophies[i].animation = { ZERO, ZERO, 20, 20 };
-	}
-}
-
-void drawTrophies(SDLConst* SDL, Trophy* trophies)
-{
-	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
 }
 
 void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)

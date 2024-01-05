@@ -61,11 +61,9 @@ void quit(SDLConst* SDL, GameInfo* gameInfo);
 void initializePlayer()
 {
 	Mario.lowerCoordinates = { PLAYER_SPAWN_POINT_X,PLAYER_SPAWN_POINT_Y };
-	//TODO comments
 	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
 	Mario.speed.speedX = NULL_SPEED;
 	Mario.speed.speedY = NULL_SPEED;
-	playerOnPlatform();
 }
 
 void checkWalkDirection(GameInfo* gameInfo)

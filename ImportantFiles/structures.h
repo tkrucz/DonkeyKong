@@ -127,19 +127,17 @@ enum StageSpecifier
 
 struct Stage 
 {
+	Player player;
 	Platform platforms;
 	Ladder ladders;
 	Barrel barrels;
 	Trophy trophies;
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;
-	Player player;
 };
 
 // TODO
 /*
-// ODDZIELNY PLIK DLA STRUCT GAME (BEDZIE ZA DUZA), ROZDZIEL FUNCTIONS.H na mniejsze "podpliki"
-// SPRAWDZ CZY WSZEDZIE JEST TIMEDELTA
 struct Game {
 	Stage stage1 {
 		player = mario ....

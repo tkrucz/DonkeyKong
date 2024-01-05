@@ -4,7 +4,7 @@
 #include<string.h>
 #include "ImportantFiles/define.h"
 #include "ImportantFiles/structures.h"
-#include"ImportantFiles/functions.h"
+#include "ImportantFiles/GeneralFunctions.h"
 
 extern "C" {
 #include"./SDL2-2.0.10/include/SDL.h"
@@ -56,13 +56,10 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-/*enum stageSpecifier {
-	STAGE1,
-	STAGE2
-};
-
+/*
 // przyjmuje feedback od przyciskow w menu albo gry
 stageSpecifier handleSpecifier() {
+
 }
 
 Stage whichStage(stageSpecifier* specifier, Game game) {
