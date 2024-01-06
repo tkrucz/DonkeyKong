@@ -29,6 +29,10 @@ void createLadders(Ladder* ladders);
 
 void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders);
 
+void createTrophies(Trophy* trophies);
+
+void drawTrophies(SDLConst* SDL, Trophy* trophies);
+
 void createPlatforms2(Platform* platforms);
 
 void drawPlatforms2(SDLConst* SDL, Color* colors, Platform* platforms);
@@ -37,6 +41,10 @@ void createLadders2(Ladder* ladders);
 
 void drawLadders2(SDLConst* SDL, Color* colors, Ladder* ladders);
 
+void createTrophies2(Trophy* trophies);
+
+void drawTrophies2(SDLConst* SDL, Trophy* trophies);
+
 void createPlatforms3(Platform* platforms);
 
 void drawPlatforms3(SDLConst* SDL, Color* colors, Platform* platforms);
@@ -44,14 +52,6 @@ void drawPlatforms3(SDLConst* SDL, Color* colors, Platform* platforms);
 void createLadders3(Ladder* ladders);
 
 void drawLadders3(SDLConst* SDL, Color* colors, Ladder* ladders);
-
-void createTrophies(Trophy* trophies);
-
-void drawTrophies(SDLConst* SDL, Trophy* trophies);
-
-void createTrophies2(Trophy* trophies);
-
-void drawTrophies2(SDLConst* SDL, Trophy* trophies);
 
 void createTrophies3(Trophy* trophies);
 
@@ -166,14 +166,36 @@ void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders)
 		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
+void createTrophies(Trophy* trophies)
+{
+	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
+		{TROPHIES_I_SPAWN_POINT_X,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{TROPHIES_II_SPAWN_POINT_X,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{TROPHIES_III_SPAWN_POINT_X,PLATFORM_IV_HEIGHT - TROPHIES_DIFFERENCE_IN_Y}
+	};
+
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	{
+		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
+		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+	}
+}
+
+void drawTrophies(SDLConst* SDL, Trophy* trophies)
+{
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
+}
+
 void createPlatforms2(Platform* platforms)
 {
 	//platformsParameters{ X cordinate, Y cordinate, length }
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
-		{60,PLATFORM_I_HEIGHT,550}, {650,PLATFORM_I_HEIGHT,50},
-		{440,PLATFORM_II_HEIGHT,160}, { 40,PLATFORM_II_HEIGHT,350 },
-		{ 500,PLATFORM_III_HEIGHT,200 }, { 140,PLATFORM_III_HEIGHT,300 },
-		{ 100,PLATFORM_IV_HEIGHT,240 }, { 380,PLATFORM_IV_HEIGHT,60 },
+		{60,PLATFORM_I_HEIGHT,550}, {650,PLATFORM_I_HEIGHT,60},
+		{440,PLATFORM_II_HEIGHT,160}, { 40,PLATFORM_II_HEIGHT,300 },
+		{ 500,PLATFORM_III_HEIGHT,200 }, { 100,PLATFORM_III_HEIGHT,300 },
+		{ 100,PLATFORM_IV_HEIGHT,200 }, { 380,PLATFORM_IV_HEIGHT,60 },
 		{ 470,PLATFORM_IV_HEIGHT,240 },	{ 260,PLATFORM_V_HEIGHT,200 }
 	};
 
@@ -195,7 +217,7 @@ void createLadders2(Ladder* ladders)
 {
 	//laddersParameters {X cordinate, Y cordinate, ladder height}
 	int laddersParameters[NUMBER_OF_LADDERS][3] = {
-		{365,PLATFORM_V_HEIGHT,160}, {600,PLATFORM_IV_HEIGHT,LADDER_HEIGHT},
+		{340,PLATFORM_V_HEIGHT,160}, {600,PLATFORM_IV_HEIGHT,LADDER_HEIGHT},
 		{150,PLATFORM_III_HEIGHT,LADDER_HEIGHT}, {550,PLATFORM_II_HEIGHT,LADDER_HEIGHT},
 		{110,PLATFORM_I_HEIGHT,60}
 	};
@@ -214,14 +236,36 @@ void drawLadders2(SDLConst* SDL, Color* colors, Ladder* ladders)
 		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
+void createTrophies2(Trophy* trophies)
+{
+	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
+		{670,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{70,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{400,PLATFORM_IV_HEIGHT - TROPHIES_DIFFERENCE_IN_Y}
+	};
+
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	{
+		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
+		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+	}
+}
+
+void drawTrophies2(SDLConst* SDL, Trophy* trophies)
+{
+	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
+}
+
 void createPlatforms3(Platform* platforms)
 {
 	//platformsParameters{ X cordinate, Y cordinate, length }
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
-		{ 60,PLATFORM_I_HEIGHT,240 }, { 350, PLATFORM_I_HEIGHT,80 },
-		{ 450,PLATFORM_I_HEIGHT,150 },{ 40,PLATFORM_II_HEIGHT,350 },
+		{ 60,PLATFORM_I_HEIGHT,240 }, { 660, PLATFORM_II_HEIGHT,40 },
+		{ 450,PLATFORM_I_HEIGHT,180 },{ 40,PLATFORM_II_HEIGHT,350 },
 		{ 440,PLATFORM_II_HEIGHT,160 }, { 100,PLATFORM_III_HEIGHT,300 },
-		{ 500,PLATFORM_III_HEIGHT,220 },{ 100,PLATFORM_IV_HEIGHT,200 },
+		{ 500,PLATFORM_III_HEIGHT,220 },{ 60,PLATFORM_IV_HEIGHT,220 },
 		{ 420,PLATFORM_IV_HEIGHT,250 },	{ 260,PLATFORM_V_HEIGHT,200 }
 	};
 
@@ -262,10 +306,10 @@ void drawLadders3(SDLConst* SDL, Color* colors, Ladder* ladders)
 		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
 }
 
-void createTrophies(Trophy* trophies)
+void createTrophies3(Trophy* trophies)
 {
 	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
-		{TROPHIES_I_SPAWN_POINT_X,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
+		{675,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
 		{TROPHIES_II_SPAWN_POINT_X,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
 		{TROPHIES_III_SPAWN_POINT_X,PLATFORM_IV_HEIGHT - TROPHIES_DIFFERENCE_IN_Y}
 	};
@@ -278,7 +322,7 @@ void createTrophies(Trophy* trophies)
 	}
 }
 
-void drawTrophies(SDLConst* SDL, Trophy* trophies)
+void drawTrophies3(SDLConst* SDL, Trophy* trophies)
 {
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
