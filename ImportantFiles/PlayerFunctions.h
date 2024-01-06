@@ -16,297 +16,296 @@ extern "C" {
 }
 
 
-void initializePlayer();
+void initializePlayer(Stage* stage);
 
-void checkWalkDirection(GameInfo* gameInfo);
+void checkWalkDirection(Stage* stage);
 
-void checkClimbDirection(GameInfo* gameInfo);
+void checkClimbDirection(Stage* stage);
 
-void checkDirection(GameInfo* gameInfo);
+void checkDirection(Stage* stage);
 
-void playerWalk(GameInfo* gameInfo); //move player in X axis by the current speedX
+void playerWalk(Stage* stage); //move player in X axis by the current speedX
 
-void playerClimb(GameInfo* gameInfo); //move player in Y axis by the current speedY
+void playerClimb(Stage* stage); //move player in Y axis by the current speedY
 
-void approximateOnGround(GameInfo* gameInfo); //check if player is near the ground
+void approximateOnGround(Stage* stage); //check if player is near the ground
 
-void approximateOnPlatform(Platform* platforms); //check if player is near the platform, while falling down
+void approximateOnPlatform(Stage* stage); //check if player is near the platform, while falling down
 
-void hitBottomOfThePlatform(Platform* platforms, GameInfo* gameInfo); //check if player hit the bottom of platform
+void hitBottomOfThePlatform(Stage* stage); //check if player hit the bottom of platform
 
-void hitSidesOfThePlatform(Platform* platforms); //check if player hit the sides of platform
+void hitSidesOfThePlatform(Stage* stage); //check if player hit the sides of platform
 
 //check if player is jumping||falling down change his position by the current speedY, check if there is collision or if player should get points 
-void gravityApply(GameInfo* gameInfo, Platform* platforms, Barrel* barrels);
+void gravityApply(Stage* stage);
 
-void playerJump(); //give the speedY value -JumpingSpeed
+void playerJump(Stage* stage); //give the speedY value -JumpingSpeed
 
-void checkIfPlayerIsJumping();
+void checkIfPlayerIsJumping(Stage* stage);
 
-void playerMovement(GameInfo* gameInfo);
+void playerMovement(Stage* stage);
 
-void loseLive(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo);
+void loseLive(Stage* stage, SDLConst* SDL);
 
-void isPlayerOutsideTheBorders(); //check if player isn't outside of the screen borders
+void isPlayerOutsideTheBorders(Stage* stage); //check if player isn't outside of the screen borders
 
-void isPlayerOnLadder(Ladder* ladders);
+void isPlayerOnLadder(Stage* stage);
 
-void isPlayerOnPlatform(Platform* platforms);
+void isPlayerOnPlatform(Stage* stage);
 
-void isPlayerOnGround(); 
+void isPlayerOnGround(Stage* stage); 
 
-void whereIsPLayer(Platform* platforms, Ladder* ladders);
+void whereIsPLayer(Stage* stage);
 
-void quit(SDLConst* SDL, GameInfo* gameInfo);
+void quit(Stage* stage, SDLConst* SDL);
 
-void initializePlayer()
+void initializePlayer(Stage* stage)
 {
-	Mario.lowerCoordinates = { PLAYER_SPAWN_POINT_X,PLAYER_SPAWN_POINT_Y };
-	Mario.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,Mario.realSize[0],Mario.realSize[1] };
-	Mario.speed.speedX = NULL_SPEED;
-	Mario.speed.speedY = NULL_SPEED;
+	stage->player.lowerCoordinates = { PLAYER_SPAWN_POINT_X,PLAYER_SPAWN_POINT_Y };
+	stage->player.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,stage->player.realSize[0],stage->player.realSize[1] };
+	stage->player.speed.speedX = NULL_SPEED;
+	stage->player.speed.speedY = NULL_SPEED;
 }
 
-void checkWalkDirection(GameInfo* gameInfo)
+void checkWalkDirection(Stage* stage)
 {
-	if (Mario.walkLeft || Mario.walkRight)
+	if (stage->player.walkLeft || stage->player.walkRight)
 	{
-		Mario.speed.speedX = WALKING_SPEED;
-		playerWalk(gameInfo);
+		stage->player.speed.speedX = WALKING_SPEED;
+		playerWalk(stage);
 	}
 }
 
-void checkClimbDirection(GameInfo* gameInfo)
+void checkClimbDirection(Stage* stage)
 {
-	if (Mario.climbUp || Mario.climbDown)
+	if (stage->player.climbUp || stage->player.climbDown)
 	{
-		Mario.speed.speedY = CLIMBING_SPEED;
-		playerClimb(gameInfo);
+		stage->player.speed.speedY = CLIMBING_SPEED;
+		playerClimb(stage);
 	}
 }
 
-void checkDirection(GameInfo* gameInfo)
+void checkDirection(Stage* stage)
 {
-	checkWalkDirection(gameInfo);
-	checkClimbDirection(gameInfo);
+	checkWalkDirection(stage);
+	checkClimbDirection(stage);
 }
 
-void playerWalk(GameInfo* gameInfo)
+void playerWalk(Stage* stage)
 {
-	if(Mario.walkLeft)
-		Mario.lowerCoordinates.x -= (Mario.speed.speedX * gameInfo->deltaTime);
-	if (Mario.walkRight)
-		Mario.lowerCoordinates.x += (Mario.speed.speedX * gameInfo->deltaTime);
+	if(stage->player.walkLeft)
+		stage->player.lowerCoordinates.x -= (stage->player.speed.speedX * stage->gameInfo.deltaTime);
+	if (stage->player.walkRight)
+		stage->player.lowerCoordinates.x += (stage->player.speed.speedX * stage->gameInfo.deltaTime);
 }
 
-void playerClimb(GameInfo* gameInfo)
+void playerClimb(Stage* stage)
 {
-	if (Mario.begLadder && Mario.climbDown)
-		Mario.speed.speedY = NULL_SPEED;
-	if (Mario.endLadder && Mario.climbUp)
-		Mario.speed.speedY = NULL_SPEED;
-	if (Mario.climbDown)
-		Mario.lowerCoordinates.y += (Mario.speed.speedY * gameInfo->deltaTime);
-	if (Mario.climbUp)
-		Mario.lowerCoordinates.y -= (Mario.speed.speedY * gameInfo->deltaTime);
+	if (stage->player.begLadder && stage->player.climbDown)
+		stage->player.speed.speedY = NULL_SPEED;
+	if (stage->player.endLadder && stage->player.climbUp)
+		stage->player.speed.speedY = NULL_SPEED;
+	if (stage->player.climbDown)
+		stage->player.lowerCoordinates.y += (stage->player.speed.speedY * stage->gameInfo.deltaTime);
+	if (stage->player.climbUp)
+		stage->player.lowerCoordinates.y -= (stage->player.speed.speedY * stage->gameInfo.deltaTime);
 }
 
-void approximateOnGround(GameInfo* gameInfo)
+void approximateOnGround(Stage* stage)
 {
-	if (Mario.lowerCoordinates.y + Mario.speed.speedY + (GRAVITY_SPEED * gameInfo->deltaTime) >= GROUND_HEIGHT)
+	if (stage->player.lowerCoordinates.y + stage->player.speed.speedY + (GRAVITY_SPEED * stage->gameInfo.deltaTime) >= GROUND_HEIGHT)
 	{
-		Mario.lowerCoordinates.y = GROUND_HEIGHT;
-		playerNotFallingDown();
-		playerNotJumping();
+		stage->player.lowerCoordinates.y = GROUND_HEIGHT;
+		playerNotFallingDown(stage);
+		playerNotJumping(stage);
 	}
 }
 
-void approximateOnPlatform(Platform* platforms)
+void approximateOnPlatform(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (Mario.speed.speedY > 0 && Mario.lowerCoordinates.y > platforms[i].upperCorner.y &&
-			Mario.lowerCoordinates.y < platforms[i].upperCorner.y + platforms[i].width &&
-			Mario.lowerCoordinates.x<platforms[i].upperCorner.x + platforms[i].length &&
-			Mario.lowerCoordinates.x + Mario.realSize[0]>platforms[i].upperCorner.x)
+		if (stage->player.speed.speedY > 0 && stage->player.lowerCoordinates.y > stage->platforms[i].upperCorner.y &&
+			stage->player.lowerCoordinates.y < stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
+			stage->player.lowerCoordinates.x<stage->platforms[i].upperCorner.x + stage->platforms[i].length &&
+			stage->player.lowerCoordinates.x + stage->player.realSize[0]>stage->platforms[i].upperCorner.x)
 		{
-			Mario.lowerCoordinates.y = platforms[i].upperCorner.y;
-			Mario.speed.speedY = NULL_SPEED;
-			playerNotFallingDown();
-			playerNotJumping();
+			stage->player.lowerCoordinates.y = stage->platforms[i].upperCorner.y;
+			stage->player.speed.speedY = NULL_SPEED;
+			playerNotFallingDown(stage);
+			playerNotJumping(stage);
 		}
 	}
 }
 
-void hitBottomOfThePlatform(Platform* platforms, GameInfo* gameInfo) //check if player doesn't hit the bottom of the platform
+void hitBottomOfThePlatform(Stage* stage) //check if player doesn't hit the bottom of the platform
 {
-	double upperYCorner = Mario.lowerCoordinates.y - Mario.realSize[1]; //"-" beacuse y increases in down direction
+	double upperYCorner = stage->player.lowerCoordinates.y - stage->player.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (upperYCorner <= platforms[i].upperCorner.y + platforms[i].width &&
-			upperYCorner > platforms[i].upperCorner.y)
-			if (platforms[i].upperCorner.x <= Mario.lowerCoordinates.x + Mario.realSize[0] &&
-				Mario.lowerCoordinates.x <= platforms[i].upperCorner.x + platforms[i].length)
+		if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
+			upperYCorner > stage->platforms[i].upperCorner.y)
+			if (stage->platforms[i].upperCorner.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] &&
+				stage->player.lowerCoordinates.x <= stage->platforms[i].upperCorner.x + stage->platforms[i].length)
 			{
-				double elasticColision = gameInfo->deltaTime * ELASTIC_COLISION_CONST * (Mario.speed.speedY + GRAVITY_SPEED * gameInfo->deltaTime);
-				Mario.speed.speedY = elasticColision; //dodaæ elastic colision do sturktury skok kiedyœ?
+				double elasticColision = stage->gameInfo.deltaTime * ELASTIC_COLISION_CONST * (stage->player.speed.speedY + GRAVITY_SPEED * stage->gameInfo.deltaTime);
+				stage->player.speed.speedY = elasticColision; //dodaæ elastic colision do sturktury skok kiedyœ?
 			}
 	}
 }
 
-void hitSidesOfThePlatform(Platform* platforms)
+void hitSidesOfThePlatform(Stage* stage)
 {
-	double upperYCorner = Mario.lowerCoordinates.y - Mario.realSize[1];
-	double LeftCorner = Mario.lowerCoordinates.x;
-	double RightCorner = Mario.lowerCoordinates.x + Mario.realSize[0];
+	double upperYCorner = stage->player.lowerCoordinates.y - stage->player.realSize[1];
+	double LeftCorner = stage->player.lowerCoordinates.x;
+	double RightCorner = stage->player.lowerCoordinates.x + stage->player.realSize[0];
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (LeftCorner <= platforms[i].upperCorner.x + platforms[i].length && LeftCorner >= platforms[i].upperCorner.x + platforms[i].length - ONE)
-			if (upperYCorner <= platforms[i].upperCorner.y + platforms[i].width && upperYCorner > platforms[i].upperCorner.y)
+		if (LeftCorner <= stage->platforms[i].upperCorner.x + stage->platforms[i].length && LeftCorner >= stage->platforms[i].upperCorner.x + stage->platforms[i].length - ONE)
+			if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width && upperYCorner > stage->platforms[i].upperCorner.y)
 			{
-				Mario.lowerCoordinates.x = platforms[i].upperCorner.x + platforms[i].length;
+				stage->player.lowerCoordinates.x = stage->platforms[i].upperCorner.x + stage->platforms[i].length;
 				return;
 			}
-		if (RightCorner >= platforms[i].upperCorner.x && RightCorner <= platforms[i].upperCorner.x + ONE)
-			if (upperYCorner <= platforms[i].upperCorner.y + platforms[i].width && upperYCorner > platforms[i].upperCorner.y)
-				Mario.lowerCoordinates.x = platforms[i].upperCorner.x - Mario.realSize[0];
+		if (RightCorner >= stage->platforms[i].upperCorner.x && RightCorner <= stage->platforms[i].upperCorner.x + ONE)
+			if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width && upperYCorner > stage->platforms[i].upperCorner.y)
+				stage->player.lowerCoordinates.x = stage->platforms[i].upperCorner.x - stage->player.realSize[0];
 	}
 }
 
-//TODO KONIECZNIE WSZYSTKIE STRUKTURY/ZMIENNE NIE MOGA BYC GLOBALNE !!!!!! ////////////////////////////////////////////////////////////////
-void gravityApply(GameInfo* gameInfo, Platform* platforms, Barrel* barrels)
+void gravityApply(Stage* stage)
 {
-	if (Mario.isJumping || Mario.fallDown)
+	if (stage->player.isJumping || stage->player.fallDown)
 	{
-		Mario.speed.speedY += (GRAVITY_SPEED * gameInfo->deltaTime);
-		Mario.lowerCoordinates.y += Mario.speed.speedY;
-		approximateOnGround(gameInfo);
-		hitBottomOfThePlatform(platforms, gameInfo);
-		hitSidesOfThePlatform(platforms);
-		approximateOnPlatform(platforms);
+		stage->player.speed.speedY += (GRAVITY_SPEED * stage->gameInfo.deltaTime);
+		stage->player.lowerCoordinates.y += stage->player.speed.speedY;
+		approximateOnGround(stage);
+		hitBottomOfThePlatform(stage);
+		hitSidesOfThePlatform(stage);
+		approximateOnPlatform(stage);
 	}
 }
 
-void playerJump()
+void playerJump(Stage* stage)
 {
-	Mario.speed.speedY = -JUMPING_SPEED;
+	stage->player.speed.speedY = -JUMPING_SPEED;
 }
 
-void checkIfPlayerIsJumping() //no "double" jump or inifinity jump
+void checkIfPlayerIsJumping(Stage* stage) //no "double" jump or inifinity jump
 {
-	if (Mario.isJumping == true)
+	if (stage->player.isJumping == true)
 		return;
 	else
 	{
-		playerJumping();
-		playerJump();
+		playerJumping(stage);
+		playerJump(stage);
 	}
 }
 
-void playerMovement(GameInfo* gameInfo)
+void playerMovement(Stage* stage)
 {
-	if (Mario.onPlatform || Mario.isJumping || Mario.fallDown)
+	if (stage->player.onPlatform || stage->player.isJumping || stage->player.fallDown)
 	{
-		checkWalkDirection(gameInfo);
-		playerWalk(gameInfo);		
+		checkWalkDirection(stage);
+		playerWalk(stage);		
 	}
-	if (Mario.onLadder)
+	if (stage->player.onLadder)
 	{
-		checkDirection(gameInfo); //if checkClimbDirection(), you can only climb on ladder, no moving in X axis
-		playerClimb(gameInfo);
+		checkDirection(stage); //if checkClimbDirection(), you can only climb on ladder, no moving in X axis
+		playerClimb(stage);
 	}
-	if (Mario.begLadder || Mario.endLadder)
+	if (stage->player.begLadder || stage->player.endLadder)
 	{
-		checkDirection(gameInfo);
-		playerWalk(gameInfo);
-		playerClimb(gameInfo);
+		checkDirection(stage);
+		playerWalk(stage);
+		playerClimb(stage);
 	}
 }
 
-void loseLive(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo)
+void loseLive(Stage* stage, SDLConst* SDL)
 {
-	playerInfo->lives -= 1;
-	if (playerInfo->lives == ZERO)
-		quit(SDL, gameInfo);
+	stage->playerInfo.lives -= 1;
+	if (stage->playerInfo.lives == ZERO)
+		quit(stage, SDL);
 }
 
-void isPlayerOutsideTheBorders()
+void isPlayerOutsideTheBorders(Stage* stage)
 {
-	if (Mario.lowerCoordinates.x <= ZERO)
-		Mario.lowerCoordinates.x = ZERO;
-	if (Mario.lowerCoordinates.x + Mario.realSize[0] >= SCREEN_WIDTH)
-		Mario.lowerCoordinates.x = SCREEN_WIDTH - Mario.realSize[0];
+	if (stage->player.lowerCoordinates.x <= ZERO)
+		stage->player.lowerCoordinates.x = ZERO;
+	if (stage->player.lowerCoordinates.x + stage->player.realSize[0] >= SCREEN_WIDTH)
+		stage->player.lowerCoordinates.x = SCREEN_WIDTH - stage->player.realSize[0];
 }
 
-void isPlayerOnLadder(Ladder* ladders)
+void isPlayerOnLadder(Stage* stage)
 {
-	int leftLowerCorner[2] = { Mario.lowerCoordinates.x, Mario.lowerCoordinates.y };
+	int leftLowerCorner[2] = { stage->player.lowerCoordinates.x, stage->player.lowerCoordinates.y };
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		if (ladders[i].upperCorner.x <= Mario.lowerCoordinates.x && Mario.lowerCoordinates.x <= ladders[i].upperCorner.x + ladders[i].width) //x increses in right direciton
+		if (stage->ladders[i].upperCorner.x <= stage->player.lowerCoordinates.x && stage->player.lowerCoordinates.x <= stage->ladders[i].upperCorner.x + stage->ladders[i].width) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
-			if (leftLowerCorner[1] == ladders[i].upperCorner.y + ladders[i].height) //y increases in down direction
+			if (leftLowerCorner[1] == stage->ladders[i].upperCorner.y + stage->ladders[i].height) //y increases in down direction
 			{
-				playerOnLadderBeg();
-				playerNotOnLadderEnd();
-				playerOnLadder();
+				playerOnLadderBeg(stage);
+				playerNotOnLadderEnd(stage);
+				playerOnLadder(stage);
 				return;
 			}
 			//is Mario at the end of ladder?
-			else if (leftLowerCorner[1] == ladders[i].upperCorner.y)
+			else if (leftLowerCorner[1] == stage->ladders[i].upperCorner.y)
 			{
-				playerOnLadderEnd();
-				playerNotOnLadderBeg();
-				playerOnLadder();
+				playerOnLadderEnd(stage);
+				playerNotOnLadderBeg(stage);
+				playerOnLadder(stage);
 				return;
 			}
 			//is Mario in the "middle" of ladder?
-			else if (ladders[i].upperCorner.y < leftLowerCorner[1] && leftLowerCorner[1] < ladders[i].upperCorner.y + ladders[i].height)
+			else if (stage->ladders[i].upperCorner.y < leftLowerCorner[1] && leftLowerCorner[1] < stage->ladders[i].upperCorner.y + stage->ladders[i].height)
 			{
-				playerOnLadder();
-				playerNotOnLadderEnd();
-				playerNotOnLadderBeg();
+				playerOnLadder(stage);
+				playerNotOnLadderEnd(stage);
+				playerNotOnLadderBeg(stage);
 				return;
 			}
 		}
 	}
-	playerNotOnLadderEnd();
-	playerNotOnLadderBeg();
-	playerNotOnLadder();
+	playerNotOnLadderEnd(stage);
+	playerNotOnLadderBeg(stage);
+	playerNotOnLadder(stage);
 }
 
-void isPlayerOnPlatform(Platform* platforms)
+void isPlayerOnPlatform(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
 		// is Mario on platform height?
-		if (Mario.lowerCoordinates.y == platforms[i].upperCorner.y)
+		if (stage->player.lowerCoordinates.y == stage->platforms[i].upperCorner.y)
 			// how far from edges?
-			if (platforms[i].upperCorner.x <= Mario.lowerCoordinates.x + Mario.realSize[0] && Mario.lowerCoordinates.x <= platforms[i].upperCorner.x + platforms[i].length)
+			if (stage->platforms[i].upperCorner.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] && stage->player.lowerCoordinates.x <= stage->platforms[i].upperCorner.x + stage->platforms[i].length)
 			{
-				playerOnPlatform();
+				playerOnPlatform(stage);
 				return;
 			}
 	}
-	playerNotOnPlatform();
+	playerNotOnPlatform(stage);
 }
 
-void isPlayerOnGround()
+void isPlayerOnGround(Stage* stage)
 {
-	if (!Mario.onPlatform && !Mario.onLadder && Mario.lowerCoordinates.y != GROUND_HEIGHT)
-		playerFallingDown();
-	if (Mario.lowerCoordinates.y == GROUND_HEIGHT)
+	if (!stage->player.onPlatform && !stage->player.onLadder && stage->player.lowerCoordinates.y != GROUND_HEIGHT)
+		playerFallingDown(stage);
+	if (stage->player.lowerCoordinates.y == GROUND_HEIGHT)
 	{
-		playerOnGround();
-		playerNotFallingDown();
+		playerOnGround(stage);
+		playerNotFallingDown(stage);
 	}
 }
 
-void whereIsPLayer(Platform* platforms, Ladder* ladders)
+void whereIsPLayer(Stage* stage)
 {
-	isPlayerOutsideTheBorders();
-	isPlayerOnLadder(ladders);
-	isPlayerOnPlatform(platforms);
-	isPlayerOnGround();
+	isPlayerOutsideTheBorders(stage);
+	isPlayerOnLadder(stage);
+	isPlayerOnPlatform(stage);
+	isPlayerOnGround(stage);
 }

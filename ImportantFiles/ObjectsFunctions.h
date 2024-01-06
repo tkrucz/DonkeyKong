@@ -21,30 +21,29 @@ int loadBMPs(SDLConst* SDL);
 
 void initializeColors(SDLConst* SDL, Color* colors);
 
-void createBarrels(Barrel* barrels);
+void createBarrels(Stage* stage);
 
-void drawBarrels(SDLConst* SDL, Barrel* barrels);
+void drawBarrels(Stage* stage, SDLConst* SDL);
 
-void initializeGameObjects(StageSpecifier* stageSpecifier, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void initializeGameObjects(Stage* stage);
 
-void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels);
+void barrelsApproximateOnPlatform(Stage* stage);
 
-void areBarrelsOnGround(Barrel* barrels);
+void areBarrelsOnGround(Stage* stage);
 
-void whereAreBarrels(Platform* platforms, Barrel* barrels);
+void whereAreBarrels(Stage* stage);
 
-void barrelBowling(Barrel* barrels, GameInfo* gameInfo);
+void barrelBowling(Stage* stage);
 
-void barrelFalling(Barrel* barrels, GameInfo* gameInfo);
+void barrelFalling(Stage* stage);
 
-void barrelMovement(Barrel* barrels, GameInfo* gameInfo);
+void barrelMovement(Stage* stage);
 
-void collision(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
+void collision(Stage* stage, SDLConst* SDL);
 
-void whereAreObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score,
-	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies, ShowText* showText);
+void whereAreObjects(Stage* stage, SDLConst* SDL,  Score* score, ShowText* showText);
 
-void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
+void moveObjects(Stage* stage, SDLConst* SDL);
 
 
 int loadBMPs(SDLConst* SDL)
@@ -75,7 +74,7 @@ void initializeColors(SDLConst* SDL, Color* colors)
 	colors->grey = SDL_MapRGB(SDL->screen->format, 160, 160, 160);
 }
 
-void createBarrels(Barrel* barrels)
+void createBarrels(Stage* stage)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
@@ -91,147 +90,146 @@ void createBarrels(Barrel* barrels)
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		barrels[i].lowerRightCoordinates.x = barrelsParameters[i][0];
-		barrels[i].lowerRightCoordinates.y = barrelsParameters[i][1];
-		barrels[i].fallDown = barrelsParameters[i][2];
-		barrels[i].onPlatform = barrelsParameters[i][3];
-		barrels[i].onGround = barrelsParameters[i][4];
-		barrels[i].animation = { ZERO, ZERO, barrels[i].realSize[0], barrels[i].realSize[1] };
+		stage->barrels[i].lowerRightCoordinates.x = barrelsParameters[i][0];
+		stage->barrels[i].lowerRightCoordinates.y = barrelsParameters[i][1];
+		stage->barrels[i].fallDown = barrelsParameters[i][2];
+		stage->barrels[i].onPlatform = barrelsParameters[i][3];
+		stage->barrels[i].onGround = barrelsParameters[i][4];
+		stage->barrels[i].animation = { ZERO, ZERO, stage->barrels[i].realSize[0], stage->barrels[i].realSize[1] };
 	}
 }
 
-void drawBarrels(SDLConst* SDL, Barrel* barrels)
+void drawBarrels(Stage* stage, SDLConst* SDL)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-		DrawSurface(SDL->screen, SDL->barrel, barrels[i].lowerRightCoordinates.x, barrels[i].lowerRightCoordinates.y, &barrels[i].animation);
+		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
 }
 
-void initializeGameObjects(StageSpecifier* stageSpecifier, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void initializeGameObjects(Stage* stage)
 {
-	if (*stageSpecifier == STAGE1)
+	if (stage->stageSpecifier == STAGE1)
 	{
-		createPlatforms(platforms);
-		createLadders(ladders);
-		createBarrels(barrels);
-		createTrophies(trophies);
+		createPlatforms(stage);
+		createLadders(stage);
+		createBarrels(stage);
+		createTrophies(stage);
 	}
-	else if (*stageSpecifier == STAGE2)
+	else if (stage->stageSpecifier == STAGE2)
 	{
-		createPlatforms2(platforms);
-		createLadders2(ladders);
-		createBarrels(barrels);
-		createTrophies2(trophies);
+		createPlatforms2(stage);
+		createLadders2(stage);
+		createBarrels(stage);
+		createTrophies2(stage);
 	}
-	else if (*stageSpecifier == STAGE3)
+	else if (stage->stageSpecifier == STAGE3)
 	{
-		createPlatforms3(platforms);
-		createLadders3(ladders);
-		createBarrels(barrels);
-		createTrophies3(trophies);
+		createPlatforms3(stage);
+		createLadders3(stage);
+		createBarrels(stage);
+		createTrophies3(stage);
 	}
 }
 
-void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels)
+void barrelsApproximateOnPlatform(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		barrels[i].onPlatform = false;
+		stage->barrels[i].onPlatform = false;
 		for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
 		{
-			if (barrels[i].lowerRightCoordinates.y + barrels[i].speed.speedY + BARRELS_DIFFERENCE_IN_Y >= platforms[j].upperCorner.y &&
-				barrels[i].lowerRightCoordinates.y - barrels[i].realSize[1] <= platforms[j].upperCorner.y + platforms[j].width &&
-				platforms[j].upperCorner.x <= barrels[i].lowerRightCoordinates.x &&
-				barrels[i].lowerRightCoordinates.x - barrels[i].realSize[0] <= platforms[j].upperCorner.x + platforms[j].length)
+			if (stage->barrels[i].lowerRightCoordinates.y + stage->barrels[i].speed.speedY + BARRELS_DIFFERENCE_IN_Y >= stage->platforms[j].upperCorner.y &&
+				stage->barrels[i].lowerRightCoordinates.y - stage->barrels[i].realSize[1] <= stage->platforms[j].upperCorner.y + stage->platforms[j].width &&
+				stage->platforms[j].upperCorner.x <= stage->barrels[i].lowerRightCoordinates.x &&
+				stage->barrels[i].lowerRightCoordinates.x - stage->barrels[i].realSize[0] <= stage->platforms[j].upperCorner.x + stage->platforms[j].length)
 			{
-				barrels[i].lowerRightCoordinates.y = platforms[j].upperCorner.y + BARRELS_DIFFERENCE_IN_Y;
-				barrels[i].onPlatform = true;
+				stage->barrels[i].lowerRightCoordinates.y = stage->platforms[j].upperCorner.y + BARRELS_DIFFERENCE_IN_Y;
+				stage->barrels[i].onPlatform = true;
 				break;
 			}
 		}
 	}
 }
 
-void areBarrelsOnGround(Barrel* barrels)
+void areBarrelsOnGround(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].lowerRightCoordinates.y + barrels[i].speed.speedY >= GROUND_HEIGHT)
-			barrels[i].onGround = true;
+		if (stage->barrels[i].lowerRightCoordinates.y + stage->barrels[i].speed.speedY >= GROUND_HEIGHT)
+			stage->barrels[i].onGround = true;
 		else
-			barrels[i].onGround = false;
+			stage->barrels[i].onGround = false;
 
-		if (barrels[i].onGround)
+		if (stage->barrels[i].onGround)
 		{
-			if (barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH / 2)
-				barrels[i].speed.speedX = BARRELS_BOWLING_SPEED;
-			if (barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH)
-				barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED;
-			barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
+			if (stage->barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH / 2)
+				stage->barrels[i].speed.speedX = BARRELS_BOWLING_SPEED;
+			if (stage->barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH)
+				stage->barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED;
+			stage->barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
 		}
 	}
 }
 
-void whereAreBarrels(Platform* platforms, Barrel* barrels)
+void whereAreBarrels(Stage* stage)
 {
-	barrelsApproximateOnPlatform(platforms, barrels);
-	areBarrelsOnGround(barrels);
+	barrelsApproximateOnPlatform(stage);
+	areBarrelsOnGround(stage);
 }
 
-void barrelBowling(Barrel* barrels, GameInfo* gameInfo)
+void barrelBowling(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].onPlatform)
-			barrels[i].lowerRightCoordinates.x += barrels[i].speed.speedX * gameInfo->deltaTime;
-		if (barrels[i].lowerRightCoordinates.x >= SCREEN_WIDTH)
-			barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED; //change the speed "direction"
+		if (stage->barrels[i].onPlatform)
+			stage->barrels[i].lowerRightCoordinates.x += stage->barrels[i].speed.speedX * stage->gameInfo.deltaTime;
+		if (stage->barrels[i].lowerRightCoordinates.x >= SCREEN_WIDTH)
+			stage->barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED; //change the speed "direction"
 	}
 }
 
-void barrelFalling(Barrel* barrels, GameInfo* gameInfo)
+void barrelFalling(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (!barrels[i].onPlatform && !barrels[i].onGround)
-			barrels[i].fallDown = true;
-		if (barrels[i].fallDown)
-			barrels[i].lowerRightCoordinates.y += barrels[i].speed.speedY * gameInfo->deltaTime;
+		if (!stage->barrels[i].onPlatform && !stage->barrels[i].onGround)
+			stage->barrels[i].fallDown = true;
+		if (stage->barrels[i].fallDown)
+			stage->barrels[i].lowerRightCoordinates.y += stage->barrels[i].speed.speedY * stage->gameInfo.deltaTime;
 	}
 }
 
-void barrelMovement(Barrel* barrels, GameInfo* gameInfo)
+void barrelMovement(Stage* stage)
 {
-	barrelBowling(barrels, gameInfo);
-	barrelFalling(barrels, gameInfo);
+	barrelBowling(stage);
+	barrelFalling(stage);
 }
 
-void collision(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
+void collision(Stage* stage, SDLConst* SDL)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
-		if (barrels[i].lowerRightCoordinates.y + BARRELS_DIFFERENCE_IN_Y >= Mario.lowerCoordinates.y - Mario.realSize[1] &&
-			barrels[i].lowerRightCoordinates.y - BARRELS_HITBOX_SIZE <= Mario.lowerCoordinates.y &&
-			barrels[i].lowerRightCoordinates.x <= Mario.lowerCoordinates.x + Mario.realSize[0] &&
-			barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE >= Mario.lowerCoordinates.x)
+		if (stage->barrels[i].lowerRightCoordinates.y + BARRELS_DIFFERENCE_IN_Y >= stage->player.lowerCoordinates.y - stage->player.realSize[1] &&
+			stage->barrels[i].lowerRightCoordinates.y - BARRELS_HITBOX_SIZE <= stage->player.lowerCoordinates.y &&
+			stage->barrels[i].lowerRightCoordinates.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] &&
+			stage->barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE >= stage->player.lowerCoordinates.x)
 		{
-			loseLive(SDL, gameInfo, playerInfo);
-			barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
+			loseLive(stage, SDL);
+			stage->barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
 			break;
 		}
 	}
 }
 
-void whereAreObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score,
-	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies, ShowText* showText)
+void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)
 {
-	whereIsPLayer(platforms, ladders);
-	whereAreBarrels(platforms, barrels);
-	deltaScore(SDL, gameInfo, playerInfo, score, barrels, trophies, showText);
+	whereIsPLayer(stage);
+	whereAreBarrels(stage);
+	deltaScore(stage, SDL, score, showText);
 }
 
-void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
+void moveObjects(Stage* stage, SDLConst* SDL)
 {
-	playerMovement(gameInfo);
-	barrelMovement(barrels, gameInfo);
-	collision(SDL, gameInfo, playerInfo, barrels);
+	playerMovement(stage);
+	barrelMovement(stage);
+	collision(stage, SDL);
 }

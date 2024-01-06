@@ -85,7 +85,7 @@ struct Player
 	bool climbUp = false;
 	bool climbDown = false;
 	char text[128];
-}Mario;
+};
 
 struct Barrel
 {
@@ -137,10 +137,10 @@ struct Stage
 {
 	StageSpecifier stageSpecifier = STAGE1;
 	Player player;
-	Platform platforms;
-	Ladder ladders;
-	Barrel barrels;
-	Trophy trophies;
+	Platform platforms[NUMBER_OF_PLATFORMS];
+	Ladder ladders[NUMBER_OF_LADDERS];
+	Barrel barrels[NUMBER_OF_BARRELS];
+	Trophy trophies[NUMBER_OF_TROPHIES];
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;
 	Color platformColor;

@@ -17,31 +17,31 @@ extern "C" {
 
 void drawGround(SDLConst* SDL, Color* colors);
 
-void createPlatforms(Platform* platforms);
+void createPlatforms(Stage* stage);
 
-void drawPlatforms(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms);
+void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors);
 
-void platformColor(Stage* stage, StageSpecifier* stageSpecifier, Color* colors);
+void platformColor(Stage* stage, Color* colors);
 
-void createLadders(Ladder* ladders);
+void createLadders(Stage* stage);
 
-void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders);
+void drawLadders(Stage* stage, SDLConst* SDL, Color* colors);
 
-void createTrophies(Trophy* trophies);
+void createTrophies(Stage* stage);
 
-void drawTrophies(SDLConst* SDL, Trophy* trophies);
+void drawTrophies(Stage* stage, SDLConst* SDL);
 
-void createPlatforms2(Platform* platforms);
+void createPlatforms2(Stage* stage);
 
-void createLadders2(Ladder* ladders);
+void createLadders2(Stage* stage);
 
-void createTrophies2(Trophy* trophies);
+void createTrophies2(Stage* stage);
 
-void createPlatforms3(Platform* platforms);
+void createPlatforms3(Stage* stage);
 
-void createLadders3(Ladder* ladders);
+void createLadders3(Stage* stage);
 
-void createTrophies3(Trophy* trophies);
+void createTrophies3(Stage* stage);
 
 
 void drawGround(SDLConst* SDL, Color* colors)
@@ -49,7 +49,7 @@ void drawGround(SDLConst* SDL, Color* colors)
 	DrawLine(SDL->screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
-void createPlatforms(Platform* platforms)
+void createPlatforms(Stage* stage)
 {
 	//platformsParameters{ X cordinate, Y cordinate, length }
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
@@ -62,39 +62,39 @@ void createPlatforms(Platform* platforms)
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		platforms[i].upperCorner.x = platformsParameters[i][0];
-		platforms[i].upperCorner.y = platformsParameters[i][1];
-		platforms[i].length = platformsParameters[i][2];
+		stage->platforms[i].upperCorner.x = platformsParameters[i][0];
+		stage->platforms[i].upperCorner.y = platformsParameters[i][1];
+		stage->platforms[i].length = platformsParameters[i][2];
 	}
 }
 
-void drawPlatforms(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms)
+void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors)
 {
-	platformColor(stage, stageSpecifier, colors);
+	platformColor(stage, colors);
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, stage->platformColor.platformColor);
+		DrawRectangle(SDL->screen, stage->platforms[i].upperCorner.x, stage->platforms[i].upperCorner.y, stage->platforms[i].length, stage->platforms[i].width, colors->black, stage->platformColor.platformColor);
 }
 
-void platformColor(Stage* stage, StageSpecifier* stageSpecifier, Color* colors)
+void platformColor(Stage* stage, Color* colors)
 {
-	if (*stageSpecifier == STAGE1)
+	if (stage->stageSpecifier == STAGE1)
 	{
 		colors->platformColor = colors->pink;
 		stage->platformColor.platformColor = colors->platformColor;
 	}
-	else if (*stageSpecifier == STAGE2)
+	else if (stage->stageSpecifier == STAGE2)
 	{
 		colors->platformColor = colors->indygo;
 		stage->platformColor.platformColor = colors->platformColor;
 	}
-	else if (*stageSpecifier == STAGE3)
+	else if (stage->stageSpecifier == STAGE3)
 	{
 		colors->platformColor = colors->lime;
 		stage->platformColor.platformColor = colors->platformColor;
 	}
 }
 
-void createLadders(Ladder* ladders)
+void createLadders(Stage* stage)
 {
 	//laddersParameters {X cordinate, Y cordinate, ladder height}
 	int laddersParameters[NUMBER_OF_LADDERS][3] = {
@@ -105,19 +105,19 @@ void createLadders(Ladder* ladders)
 
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		ladders[i].upperCorner.x = laddersParameters[i][0];
-		ladders[i].upperCorner.y = laddersParameters[i][1];
-		ladders[i].height = laddersParameters[i][2];
+		stage->ladders[i].upperCorner.x = laddersParameters[i][0];
+		stage->ladders[i].upperCorner.y = laddersParameters[i][1];
+		stage->ladders[i].height = laddersParameters[i][2];
 	}
 }
 
-void drawLadders(SDLConst* SDL, Color* colors, Ladder* ladders)
+void drawLadders(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
-		DrawRectangle(SDL->screen, ladders[i].upperCorner.x, ladders[i].upperCorner.y, ladders[i].width, ladders[i].height, colors->black, colors->grey);
+		DrawRectangle(SDL->screen, stage->ladders[i].upperCorner.x, stage->ladders[i].upperCorner.y, stage->ladders[i].width, stage->ladders[i].height, colors->black, colors->grey);
 }
 
-void createTrophies(Trophy* trophies)
+void createTrophies(Stage* stage)
 {
 	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
 		{TROPHIES_I_SPAWN_POINT_X,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
@@ -127,19 +127,19 @@ void createTrophies(Trophy* trophies)
 
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 	{
-		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
-		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
+		stage->trophies[i].animation = { ZERO, ZERO, 20, 20 };
 	}
 }
 
-void drawTrophies(SDLConst* SDL, Trophy* trophies)
+void drawTrophies(Stage* stage, SDLConst* SDL)
 {
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-		DrawSurface(SDL->screen, SDL->trophy, trophies[i].lowerCoordinates.x, trophies[i].lowerCoordinates.y, &trophies[i].animation);
+		DrawSurface(SDL->screen, SDL->trophy, stage->trophies[i].lowerCoordinates.x, stage->trophies[i].lowerCoordinates.y, &stage->trophies[i].animation);
 }
 
-void createPlatforms2(Platform* platforms)
+void createPlatforms2(Stage* stage)
 {
 	//platformsParameters{ X cordinate, Y cordinate, length }
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
@@ -152,13 +152,13 @@ void createPlatforms2(Platform* platforms)
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		platforms[i].upperCorner.x = platformsParameters[i][0];
-		platforms[i].upperCorner.y = platformsParameters[i][1];
-		platforms[i].length = platformsParameters[i][2];
+		stage->platforms[i].upperCorner.x = platformsParameters[i][0];
+		stage->platforms[i].upperCorner.y = platformsParameters[i][1];
+		stage->platforms[i].length = platformsParameters[i][2];
 	}
 }
 
-void createLadders2(Ladder* ladders)
+void createLadders2(Stage* stage)
 {
 	//laddersParameters {X cordinate, Y cordinate, ladder height}
 	int laddersParameters[NUMBER_OF_LADDERS][3] = {
@@ -169,13 +169,13 @@ void createLadders2(Ladder* ladders)
 
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		ladders[i].upperCorner.x = laddersParameters[i][0];
-		ladders[i].upperCorner.y = laddersParameters[i][1];
-		ladders[i].height = laddersParameters[i][2];
+		stage->ladders[i].upperCorner.x = laddersParameters[i][0];
+		stage->ladders[i].upperCorner.y = laddersParameters[i][1];
+		stage->ladders[i].height = laddersParameters[i][2];
 	}
 }
 
-void createTrophies2(Trophy* trophies)
+void createTrophies2(Stage* stage)
 {
 	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
 		{670,PLATFORM_I_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
@@ -185,13 +185,13 @@ void createTrophies2(Trophy* trophies)
 
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 	{
-		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
-		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
+		stage->trophies[i].animation = { ZERO, ZERO, 20, 20 };
 	}
 }
 
-void createPlatforms3(Platform* platforms)
+void createPlatforms3(Stage* stage)
 {
 	//platformsParameters{ X cordinate, Y cordinate, length }
 	int platformsParameters[NUMBER_OF_PLATFORMS][3] = {
@@ -204,13 +204,13 @@ void createPlatforms3(Platform* platforms)
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		platforms[i].upperCorner.x = platformsParameters[i][0];
-		platforms[i].upperCorner.y = platformsParameters[i][1];
-		platforms[i].length = platformsParameters[i][2];
+		stage->platforms[i].upperCorner.x = platformsParameters[i][0];
+		stage->platforms[i].upperCorner.y = platformsParameters[i][1];
+		stage->platforms[i].length = platformsParameters[i][2];
 	}
 }
 
-void createLadders3(Ladder* ladders)
+void createLadders3(Stage* stage)
 {
 	//laddersParameters {X cordinate, Y cordinate, ladder height}
 	int laddersParameters[NUMBER_OF_LADDERS][3] = {
@@ -221,13 +221,13 @@ void createLadders3(Ladder* ladders)
 
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		ladders[i].upperCorner.x = laddersParameters[i][0];
-		ladders[i].upperCorner.y = laddersParameters[i][1];
-		ladders[i].height = laddersParameters[i][2];
+		stage->ladders[i].upperCorner.x = laddersParameters[i][0];
+		stage->ladders[i].upperCorner.y = laddersParameters[i][1];
+		stage->ladders[i].height = laddersParameters[i][2];
 	}
 }
 
-void createTrophies3(Trophy* trophies)
+void createTrophies3(Stage* stage)
 {
 	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
 		{675,PLATFORM_II_HEIGHT - TROPHIES_DIFFERENCE_IN_Y},
@@ -237,8 +237,8 @@ void createTrophies3(Trophy* trophies)
 
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 	{
-		trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
-		trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		trophies[i].animation = { ZERO, ZERO, 20, 20 };
+		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
+		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
+		stage->trophies[i].animation = { ZERO, ZERO, 20, 20 };
 	}
 }

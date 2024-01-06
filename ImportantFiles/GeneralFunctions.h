@@ -15,40 +15,35 @@ extern "C" {
 #include"./SDL2-2.0.10/include/SDL_main.h"
 }
 
-void createWindow(SDLConst* SDL, GameInfo* gameInfo);
+void createWindow(SDLConst* SDL, Stage* stage);
 
-void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
+void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
-void drawScene(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void drawScene(Stage* stage, SDLConst* SDL, Color* colors);
 
-void displayWindow(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void displayWindow(Stage* stage, SDLConst* SDL, Color* colors);
 
 void refreshWindow(SDLConst* SDL);
 
-void printGameInfo(SDLConst* SDL, GameInfo* gameInfo, Color* colors);
+void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
-void printPlayerInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
+void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
-void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo); //set up the game at the beginning
+void defaultSettings(Stage* stage); //set up the game at the beginning
 
-void newGameSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
-Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //set up settings after pressing "n"
+void newGameSettings(Stage* stage); //set up settings after pressing "n"
 
-void loadStageSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
-Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //NOT USED
+void loadStageSettings(Stage* stage); 
 
-void timeCounting(GameInfo* gameInfo); //counting the game time
+void timeCounting(Stage* stage); //counting the game time
 
-void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
+void readKeys(Stage* stage,SDLConst* SDL,Score* score); //read key input
 
-void playerKeyHandle(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score);
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
-void quit(SDLConst* SDL, GameInfo* gameInfo);
+void quit(Stage* stage, SDLConst* SDL);
 
 void firstStageSpecify(Stage* stage);
 
@@ -56,16 +51,15 @@ void secondStageSpecify(Stage* stage);
 
 void thirdStageSpecify(Stage* stage);
 
-void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void handleSpecifier(Stage* stage, SDLConst* SDL);
 
 Stage whichStage(Stage* stage, Game* game);
 
-void createWindow(SDLConst* SDL, GameInfo* gameInfo) // Create a window with specified size.
+void createWindow(SDLConst* SDL, Stage* stage) // Create a window with specified size.
 {
-	gameInfo->err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+	stage->gameInfo.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&SDL->window, &SDL->renderer);
-	if (gameInfo->err != 0)
+	if (stage->gameInfo.err != 0)
 	{
 		SDL_Quit();
 		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
@@ -85,29 +79,28 @@ void createWindow(SDLConst* SDL, GameInfo* gameInfo) // Create a window with spe
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
+void printInfo(Stage* stage, SDLConst* SDL, Color* colors)
 {
-	printGameInfo(SDL, gameInfo, colors);
-	printPlayerInfo(SDL, gameInfo, playerInfo, colors);
+	printGameInfo(stage, SDL, colors);
+	printPlayerInfo(stage, SDL, colors);
 }
 
-void drawScene(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
+void drawScene(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	drawGround(SDL, colors);
-	drawPlatforms(stage, stageSpecifier, SDL, colors, platforms);
-	drawLadders(SDL, colors, ladders);
-	drawTrophies(SDL, trophies);
-	drawBarrels(SDL, barrels);
+	drawPlatforms(stage, SDL, colors);
+	drawLadders(stage, SDL, colors);
+	drawTrophies(stage, SDL);
+	drawBarrels(stage, SDL);
 
 } 
 
-void displayWindow(Stage* stage, StageSpecifier* stageSpecifier,SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void displayWindow(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(stage, &stage->stageSpecifier, SDL, colors, platforms, ladders, barrels, trophies);
-	printInfo(SDL, gameInfo, playerInfo, colors);
-	DrawSurface(SDL->screen, SDL->player, Mario.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, Mario.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
+	drawScene(stage,SDL,colors);
+	printInfo(stage,SDL,colors);
+	DrawSurface(SDL->screen, SDL->player, stage->player.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, stage->player.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &stage->player.animation); //draws the player
 }
 
 void refreshWindow(SDLConst* SDL)
@@ -117,74 +110,71 @@ void refreshWindow(SDLConst* SDL)
 	SDL_RenderPresent(SDL->renderer);
 }
 
-void printGameInfo(SDLConst* SDL, GameInfo* gameInfo, Color* colors)
+void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
-	sprintf(gameInfo->text, "King Donkey");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TITLE_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Implemented requirements: mandatory, A, B, C, F ");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, REQUIREMENTS_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Time from beginning: %.1lf s", gameInfo->gameTime);
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TIME_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Esc - quit, n - new game ");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, OPTIONS_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "\30 - move up \31 - move down \32 - move left \33 - move right SPACE - jump");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, KEYS_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Author: Tomasz Kruczalak 198049");
-	DrawString(SDL->screen, ZERO_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL->charset);
+	sprintf(stage->gameInfo.text, "King Donkey");
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, TITLE_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, F ");
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Time from beginning: %.1lf s", stage->gameInfo.gameTime);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, TIME_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Esc - quit, n - new game ");
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, OPTIONS_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "\30 - move up \31 - move down \32 - move left \33 - move right SPACE - jump");
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, KEYS_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Author: Tomasz Kruczalak 198049");
+	DrawString(SDL->screen, ZERO_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
 }
 
-void printPlayerInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors)
+void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	DrawRectangle(SDL->screen, ZERO_COLUMN, EIGHTY_ROW, ONE_HUNDRED_TWENTY, THIRTY_FIVE, colors->white, colors->black);
-	sprintf(gameInfo->text, "Score: %.6d", playerInfo->score);
-	DrawString(SDL->screen, TEN_COLUMN, EIGHTY_FIVE_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Lives: %d", playerInfo->lives);
-	DrawString(SDL->screen, TEN_COLUMN, HUNDRED_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Trophies:");
-	DrawString(SDL->screen, FIVE_HUNDRED_COLUMN, AUTHOR_INFO_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "LeftLowerXCorner: %.0f", Mario.lowerCoordinates.x);
-	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_FIFTHY_COLUMN, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "LeftLowerYCorner: %.0f", Mario.lowerCoordinates.y);
-	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_SEVENTY_COLUMN, gameInfo->text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Score: %.6d", stage->playerInfo.score);
+	DrawString(SDL->screen, TEN_COLUMN, EIGHTY_FIVE_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Lives: %d", stage->playerInfo.lives);
+	DrawString(SDL->screen, TEN_COLUMN, HUNDRED_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "Trophies:");
+	DrawString(SDL->screen, FIVE_HUNDRED_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "LeftLowerXCorner: %.0f", stage->player.lowerCoordinates.x);
+	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_FIFTHY_COLUMN, stage->gameInfo.text, SDL->charset);
+	sprintf(stage->gameInfo.text, "LeftLowerYCorner: %.0f", stage->player.lowerCoordinates.y);
+	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_SEVENTY_COLUMN, stage->gameInfo.text, SDL->charset);
 }
 
-void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
+void defaultSettings(Stage* stage)
 {
-	gameInfo->quit = false;
-	gameInfo->gameTime = ZERO;
-	playerInfo->score = PLAYER_DEFAULT_POINTS;
-	playerInfo->lives = PLAYER_DEFAULT_LIVES;
-	initializePlayer();
+	stage->gameInfo.quit = false;
+	stage->gameInfo.gameTime = ZERO;
+	stage->playerInfo.score = PLAYER_DEFAULT_POINTS;
+	stage->playerInfo.lives = PLAYER_DEFAULT_LIVES;
+	initializePlayer(stage);
 }
 
-void newGameSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void newGameSettings(Stage* stage)
 {
-	defaultSettings(gameInfo, playerInfo);
-	initializeGameObjects(stageSpecifier, platforms, ladders, barrels, trophies);
+	defaultSettings(stage);
+	initializeGameObjects(stage);
 }
 
-void loadStageSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void loadStageSettings(Stage* stage)
 {
-	gameInfo->quit = false;
-	playerInfo->score = playerInfo->score;
-	playerInfo->lives = playerInfo->lives;
-	initializePlayer();
-	initializeGameObjects(stageSpecifier, platforms, ladders, barrels, trophies);
+	stage->gameInfo.quit = false;
+	stage->playerInfo.score = stage->playerInfo.score;
+	stage->playerInfo.lives = stage->playerInfo.lives;
+	initializePlayer(stage);
+	initializeGameObjects(stage);
 }
 
-void timeCounting(GameInfo* gameInfo)
+void timeCounting(Stage* stage)
 {
-	gameInfo->deltaTime = (gameInfo->t2 - gameInfo->t1) * MILI;
-	gameInfo->t1 = gameInfo->t2;
-	gameInfo->gameTime += gameInfo->deltaTime;
+	stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
+	stage->gameInfo.t1 = stage->gameInfo.t2;
+	stage->gameInfo.gameTime += stage->gameInfo.deltaTime;
 }
 
 // TODO przejrzystosc kodu
-void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void readKeys(Stage* stage, SDLConst* SDL,Score* score)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -193,45 +183,44 @@ void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameI
 		{
 		case SDL_KEYDOWN:
 			if (keyPressed == SDLK_ESCAPE)
-				quit(SDL, gameInfo);
+				quit(stage, SDL);
 			else if (keyPressed == SDLK_n)
-				newGameSettings(stageSpecifier, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+				newGameSettings(stage);
 			break;	
 		case SDL_QUIT: //X button in right up corner
-			quit(SDL, gameInfo);
+			quit(stage, SDL);
 			break;
 		}
-		playerKeyHandle(stage,stageSpecifier,SDL,gameInfo,playerInfo,score,platforms,ladders,barrels,trophies);
+		playerKeyHandle(stage, SDL, score);
 	}
 }
 
-void playerKeyHandle(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
 	switch (SDL->event.type)
 	{
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_RIGHT)
-			playerWalkRight();
+			playerWalkRight(stage);
 		else if (keyPressed == SDLK_LEFT)
-			playerWalkLeft();
+			playerWalkLeft(stage);
 		else if (keyPressed == SDLK_DOWN)
-			playerClimbDown();
+			playerClimbDown(stage);
 		else if (keyPressed == SDLK_UP)
-			playerClimbUp();
+			playerClimbUp(stage);
 		else if (keyPressed == SDLK_SPACE)
-			checkIfPlayerIsJumping();
+			checkIfPlayerIsJumping(stage);
 		else if (keyPressed == SDLK_1)
-			handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+			handleSpecifier(stage, SDL);
 		else if (keyPressed == SDLK_2)
-			handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+			handleSpecifier(stage, SDL);
 		else if (keyPressed == SDLK_3)
-			handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+			handleSpecifier(stage, SDL);
 		break;
 	case SDL_KEYUP:
-		playerNotWalking();
-		playerNotClimbing();
+		playerNotWalking(stage);
+		playerNotClimbing(stage);
 		break;
 	}
 }
@@ -248,9 +237,9 @@ void SDLSpace(SDLConst* SDL)
 	SDL_DestroyWindow(SDL->window);
 }
 
-void quit(SDLConst* SDL, GameInfo* gameInfo)
+void quit(Stage* stage, SDLConst* SDL)
 {
-	gameInfo->quit = true;
+	stage->gameInfo.quit = true;
 	SDLSpace(SDL);
 	SDL_Quit();
 }
@@ -272,10 +261,9 @@ void thirdStageSpecify(Stage* stage)
 	stage->stageSpecifier = STAGE3;
 }
 
-void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void handleSpecifier(Stage* stage, SDLConst* SDL)
 {
-	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
+	if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
 		int keyPressed = SDL->event.key.keysym.sym;
 		switch (SDL->event.type)
@@ -291,7 +279,7 @@ Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 		case SDL_KEYUP:
 			break;
 		}		
-		loadStageSettings(&stage->stageSpecifier, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+		loadStageSettings(stage);
 	}
 }
 

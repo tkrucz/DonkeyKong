@@ -18,45 +18,40 @@ extern "C"
 
 int main(int argc, char** argv) {
 	SDLConst SDL;
-	Platform platforms[NUMBER_OF_PLATFORMS];
-	Ladder ladders[NUMBER_OF_LADDERS];
-	Barrel barrels[NUMBER_OF_BARRELS];
-	Trophy trophies[NUMBER_OF_TROPHIES];
-	PlayerInfo playerInfo;
-	GameInfo gameInfo;
 	Color colors;
 	Score score;
 	ShowText showText;
 	
-	Game game;
-	Stage stage;	
+	Stage stage;
+
 	StageSpecifier specifier;
+	Game game;
 
 	specifier = stage.stageSpecifier;
 	//stage = whichStage(&stage, &game);
 	SDL_ShowCursor(SDL_DISABLE);
 
-	createWindow(&SDL, &gameInfo);
+	createWindow(&SDL, &stage);
 	initializeColors(&SDL, &colors);
 	loadBMPs(&SDL);
-	defaultSettings(&gameInfo, &playerInfo);
-	initializeGameObjects(&specifier, platforms, ladders, barrels,trophies);
+	defaultSettings(&stage);
+	initializeGameObjects(&stage);
 
-	gameInfo.t1 = SDL_GetTicks();
+	stage.gameInfo.t1 = SDL_GetTicks();
 
-	while (!gameInfo.quit)
+	while (!stage.gameInfo.quit)
 	{
-		gameInfo.t2 = SDL_GetTicks();
-		timeCounting(&gameInfo);
+		stage.gameInfo.t2 = SDL_GetTicks();
+		timeCounting(&stage);
 
 		refreshWindow(&SDL);
-		displayWindow(&stage, &specifier, &SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
+		displayWindow(&stage, &SDL, &colors);
 
-		readKeys(&stage, &specifier, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
+		readKeys(&stage, &SDL, &score);
 
-		gravityApply(&gameInfo, platforms, barrels);
-		whereAreObjects(&SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies, &showText);
-		moveObjects(&SDL, &gameInfo, &playerInfo, barrels);
+		gravityApply(&stage);
+		whereAreObjects(&stage, &SDL, &score, &showText);
+		moveObjects(&stage, &SDL);
 	}
 	return 0;
 }

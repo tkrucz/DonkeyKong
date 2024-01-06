@@ -13,167 +13,167 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-void playerOnLadderBeg();
+void playerOnLadderBeg(Stage* stage);
 
-void playerNotOnLadderBeg();
+void playerNotOnLadderBeg(Stage* stage);
 
-void playerOnLadderEnd();
+void playerOnLadderEnd(Stage* stage);
 
-void playerNotOnLadderEnd();
+void playerNotOnLadderEnd(Stage* stage);
 
-void playerOnLadder();
+void playerOnLadder(Stage* stage);
 
-void playerNotOnLadder();
+void playerNotOnLadder(Stage* stage);
 
-void playerOnPlatform();
+void playerOnPlatform(Stage* stage);
 
-void playerNotOnPlatform();
+void playerNotOnPlatform(Stage* stage);
 
-void playerFallingDown();
+void playerFallingDown(Stage* stage);
 
-void playerNotFallingDown();
+void playerNotFallingDown(Stage* stage);
 
-void playerJumping();
+void playerJumping(Stage* stage);
 
-void playerNotJumping();
+void playerNotJumping(Stage* stage);
 
-void playerOnGround();
+void playerOnGround(Stage* stage);
 
-void playerWalkRight();
+void playerWalkRight(Stage* stage);
 
-void playerNotWalkRight();
+void playerNotWalkRight(Stage* stage);
 
-void playerWalkLeft();
+void playerWalkLeft(Stage* stage);
 
-void playerNotWalkLeft();
+void playerNotWalkLeft(Stage* stage);
 
-void playerNotWalking();
+void playerNotWalking(Stage* stage);
 
-void playerClimbUp();
+void playerClimbUp(Stage* stage);
 
-void playerNotClimbUp();
+void playerNotClimbUp(Stage* stage);
 
-void playerClimbDown();
+void playerClimbDown(Stage* stage);
 
-void playerNotClimbDown();
+void playerNotClimbDown(Stage* stage);
 
-void playerNotClimbing();
+void playerNotClimbing(Stage* stage);
 
-void playerOnLadderBeg()
+void playerOnLadderBeg(Stage* stage)
 {
-	Mario.begLadder = true;
+	stage->player.begLadder = true;
 }
 
-void playerNotOnLadderBeg()
+void playerNotOnLadderBeg(Stage* stage)
 {
-	Mario.begLadder = false;
+	stage->player.begLadder = false;
 }
 
-void playerOnLadderEnd()
+void playerOnLadderEnd(Stage* stage)
 {
-	Mario.endLadder = true;
+	stage->player.endLadder = true;
 }
 
-void playerNotOnLadderEnd()
+void playerNotOnLadderEnd(Stage* stage)
 {
-	Mario.endLadder = false;
+	stage->player.endLadder = false;
 }
 
-void playerOnLadder()
+void playerOnLadder(Stage* stage)
 {
-	Mario.onLadder = true;
+	stage->player.onLadder = true;
 }
 
-void playerNotOnLadder()
+void playerNotOnLadder(Stage* stage)
 {
-	Mario.onLadder = false;
+	stage->player.onLadder = false;
 }
 
-void playerOnPlatform()
+void playerOnPlatform(Stage* stage)
 {
-	Mario.onPlatform = true;
+	stage->player.onPlatform = true;
 }
 
-void playerNotOnPlatform()
+void playerNotOnPlatform(Stage* stage)
 {
-	Mario.onPlatform = false;
+	stage->player.onPlatform = false;
 }
 
-void playerFallingDown()
+void playerFallingDown(Stage* stage)
 {
-	Mario.fallDown = true;
+	stage->player.fallDown = true;
 }
 
-void playerNotFallingDown()
+void playerNotFallingDown(Stage* stage)
 {
-	Mario.fallDown = false;
+	stage->player.fallDown = false;
 }
 
-void playerJumping()
+void playerJumping(Stage* stage)
 {
-	Mario.isJumping = true;
+	stage->player.isJumping = true;
 }
 
-void playerNotJumping()
+void playerNotJumping(Stage* stage)
 {
-	Mario.isJumping = false;
+	stage->player.isJumping = false;
 }
 
-void playerOnGround()
+void playerOnGround(Stage* stage)
 {
-	Mario.onPlatform = true;
+	stage->player.onPlatform = true;
 }
 
-void playerWalkRight()
+void playerWalkRight(Stage* stage)
 {
-	Mario.walkRight = true;
-	playerNotWalkLeft();
+	stage->player.walkRight = true;
+	playerNotWalkLeft(stage);
 }
 
-void playerNotWalkRight()
+void playerNotWalkRight(Stage* stage)
 {
-	Mario.walkRight = false;
+	stage->player.walkRight = false;
 }
 
-void playerWalkLeft()
+void playerWalkLeft(Stage* stage)
 {
-	Mario.walkLeft = true;
-	playerNotWalkRight();
+	stage->player.walkLeft = true;
+	playerNotWalkRight(stage);
 }
 
-void playerNotWalkLeft()
+void playerNotWalkLeft(Stage* stage)
 {
-	Mario.walkLeft = false;
+	stage->player.walkLeft = false;
 }
 
-void playerNotWalking()
+void playerNotWalking(Stage* stage)
 {
-	Mario.walkLeft = false;
-	Mario.walkRight = false;
+	stage->player.walkLeft = false;
+	stage->player.walkRight = false;
 }
 
-void playerClimbUp()
+void playerClimbUp(Stage* stage)
 {
-	Mario.climbUp = true;
+	stage->player.climbUp = true;
 }
 
-void playerNotClimbUp()
+void playerNotClimbUp(Stage* stage)
 {
-	Mario.climbUp = false;
+	stage->player.climbUp = false;
 }
 
-void playerClimbDown()
+void playerClimbDown(Stage* stage)
 {
-	Mario.climbDown = true;
+	stage->player.climbDown = true;
 }
 
-void playerNotClimbDown()
+void playerNotClimbDown(Stage* stage)
 {
-	Mario.climbDown = false;
+	stage->player.climbDown = false;
 }
 
-void playerNotClimbing()
+void playerNotClimbing(Stage* stage)
 {
-	Mario.climbDown = false;
-	Mario.climbUp = false;
+	stage->player.climbDown = false;
+	stage->player.climbUp = false;
 }
