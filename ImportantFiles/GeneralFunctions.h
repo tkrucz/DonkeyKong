@@ -19,9 +19,10 @@ void createWindow(SDLConst* SDL, GameInfo* gameInfo);
 
 void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
-void drawScene(SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void drawScene(StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
-void displayWindow(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void displayWindow(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 void refreshWindow(SDLConst* SDL);
 
@@ -31,9 +32,11 @@ void printPlayerInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, 
 
 void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo); //set up the game at the beginning
 
-void newGameSettings(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //set up settings after pressing "n"
+void newGameSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
+Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //set up settings after pressing "n"
 
-void loadStageSettings(GameInfo* gameInfo, PlayerInfo* playerInfo); //NOT USED
+void loadStageSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
+Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //NOT USED
 
 void timeCounting(GameInfo* gameInfo); //counting the game time
 
@@ -47,7 +50,8 @@ void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* tro
 
 void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
 
-void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
+void readKeys(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
@@ -93,7 +97,7 @@ void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color*
 	printPlayerInfo(SDL, gameInfo, playerInfo, colors);
 }
 
-void drawScene(SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
+void drawScene(StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
 {
 	drawGround(SDL, colors);
 	drawPlatforms(SDL, colors, platforms);
@@ -102,10 +106,11 @@ void drawScene(SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladder
 	drawBarrels(SDL, barrels);
 } 
 
-void displayWindow(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void displayWindow(StageSpecifier* stageSpecifier,SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(SDL, colors, platforms, ladders, barrels, trophies);
+	drawScene(stageSpecifier, SDL, colors, platforms, ladders, barrels, trophies);
 	printInfo(SDL, gameInfo, playerInfo, colors);
 	DrawSurface(SDL->screen, SDL->player, Mario.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, Mario.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
@@ -158,18 +163,21 @@ void defaultSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
 	initializePlayer();
 }
 
-void newGameSettings(GameInfo* gameInfo, PlayerInfo* playerInfo, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void newGameSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	defaultSettings(gameInfo, playerInfo);
-	initializeGameObjects(platforms, ladders, barrels, trophies);
+	initializeGameObjects(stageSpecifier, platforms, ladders, barrels, trophies);
 }
 
-void loadStageSettings(GameInfo* gameInfo, PlayerInfo* playerInfo)
+void loadStageSettings(StageSpecifier* stageSpecifier, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	gameInfo->quit = false;
 	playerInfo->score = playerInfo->score;
 	playerInfo->lives = playerInfo->lives;
 	initializePlayer();
+	initializeGameObjects(stageSpecifier, platforms, ladders, barrels, trophies);
 }
 
 void timeCounting(GameInfo* gameInfo)
@@ -244,7 +252,7 @@ void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* t
 }
 
 // TODO przejrzystosc kodu
-void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void readKeys(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -255,7 +263,7 @@ void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* 
 			if (keyPressed == SDLK_ESCAPE)
 				quit(SDL, gameInfo);			
 			else if (keyPressed == SDLK_n)
-				newGameSettings(gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+				newGameSettings(stageSpecifier, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 			else if (keyPressed == SDLK_RIGHT)
 				playerWalkRight();
 			else if (keyPressed == SDLK_LEFT)

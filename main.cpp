@@ -29,8 +29,8 @@ int main(int argc, char** argv) {
 	
 	Game game;
 	Stage stage;
+	StageSpecifier specifier;
 
-	//stageSpecifier specifier;
 	//specifier = handleSpecifier();
 	//Stage tmp = whichStage(specifier, game);
 	SDL_ShowCursor(SDL_DISABLE);
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 	initializeColors(&SDL, &colors);
 	loadBMPs(&SDL);
 	defaultSettings(&gameInfo, &playerInfo);
-	initializeGameObjects(platforms, ladders, barrels,trophies);
+	initializeGameObjects(&specifier, platforms, ladders, barrels,trophies);
 
 	gameInfo.t1 = SDL_GetTicks();
 
@@ -49,10 +49,10 @@ int main(int argc, char** argv) {
 		timeCounting(&gameInfo);
 
 		refreshWindow(&SDL);
-		displayWindow(&SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
+		displayWindow(&specifier, &SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
 
 		handleSpecifier(&stage, &SDL);
-		readKeys(&SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
+		readKeys(&specifier, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
 		gravityApply(&gameInfo, platforms, barrels);
 		whereAreObjects(&playerInfo, &score, platforms, ladders, barrels, trophies);

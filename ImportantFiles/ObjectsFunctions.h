@@ -53,7 +53,7 @@ void createBarrels(Barrel* barrels);
 
 void drawBarrels(SDLConst* SDL, Barrel* barrels);
 
-void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void initializeGameObjects(StageSpecifier* stageSpecifier, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels);
 
@@ -326,7 +326,7 @@ void drawBarrels(SDLConst* SDL, Barrel* barrels)
 		DrawSurface(SDL->screen, SDL->barrel, barrels[i].lowerRightCoordinates.x, barrels[i].lowerRightCoordinates.y, &barrels[i].animation);
 }
 
-void initializeGameObjects(Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void initializeGameObjects(StageSpecifier* stageSpecifier, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	createPlatforms(platforms);
 	createLadders(ladders);
