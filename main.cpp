@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
 	Color colors;
 	Score score;
 	
+	Game game;
 	Stage stage;
 
 	//stageSpecifier specifier;

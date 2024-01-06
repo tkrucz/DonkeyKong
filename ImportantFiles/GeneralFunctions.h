@@ -61,6 +61,8 @@ StageSpecifier thirdStageSpecify(Stage* stage);
 
 StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL);
 
+Stage whichStage(Stage* stage, Game* game);
+
 void createWindow(SDLConst* SDL, GameInfo* gameInfo) // Create a window with specified size.
 {
 	gameInfo->err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
@@ -334,26 +336,16 @@ StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL)
 			}
 		}
 	}
-} 
-
-/*
-*	Ths funtion works at the beginning and also activate, when player.lowerCordinates.y == platform_V_height.
-
-StageSpecifier handleSpecifier()
-{
-
 }
 
-Stage whichStage(StageSpecifier* specifier, Game game) {
-
-	switch (specifier) {
+Stage whichStage(Stage* stage, Game* game)
+{
+	switch (stage->stageSpecifier) {
 	case STAGE1:
-		return game.STAGE1;
+		return game->stage1;
 	case STAGE2:
-		return game.STAGE2;
+		return game->stage2;
 	case STAGE3:
-		return game.STAGE3;
+		return game->stage3;
 	}
 }
-
-*/
