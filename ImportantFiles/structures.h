@@ -17,6 +17,14 @@ struct Speed
 	double speedY;
 };
 
+struct ShowText
+{
+	bool isVisible = false;
+	double showingTime = SHOWING_TIME;
+	double actualShowingTime = ZERO;
+	
+};
+
 struct SDLConst
 {
 	SDL_Event event;
@@ -76,6 +84,7 @@ struct Player
 	bool walkLeft = false;
 	bool climbUp = false;
 	bool climbDown = false;
+	char text[128];
 }Mario;
 
 struct Barrel

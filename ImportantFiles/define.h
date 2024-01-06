@@ -35,6 +35,7 @@
 #define HALF 0.5
 #define ONE 1
 #define THREE 3
+#define FIFTEEN 15
 
 #define GRAVITY_SPEED 1
 #define JUMPING_SPEED 0.45
@@ -92,3 +93,4 @@
 #define JUMP_OVER_BARREL_POINTS 1000
 #define GET_TROPHY_POINTS 500
 #define END_THE_STAGE_POINTS 10000
+#define SHOWING_TIME 1

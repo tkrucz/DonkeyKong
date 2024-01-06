@@ -57,7 +57,7 @@ void secondStageSpecify(Stage* stage);
 void thirdStageSpecify(Stage* stage);
 
 void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
-	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 Stage whichStage(Stage* stage, Game* game);
 
@@ -122,7 +122,7 @@ void printGameInfo(SDLConst* SDL, GameInfo* gameInfo, Color* colors)
 	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(gameInfo->text, "King Donkey");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TITLE_ROW, gameInfo->text, SDL->charset);
-	sprintf(gameInfo->text, "Implemented requirements: mandatory, A, C, F ");
+	sprintf(gameInfo->text, "Implemented requirements: mandatory, A, B, C, F ");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, REQUIREMENTS_ROW, gameInfo->text, SDL->charset);
 	sprintf(gameInfo->text, "Time from beginning: %.1lf s", gameInfo->gameTime);
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(gameInfo->text) * 8 / 2, TIME_ROW, gameInfo->text, SDL->charset);

@@ -41,7 +41,8 @@ void barrelMovement(Barrel* barrels, GameInfo* gameInfo);
 
 void collision(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
-void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void whereAreObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score,
+	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies, ShowText* showText);
 
 void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels);
 
@@ -220,11 +221,12 @@ void collision(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel
 	}
 }
 
-void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void whereAreObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score,
+	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies, ShowText* showText)
 {
 	whereIsPLayer(platforms, ladders);
 	whereAreBarrels(platforms, barrels);
-	deltaScore(playerInfo, score, barrels, trophies);
+	deltaScore(SDL, gameInfo, playerInfo, score, barrels, trophies, showText);
 }
 
 void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)

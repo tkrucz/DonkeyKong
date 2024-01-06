@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
 	GameInfo gameInfo;
 	Color colors;
 	Score score;
+	ShowText showText;
 	
 	Game game;
 	Stage stage;	
@@ -54,7 +55,7 @@ int main(int argc, char** argv) {
 		readKeys(&stage, &specifier, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
 		gravityApply(&gameInfo, platforms, barrels);
-		whereAreObjects(&playerInfo, &score, platforms, ladders, barrels, trophies);
+		whereAreObjects(&SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies, &showText);
 		moveObjects(&SDL, &gameInfo, &playerInfo, barrels);
 	}
 	return 0;

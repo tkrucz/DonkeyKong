@@ -15,17 +15,17 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels);
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels, ShowText* showText);
 
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies);
+void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies, ShowText* showText);
 
-void endTheStage(PlayerInfo* playerInfo, Score* score);
+void endTheStage(SDLConst* SDL, PlayerInfo* playerInfo, Score* score);
 
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
+void addScore(SDLConst* SDL, PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies, ShowText* showText);
 
-void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
+void deltaScore(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies, ShowText* showText);
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
+void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels, ShowText* showText)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
 	{
@@ -36,7 +36,12 @@ void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 				barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE <= Mario.lowerCoordinates.x + Mario.realSize[0])
 			{
 				playerInfo->score += barrels[i].barrelScore;
-				score->deltaScore = barrels[i].barrelScore;
+				if (barrels[i].barrelScore > 0)
+				{
+					score->deltaScore = barrels[i].barrelScore;
+					showText->actualShowingTime = ZERO;
+					showText->isVisible = true;
+				}
 				barrels[i].barrelScore = ZERO;
 				break;
 			}
@@ -45,7 +50,7 @@ void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 	}
 }
 
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
+void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies, ShowText* showText)
 {
 	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
 	{
@@ -55,6 +60,8 @@ void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 		{
 			playerInfo->score += score->getTrophy;
 			score->deltaScore = score->getTrophy;
+			showText->actualShowingTime = ZERO;
+			showText->isVisible = true;
 			trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
 			trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
 			return;
@@ -62,29 +69,37 @@ void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 	}
 }
 
-void endTheStage(PlayerInfo* playerInfo, Score* score)
+void endTheStage(SDLConst* SDL, PlayerInfo* playerInfo, Score* score)
 {
 	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
+		sprintf(Mario.text, "You have finished the stage. Press 1,2,3 to change the levels.");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(Mario.text) * 8 / 2, Mario.lowerCoordinates.y - Mario.realSize[1] - FIFTEEN , Mario.text, SDL->charset);
 		playerInfo->score += score->endTheStage;
 		score->deltaScore = score->endTheStage;
 		score->endTheStage = ZERO;
 	}
 }
 
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
+void addScore(SDLConst* SDL, PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies, ShowText* showText)
 {
-	jumpOverBarrel(playerInfo, score, barrels);
-	getTrophy(playerInfo, score, trophies);
-	endTheStage(playerInfo, score);
+	jumpOverBarrel(playerInfo, score, barrels,showText);
+	getTrophy(playerInfo, score, trophies,showText);
+	endTheStage(SDL, playerInfo, score);
 }
 
-void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
+void deltaScore(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies, ShowText* showText)
 {
-	addScore(playerInfo, score, barrels, trophies);
+	addScore(SDL, playerInfo, score, barrels, trophies,showText);
 	if (score->deltaScore > 0)
 	{
-		//tutaj printowanie aktualnego deltaScore
+		if( showText->actualShowingTime <= showText->showingTime)
+		{
+			sprintf(Mario.text, "%d", score->deltaScore);
+			DrawString(SDL->screen, Mario.lowerCoordinates.x, Mario.lowerCoordinates.y - Mario.realSize[1] - FIFTEEN, Mario.text, SDL->charset);
+			showText->actualShowingTime += gameInfo->deltaTime;
+		}
+		else
+			showText->isVisible = false;
 	}
-	score->deltaScore = ZERO;
 }
