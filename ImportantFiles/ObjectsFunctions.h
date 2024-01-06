@@ -17,13 +17,13 @@ extern "C" {
 
 int loadBMPs(SDLConst* SDL);
 
-void initializeColors(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors);
+void initializeColors(SDLConst* SDL, Color* colors);
 
 void drawGround(SDLConst* SDL, Color* colors);
 
 void createPlatforms(Platform* platforms);
 
-void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors, Platform* platforms);
+void drawPlatforms(Stage* stage,StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms);
 
 void platformColor(Stage* stage, StageSpecifier* stageSpecifier, Color* colors);
 
@@ -92,7 +92,7 @@ int loadBMPs(SDLConst* SDL)
 	}
 }
 
-void initializeColors(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors)
+void initializeColors(SDLConst* SDL, Color* colors)
 {
 	colors->black = SDL_MapRGB(SDL->screen->format, 0x00, 0x00, 0x00);
 	colors->white = SDL_MapRGB(SDL->screen->format, 255, 255, 255);
@@ -100,7 +100,6 @@ void initializeColors(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SD
 	colors->indygo = SDL_MapRGB(SDL->screen->format, 85, 120, 200);
 	colors->lime = SDL_MapRGB(SDL->screen->format, 152, 190, 100);
 	colors->grey = SDL_MapRGB(SDL->screen->format, 160, 160, 160);
-	platformColor(stage, stageSpecifier, colors);
 }
 
 void drawGround(SDLConst* SDL, Color* colors)
@@ -127,8 +126,9 @@ void createPlatforms(Platform* platforms)
 	}
 }
 
-void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors, Platform* platforms) {
-
+void drawPlatforms(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms)
+{
+	platformColor(stage, stageSpecifier, colors);
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, stage->platformColor.platformColor);
 }

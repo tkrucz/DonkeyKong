@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow(&SDL, &gameInfo);
-	initializeColors(&stage, &specifier, &SDL, &colors);
+	initializeColors(&SDL, &colors);
 	loadBMPs(&SDL);
 	defaultSettings(&gameInfo, &playerInfo);
 	initializeGameObjects(&specifier, platforms, ladders, barrels,trophies);

@@ -65,7 +65,8 @@ void secondStageSpecify(Stage* stage);
 
 void thirdStageSpecify(Stage* stage);
 
-void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 Stage whichStage(Stage* stage, Game* game);
 
@@ -102,17 +103,18 @@ void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color*
 void drawScene(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
 {
 	drawGround(SDL, colors);
-	drawPlatforms(stage, SDL, colors, platforms);
+	drawPlatforms(stage, stageSpecifier, SDL, colors, platforms);
 	drawLadders(SDL, colors, ladders);
 	drawTrophies(SDL, trophies);
 	drawBarrels(SDL, barrels);
 
 } 
+
 void displayWindow(Stage* stage, StageSpecifier* stageSpecifier,SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
 	Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(stage, stageSpecifier, SDL, colors, platforms, ladders, barrels, trophies);
+	drawScene(stage, &stage->stageSpecifier, SDL, colors, platforms, ladders, barrels, trophies);
 	printInfo(SDL, gameInfo, playerInfo, colors);
 	DrawSurface(SDL->screen, SDL->player, Mario.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, Mario.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
@@ -272,7 +274,7 @@ void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameI
 			break;
 		}
 		playerKeyHandle(SDL);
-		handleSpecifier(stage, stageSpecifier, SDL, platforms, ladders, barrels, trophies);
+		handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 	}
 }
 
@@ -336,7 +338,8 @@ void thirdStageSpecify(Stage* stage)
 	stage->stageSpecifier = STAGE3;
 }
 
-void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
@@ -353,8 +356,8 @@ void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL
 			break;
 		case SDL_KEYUP:
 			break;
-		}
-		initializeGameObjects(stageSpecifier, platforms, ladders, barrels, trophies);
+		}		
+		loadStageSettings(&stage->stageSpecifier, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 	}
 }
 
