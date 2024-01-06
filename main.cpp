@@ -51,8 +51,7 @@ int main(int argc, char** argv) {
 		refreshWindow(&SDL);
 		displayWindow(&stage, &specifier, &SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
 
-		handleSpecifier(&stage, &SDL);
-		readKeys(&specifier, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
+		readKeys(&stage, &specifier, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
 
 		gravityApply(&gameInfo, platforms, barrels);
 		whereAreObjects(&playerInfo, &score, platforms, ladders, barrels, trophies);

@@ -50,20 +50,22 @@ void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* tro
 
 void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
 
-void readKeys(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
 Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
+
+void playerKeyHandle(SDLConst* SDL);
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
 void quit(SDLConst* SDL, GameInfo* gameInfo);
 
-StageSpecifier firstStageSpecify(Stage* stage);
+void firstStageSpecify(Stage* stage);
 
-StageSpecifier secondStageSpecify(Stage* stage);
+void secondStageSpecify(Stage* stage);
 
-StageSpecifier thirdStageSpecify(Stage* stage);
+void thirdStageSpecify(Stage* stage);
 
-StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL);
+void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 Stage whichStage(Stage* stage, Game* game);
 
@@ -252,7 +254,7 @@ void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* t
 }
 
 // TODO przejrzystosc kodu
-void readKeys(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -264,25 +266,37 @@ void readKeys(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo,
 				quit(SDL, gameInfo);
 			else if (keyPressed == SDLK_n)
 				newGameSettings(stageSpecifier, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
-			else if (keyPressed == SDLK_RIGHT)
-				playerWalkRight();
-			else if (keyPressed == SDLK_LEFT)
-				playerWalkLeft();
-			else if (keyPressed == SDLK_DOWN)
-				playerClimbDown();
-			else if (keyPressed == SDLK_UP)
-				playerClimbUp();
-			else if (keyPressed == SDLK_SPACE)
-				checkIfPlayerIsJumping();
-			break;
-		case SDL_KEYUP:
-			playerNotWalking();
-			playerNotClimbing();			
-			break;		
+			break;	
 		case SDL_QUIT: //X button in right up corner
 			quit(SDL, gameInfo);
 			break;
 		}
+		playerKeyHandle(SDL);
+		handleSpecifier(stage, stageSpecifier, SDL, platforms, ladders, barrels, trophies);
+	}
+}
+
+void playerKeyHandle(SDLConst* SDL)
+{
+	int keyPressed = SDL->event.key.keysym.sym;
+	switch (SDL->event.type)
+	{
+	case SDL_KEYDOWN:
+		if (keyPressed == SDLK_RIGHT)
+			playerWalkRight();
+		else if (keyPressed == SDLK_LEFT)
+			playerWalkLeft();
+		else if (keyPressed == SDLK_DOWN)
+			playerClimbDown();
+		else if (keyPressed == SDLK_UP)
+			playerClimbUp();
+		else if (keyPressed == SDLK_SPACE)
+			checkIfPlayerIsJumping();
+		break;
+	case SDL_KEYUP:
+		playerNotWalking();
+		playerNotClimbing();
+		break;
 	}
 }
 
@@ -305,39 +319,43 @@ void quit(SDLConst* SDL, GameInfo* gameInfo)
 	SDL_Quit();
 }
 
-StageSpecifier firstStageSpecify(Stage* stage)
+void firstStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE1;
-	return STAGE1;
+
 }
 
-StageSpecifier secondStageSpecify(Stage* stage)
+void secondStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE2;
-	return STAGE2;
+
 }
 
-StageSpecifier thirdStageSpecify(Stage* stage)
+void thirdStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE3;
-	return STAGE3;
 }
 
-StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL)
+void handleSpecifier(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
-	int keyPressed = SDL->event.key.keysym.sym;
+	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
+	{
+		int keyPressed = SDL->event.key.keysym.sym;
 		switch (SDL->event.type)
 		{
 		case SDL_KEYDOWN:
-   				if (keyPressed == SDLK_1)
+			if (keyPressed == SDLK_1)
 				firstStageSpecify(stage);
 			else if (keyPressed == SDLK_2)
 				secondStageSpecify(stage);
 			else if (keyPressed == SDLK_3)
 				thirdStageSpecify(stage);
-			return stage->stageSpecifier;
+			break;
+		case SDL_KEYUP:
 			break;
 		}
+		initializeGameObjects(stageSpecifier, platforms, ladders, barrels, trophies);
+	}
 }
 
 Stage whichStage(Stage* stage, Game* game)
