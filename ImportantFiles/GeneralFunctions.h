@@ -40,20 +40,11 @@ Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //NOT 
 
 void timeCounting(GameInfo* gameInfo); //counting the game time
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels);
-
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies);
-
-void endTheStage(PlayerInfo* playerInfo, Score* score);
-
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
-
-void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
-
 void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
 Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
 
-void playerKeyHandle(SDLConst* SDL);
+void playerKeyHandle(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
@@ -191,72 +182,9 @@ void timeCounting(GameInfo* gameInfo)
 	gameInfo->gameTime += gameInfo->deltaTime;
 }
 
-void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
-{
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
-	{
-		if (Mario.isJumping || Mario.fallDown)
-		{
-			if (Mario.lowerCoordinates.y <= barrels[i].lowerRightCoordinates.y - BARRELS_DIFFERENCE_IN_Y &&
-				barrels[i].lowerRightCoordinates.x >= Mario.lowerCoordinates.x &&
-				barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE <= Mario.lowerCoordinates.x + Mario.realSize[0])
-			{
-				playerInfo->score += barrels[i].barrelScore;
-				score->deltaScore = barrels[i].barrelScore;
-				barrels[i].barrelScore = ZERO;
-				break;
-			}
-		}
-		barrels[i].barrelScore = JUMP_OVER_BARREL_POINTS;
-	}
-}
-
-void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
-{
-	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
-	{
-		if (Mario.lowerCoordinates.y == trophies[i].lowerCoordinates.y + TROPHIES_DIFFERENCE_IN_Y &&
-			Mario.lowerCoordinates.x >= trophies[i].lowerCoordinates.x - trophies[i].realSize[0] &&
-			Mario.lowerCoordinates.x <= trophies[i].lowerCoordinates.x + trophies[i].realSize[0])
-		{
-			playerInfo->score += score->getTrophy;
-			score->deltaScore = score->getTrophy;
-			trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
-			trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
-			return;
-		}
-	}
-}
-
-void endTheStage(PlayerInfo* playerInfo, Score* score)
-{
-	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
-	{
-		playerInfo->score += score->endTheStage;
-		score->deltaScore = score->endTheStage;
-		score->endTheStage = ZERO;
-	}
-}
-
-void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
-{
-	jumpOverBarrel(playerInfo, score, barrels);
-	getTrophy(playerInfo, score, trophies);
-	endTheStage(playerInfo, score);
-}
-
-void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
-{
-	addScore(playerInfo, score, barrels, trophies);
-	if (score->deltaScore > 0)
-	{
-		//tutaj printowanie aktualnego deltaScore
-	}
-	score->deltaScore = ZERO;
-}
-
 // TODO przejrzystosc kodu
-void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -273,12 +201,12 @@ void readKeys(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameI
 			quit(SDL, gameInfo);
 			break;
 		}
-		playerKeyHandle(SDL);
-		handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+		playerKeyHandle(stage,stageSpecifier,SDL,gameInfo,playerInfo,score,platforms,ladders,barrels,trophies);
 	}
 }
 
-void playerKeyHandle(SDLConst* SDL)
+void playerKeyHandle(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+	Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
 	switch (SDL->event.type)
@@ -294,6 +222,12 @@ void playerKeyHandle(SDLConst* SDL)
 			playerClimbUp();
 		else if (keyPressed == SDLK_SPACE)
 			checkIfPlayerIsJumping();
+		else if (keyPressed == SDLK_1)
+			handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+		else if (keyPressed == SDLK_2)
+			handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
+		else if (keyPressed == SDLK_3)
+			handleSpecifier(stage, stageSpecifier, SDL, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 		break;
 	case SDL_KEYUP:
 		playerNotWalking();
