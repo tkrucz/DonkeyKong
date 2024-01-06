@@ -17,13 +17,15 @@ extern "C" {
 
 int loadBMPs(SDLConst* SDL);
 
-void initializeColors(SDLConst* SDL, Color* colors);
+void initializeColors(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors);
 
 void drawGround(SDLConst* SDL, Color* colors);
 
 void createPlatforms(Platform* platforms);
 
-void drawPlatforms(SDLConst* SDL, Color* colors, Platform* platforms);
+void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors, Platform* platforms);
+
+void platformColor(Stage* stage, StageSpecifier* stageSpecifier, Color* colors);
 
 void createLadders(Ladder* ladders);
 
@@ -35,15 +37,11 @@ void drawTrophies(SDLConst* SDL, Trophy* trophies);
 
 void createPlatforms2(Platform* platforms);
 
-void drawPlatforms2(SDLConst* SDL, Color* colors, Platform* platforms);
-
 void createLadders2(Ladder* ladders);
 
 void createTrophies2(Trophy* trophies);
 
 void createPlatforms3(Platform* platforms);
-
-void drawPlatforms3(SDLConst* SDL, Color* colors, Platform* platforms);
 
 void createLadders3(Ladder* ladders);
 
@@ -94,7 +92,7 @@ int loadBMPs(SDLConst* SDL)
 	}
 }
 
-void initializeColors(SDLConst* SDL, Color* colors)
+void initializeColors(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors)
 {
 	colors->black = SDL_MapRGB(SDL->screen->format, 0x00, 0x00, 0x00);
 	colors->white = SDL_MapRGB(SDL->screen->format, 255, 255, 255);
@@ -102,6 +100,7 @@ void initializeColors(SDLConst* SDL, Color* colors)
 	colors->indygo = SDL_MapRGB(SDL->screen->format, 85, 120, 200);
 	colors->lime = SDL_MapRGB(SDL->screen->format, 152, 190, 100);
 	colors->grey = SDL_MapRGB(SDL->screen->format, 160, 160, 160);
+	platformColor(stage, stageSpecifier, colors);
 }
 
 void drawGround(SDLConst* SDL, Color* colors)
@@ -128,10 +127,29 @@ void createPlatforms(Platform* platforms)
 	}
 }
 
-void drawPlatforms(SDLConst* SDL, Color* colors, Platform* platforms) {
+void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors, Platform* platforms) {
 
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->pink);
+		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, stage->platformColor.platformColor);
+}
+
+void platformColor(Stage* stage, StageSpecifier* stageSpecifier, Color* colors)
+{
+	if (*stageSpecifier == STAGE1)
+	{
+		colors->platformColor = colors->pink;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
+	else if (*stageSpecifier == STAGE2)
+	{
+		colors->platformColor = colors->indygo;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
+	else if (*stageSpecifier == STAGE3)
+	{
+		colors->platformColor = colors->lime;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
 }
 
 void createLadders(Ladder* ladders)
@@ -198,12 +216,6 @@ void createPlatforms2(Platform* platforms)
 	}
 }
 
-void drawPlatforms2(SDLConst* SDL, Color* colors, Platform* platforms)
-{
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->indygo);
-}
-
 void createLadders2(Ladder* ladders)
 {
 	//laddersParameters {X cordinate, Y cordinate, ladder height}
@@ -254,12 +266,6 @@ void createPlatforms3(Platform* platforms)
 		platforms[i].upperCorner.y = platformsParameters[i][1];
 		platforms[i].length = platformsParameters[i][2];
 	}
-}
-
-void drawPlatforms3(SDLConst* SDL, Color* colors, Platform* platforms)
-{
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
-		DrawRectangle(SDL->screen, platforms[i].upperCorner.x, platforms[i].upperCorner.y, platforms[i].length, platforms[i].width, colors->black, colors->lime);
 }
 
 void createLadders3(Ladder* ladders)
@@ -328,10 +334,27 @@ void drawBarrels(SDLConst* SDL, Barrel* barrels)
 
 void initializeGameObjects(StageSpecifier* stageSpecifier, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
-	createPlatforms(platforms);
-	createLadders(ladders);
-	createBarrels(barrels);
-	createTrophies(trophies);
+	if (*stageSpecifier == STAGE1)
+	{
+		createPlatforms(platforms);
+		createLadders(ladders);
+		createBarrels(barrels);
+		createTrophies(trophies);
+	}
+	else if (*stageSpecifier == STAGE2)
+	{
+		createPlatforms2(platforms);
+		createLadders2(ladders);
+		createBarrels(barrels);
+		createTrophies2(trophies);
+	}
+	else if (*stageSpecifier == STAGE3)
+	{
+		createPlatforms3(platforms);
+		createLadders3(ladders);
+		createBarrels(barrels);
+		createTrophies3(trophies);
+	}
 }
 
 void barrelsApproximateOnPlatform(Platform* platforms, Barrel* barrels)

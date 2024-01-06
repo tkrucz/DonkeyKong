@@ -19,9 +19,9 @@ void createWindow(SDLConst* SDL, GameInfo* gameInfo);
 
 void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color* colors);
 
-void drawScene(StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
+void drawScene(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
-void displayWindow(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+void displayWindow(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
 Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies);
 
 void refreshWindow(SDLConst* SDL);
@@ -97,20 +97,20 @@ void printInfo(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Color*
 	printPlayerInfo(SDL, gameInfo, playerInfo, colors);
 }
 
-void drawScene(StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
+void drawScene(Stage* stage, StageSpecifier* stageSpecifier, SDLConst* SDL, Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels,Trophy* trophies)
 {
 	drawGround(SDL, colors);
-	drawPlatforms(SDL, colors, platforms);
+	drawPlatforms(stage, SDL, colors, platforms);
 	drawLadders(SDL, colors, ladders);
 	drawTrophies(SDL, trophies);
 	drawBarrels(SDL, barrels);
-} 
 
-void displayWindow(StageSpecifier* stageSpecifier,SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
+} 
+void displayWindow(Stage* stage, StageSpecifier* stageSpecifier,SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo,
 	Color* colors, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(stageSpecifier, SDL, colors, platforms, ladders, barrels, trophies);
+	drawScene(stage, stageSpecifier, SDL, colors, platforms, ladders, barrels, trophies);
 	printInfo(SDL, gameInfo, playerInfo, colors);
 	DrawSurface(SDL->screen, SDL->player, Mario.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, Mario.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &Mario.animation); //draws the player
 }
@@ -261,7 +261,7 @@ void readKeys(StageSpecifier* stageSpecifier, SDLConst* SDL, GameInfo* gameInfo,
 		{
 		case SDL_KEYDOWN:
 			if (keyPressed == SDLK_ESCAPE)
-				quit(SDL, gameInfo);			
+				quit(SDL, gameInfo);
 			else if (keyPressed == SDLK_n)
 				newGameSettings(stageSpecifier, gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 			else if (keyPressed == SDLK_RIGHT)
@@ -325,25 +325,19 @@ StageSpecifier thirdStageSpecify(Stage* stage)
 
 StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL)
 {
-	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
-	{
-		while (SDL_PollEvent(&SDL->event))
+	int keyPressed = SDL->event.key.keysym.sym;
+		switch (SDL->event.type)
 		{
-			int keyPressed = SDL->event.key.keysym.sym;
-			switch (SDL->event.type)
-			{
-			case SDL_KEYDOWN:
-    				if (keyPressed == SDLK_1)
-					firstStageSpecify(stage);
-				else if (keyPressed == SDLK_2)
-					secondStageSpecify(stage);
-				else if (keyPressed == SDLK_3)
-					thirdStageSpecify(stage);
-				return stage->stageSpecifier;
-				break;
-			}
+		case SDL_KEYDOWN:
+   				if (keyPressed == SDLK_1)
+				firstStageSpecify(stage);
+			else if (keyPressed == SDLK_2)
+				secondStageSpecify(stage);
+			else if (keyPressed == SDLK_3)
+				thirdStageSpecify(stage);
+			return stage->stageSpecifier;
+			break;
 		}
-	}
 }
 
 Stage whichStage(Stage* stage, Game* game)

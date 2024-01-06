@@ -29,6 +29,7 @@ struct SDLConst
 
 struct Color
 {
+	int platformColor;
 	int black;
 	int white;	
 	int pink; //for 1st stage platforms
@@ -125,7 +126,7 @@ enum StageSpecifier
 
 struct Stage 
 {
-	StageSpecifier stageSpecifier;
+	StageSpecifier stageSpecifier = STAGE1;
 	Player player;
 	Platform platforms;
 	Ladder ladders;
@@ -133,6 +134,7 @@ struct Stage
 	Trophy trophies;
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;
+	Color platformColor;
 };
 
 // TODO

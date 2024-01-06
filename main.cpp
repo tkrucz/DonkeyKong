@@ -28,15 +28,15 @@ int main(int argc, char** argv) {
 	Score score;
 	
 	Game game;
-	Stage stage;
+	Stage stage;	
 	StageSpecifier specifier;
 
-	//specifier = handleSpecifier();
-	//Stage tmp = whichStage(specifier, game);
+	specifier = stage.stageSpecifier;
+	//stage = whichStage(&stage, &game);
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow(&SDL, &gameInfo);
-	initializeColors(&SDL, &colors);
+	initializeColors(&stage, &specifier, &SDL, &colors);
 	loadBMPs(&SDL);
 	defaultSettings(&gameInfo, &playerInfo);
 	initializeGameObjects(&specifier, platforms, ladders, barrels,trophies);
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 		timeCounting(&gameInfo);
 
 		refreshWindow(&SDL);
-		displayWindow(&specifier, &SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
+		displayWindow(&stage, &specifier, &SDL, &gameInfo, &playerInfo, &colors, platforms, ladders, barrels, trophies);
 
 		handleSpecifier(&stage, &SDL);
 		readKeys(&specifier, &SDL, &gameInfo, &playerInfo, &score, platforms, ladders, barrels, trophies);
