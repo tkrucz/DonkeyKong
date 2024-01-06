@@ -47,18 +47,19 @@ void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* tro
 
 void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies);
 
-void readKeys(Stage* stage, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
+void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies); //read key input
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
 void quit(SDLConst* SDL, GameInfo* gameInfo);
 
-void firstStageSpecify(Stage* stage);
+StageSpecifier firstStageSpecify(Stage* stage);
 
-void secondStageSpecify(Stage* stage);
+StageSpecifier secondStageSpecify(Stage* stage);
 
-void thirdStageSpecify(Stage* stage);
+StageSpecifier thirdStageSpecify(Stage* stage);
 
+StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL);
 
 void createWindow(SDLConst* SDL, GameInfo* gameInfo) // Create a window with specified size.
 {
@@ -187,6 +188,7 @@ void jumpOverBarrel(PlayerInfo* playerInfo, Score* score, Barrel* barrels)
 				barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE <= Mario.lowerCoordinates.x + Mario.realSize[0])
 			{
 				playerInfo->score += barrels[i].barrelScore;
+				score->deltaScore = barrels[i].barrelScore;
 				barrels[i].barrelScore = ZERO;
 				break;
 			}
@@ -204,6 +206,7 @@ void getTrophy(PlayerInfo* playerInfo, Score* score, Trophy* trophies)
 			Mario.lowerCoordinates.x <= trophies[i].lowerCoordinates.x + trophies[i].realSize[0])
 		{
 			playerInfo->score += score->getTrophy;
+			score->deltaScore = score->getTrophy;
 			trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
 			trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
 			return;
@@ -216,6 +219,7 @@ void endTheStage(PlayerInfo* playerInfo, Score* score)
 	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
 		playerInfo->score += score->endTheStage;
+		score->deltaScore = score->endTheStage;
 		score->endTheStage = ZERO;
 	}
 }
@@ -229,14 +233,16 @@ void addScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* tro
 
 void deltaScore(PlayerInfo* playerInfo, Score* score, Barrel* barrels, Trophy* trophies)
 {
-	score->scoreBefore = playerInfo->score;
 	addScore(playerInfo, score, barrels, trophies);
-	score->scoreAfter = playerInfo->score;
-	score->deltaScore = score->scoreAfter - score->scoreBefore;
+	if (score->deltaScore > 0)
+	{
+		//tutaj printowanie aktualnego deltaScore
+	}
+	score->deltaScore = ZERO;
 }
 
 // TODO przejrzystosc kodu
-void readKeys(Stage* stage, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
+void readKeys(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Score* score, Platform* platforms, Ladder* ladders, Barrel* barrels, Trophy* trophies)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -245,13 +251,7 @@ void readKeys(Stage* stage, SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playe
 		{
 		case SDL_KEYDOWN:
 			if (keyPressed == SDLK_ESCAPE)
-				quit(SDL, gameInfo);
-			else if (keyPressed == SDLK_1)
-				firstStageSpecify(stage);
-			else if (keyPressed == SDLK_2)
-				secondStageSpecify(stage);
-			else if (keyPressed == SDLK_3)
-				thirdStageSpecify(stage);
+				quit(SDL, gameInfo);			
 			else if (keyPressed == SDLK_n)
 				newGameSettings(gameInfo, playerInfo, platforms, ladders, barrels, trophies);
 			else if (keyPressed == SDLK_RIGHT)
@@ -295,20 +295,46 @@ void quit(SDLConst* SDL, GameInfo* gameInfo)
 	SDL_Quit();
 }
 
-void firstStageSpecify(Stage* stage)
+StageSpecifier firstStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE1;
+	return STAGE1;
 }
 
-void secondStageSpecify(Stage* stage)
+StageSpecifier secondStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE2;
+	return STAGE2;
 }
 
-void thirdStageSpecify(Stage* stage)
+StageSpecifier thirdStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE3;
+	return STAGE3;
 }
+
+StageSpecifier handleSpecifier(Stage* stage, SDLConst* SDL)
+{
+	if (Mario.lowerCoordinates.y == PLATFORM_V_HEIGHT)
+	{
+		while (SDL_PollEvent(&SDL->event))
+		{
+			int keyPressed = SDL->event.key.keysym.sym;
+			switch (SDL->event.type)
+			{
+			case SDL_KEYDOWN:
+    				if (keyPressed == SDLK_1)
+					firstStageSpecify(stage);
+				else if (keyPressed == SDLK_2)
+					secondStageSpecify(stage);
+				else if (keyPressed == SDLK_3)
+					thirdStageSpecify(stage);
+				return stage->stageSpecifier;
+				break;
+			}
+		}
+	}
+} 
 
 /*
 *	Ths funtion works at the beginning and also activate, when player.lowerCordinates.y == platform_V_height.

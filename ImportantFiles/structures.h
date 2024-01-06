@@ -56,8 +56,6 @@ struct Score
 {
 	int getTrophy = GET_TROPHY_POINTS;
 	int endTheStage = END_THE_STAGE_POINTS;
-	int scoreBefore = ZERO;
-	int scoreAfter = ZERO;
 	int deltaScore = ZERO;
 };
 

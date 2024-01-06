@@ -414,7 +414,7 @@ void whereAreObjects(PlayerInfo* playerInfo, Score* score, Platform* platforms, 
 
 void moveObjects(SDLConst* SDL, GameInfo* gameInfo, PlayerInfo* playerInfo, Barrel* barrels)
 {
-	collision(SDL, gameInfo, playerInfo, barrels);
 	playerMovement(gameInfo);
 	barrelMovement(barrels, gameInfo);
+	collision(SDL, gameInfo, playerInfo, barrels);
 }
