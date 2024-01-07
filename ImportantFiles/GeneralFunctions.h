@@ -31,15 +31,15 @@ void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
 void defaultSettings(Stage* stage); //set up the game at the beginning
 
-void newGameSettings(Stage* stage); //set up settings after pressing "n"
+void newGameSettings(Stage* stage, Animator* animator); //set up settings after pressing "n"
 
-void loadStageSettings(Stage* stage); 
+void loadStageSettings(Stage* stage, Animator* animator);
 
 void timeCounting(Stage* stage); //counting the game time
 
-void readKeys(Stage* stage,SDLConst* SDL,Score* score); //read key input
+void readKeys(Stage* stage,SDLConst* SDL,Score* score, Animator* animator); //read key input
 
-void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score);
+void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator);
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
@@ -51,7 +51,7 @@ void secondStageSpecify(Stage* stage);
 
 void thirdStageSpecify(Stage* stage);
 
-void handleSpecifier(Stage* stage, SDLConst* SDL);
+void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator);
 
 Stage whichStage(Stage* stage, Game* game);
 
@@ -151,19 +151,19 @@ void defaultSettings(Stage* stage)
 	initializePlayer(stage);
 }
 
-void newGameSettings(Stage* stage)
+void newGameSettings(Stage* stage, Animator* animator)
 {
 	defaultSettings(stage);
-	initializeGameObjects(stage);
+	initializeGameObjects(stage,animator);
 }
 
-void loadStageSettings(Stage* stage)
+void loadStageSettings(Stage* stage, Animator* animator)
 {
 	stage->gameInfo.quit = false;
 	stage->playerInfo.score = stage->playerInfo.score;
 	stage->playerInfo.lives = stage->playerInfo.lives;
 	initializePlayer(stage);
-	initializeGameObjects(stage);
+	initializeGameObjects(stage,animator);
 }
 
 void timeCounting(Stage* stage)
@@ -174,7 +174,7 @@ void timeCounting(Stage* stage)
 }
 
 // TODO przejrzystosc kodu
-void readKeys(Stage* stage, SDLConst* SDL,Score* score)
+void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 {
 	while (SDL_PollEvent(&SDL->event))
 	{
@@ -185,17 +185,17 @@ void readKeys(Stage* stage, SDLConst* SDL,Score* score)
 			if (keyPressed == SDLK_ESCAPE)
 				quit(stage, SDL);
 			else if (keyPressed == SDLK_n)
-				newGameSettings(stage);
+				newGameSettings(stage, animator);
 			break;	
 		case SDL_QUIT: //X button in right up corner
 			quit(stage, SDL);
 			break;
 		}
-		playerKeyHandle(stage, SDL, score);
+		playerKeyHandle(stage, SDL, score, animator);
 	}
 }
 
-void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score)
+void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
 	switch (SDL->event.type)
@@ -212,11 +212,11 @@ void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score)
 		else if (keyPressed == SDLK_SPACE)
 			checkIfPlayerIsJumping(stage);
 		else if (keyPressed == SDLK_1)
-			handleSpecifier(stage, SDL);
+			handleSpecifier(stage, SDL, animator);
 		else if (keyPressed == SDLK_2)
-			handleSpecifier(stage, SDL);
+			handleSpecifier(stage, SDL, animator);
 		else if (keyPressed == SDLK_3)
-			handleSpecifier(stage, SDL);
+			handleSpecifier(stage, SDL, animator);
 		break;
 	case SDL_KEYUP:
 		playerNotWalking(stage);
@@ -261,7 +261,7 @@ void thirdStageSpecify(Stage* stage)
 	stage->stageSpecifier = STAGE3;
 }
 
-void handleSpecifier(Stage* stage, SDLConst* SDL)
+void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator)
 {
 	if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
@@ -279,7 +279,7 @@ void handleSpecifier(Stage* stage, SDLConst* SDL)
 		case SDL_KEYUP:
 			break;
 		}		
-		loadStageSettings(stage);
+		loadStageSettings(stage, animator);
 	}
 }
 

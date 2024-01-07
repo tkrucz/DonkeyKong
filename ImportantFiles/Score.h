@@ -39,7 +39,7 @@ void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 				if (stage->barrels[i].barrelScore > 0)
 				{
 					score->deltaScore = stage->barrels[i].barrelScore;
-					showText->actualShowingTime = ZERO;
+					showText->time.actualShowingTime = ZERO;
 					showText->isVisible = true;
 				}
 				stage->barrels[i].barrelScore = ZERO;
@@ -60,7 +60,7 @@ void getTrophy(Stage* stage, Score* score, ShowText* showText)
 		{
 			stage->playerInfo.score += score->getTrophy;
 			score->deltaScore = score->getTrophy;
-			showText->actualShowingTime = ZERO;
+			showText->time.actualShowingTime = ZERO;
 			showText->isVisible = true;
 			stage->trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
 			stage->trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
@@ -93,11 +93,11 @@ void deltaScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)
 	addScore(stage, SDL, score, showText);
 	if (score->deltaScore > 0)
 	{
-		if( showText->actualShowingTime <= showText->showingTime)
+		if( showText->time.actualShowingTime <= showText->time.showingTime)
 		{
 			sprintf(stage->player.text, "%d", score->deltaScore);
 			DrawString(SDL->screen, stage->player.lowerCoordinates.x, stage->player.lowerCoordinates.y - stage->player.realSize[1] - FIFTEEN, stage->player.text, SDL->charset);
-			showText->actualShowingTime += stage->gameInfo.deltaTime;
+			showText->time.actualShowingTime += stage->gameInfo.deltaTime;
 		}
 		else
 			showText->isVisible = false;

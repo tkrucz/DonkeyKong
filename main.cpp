@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
 	Color colors;
 	Score score;
 	ShowText showText;
+	Animator animator;
 	
 	Stage stage;
 
@@ -35,7 +36,7 @@ int main(int argc, char** argv) {
 	initializeColors(&SDL, &colors);
 	loadBMPs(&SDL);
 	defaultSettings(&stage);
-	initializeGameObjects(&stage);
+	initializeGameObjects(&stage, &animator);
 
 	stage.gameInfo.t1 = SDL_GetTicks();
 
@@ -47,11 +48,11 @@ int main(int argc, char** argv) {
 		refreshWindow(&SDL);
 		displayWindow(&stage, &SDL, &colors);
 
-		readKeys(&stage, &SDL, &score);
+		readKeys(&stage, &SDL, &score, &animator);
 
 		gravityApply(&stage);
 		whereAreObjects(&stage, &SDL, &score, &showText);
-		moveObjects(&stage, &SDL);
+		moveObjects(&stage, &SDL, &animator);
 	}
 	return 0;
 }

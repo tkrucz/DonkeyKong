@@ -10,6 +10,7 @@
 #include "GeneralFunctions.h"
 #include "PlayerFunctions.h"
 #include "Score.h"
+#include "Animations.h"
 #include "SDLFunctions.h"
 
 extern "C" {
@@ -25,7 +26,7 @@ void createBarrels(Stage* stage);
 
 void drawBarrels(Stage* stage, SDLConst* SDL);
 
-void initializeGameObjects(Stage* stage);
+void initializeGameObjects(Stage* stage, Animator* animator);
 
 void barrelsApproximateOnPlatform(Stage* stage);
 
@@ -41,9 +42,9 @@ void barrelMovement(Stage* stage);
 
 void collision(Stage* stage, SDLConst* SDL);
 
-void whereAreObjects(Stage* stage, SDLConst* SDL,  Score* score, ShowText* showText);
+void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText);
 
-void moveObjects(Stage* stage, SDLConst* SDL);
+void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator);
 
 
 int loadBMPs(SDLConst* SDL)
@@ -105,8 +106,9 @@ void drawBarrels(Stage* stage, SDLConst* SDL)
 		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
 }
 
-void initializeGameObjects(Stage* stage)
+void initializeGameObjects(Stage* stage, Animator* animator)
 {
+	initializeAnimator(stage, animator);
 	if (stage->stageSpecifier == STAGE1)
 	{
 		createPlatforms(stage);
@@ -224,12 +226,13 @@ void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showTe
 {
 	whereIsPLayer(stage);
 	whereAreBarrels(stage);
-	deltaScore(stage, SDL, score, showText);
+	deltaScore(stage, SDL, score, showText);	
 }
 
-void moveObjects(Stage* stage, SDLConst* SDL)
+void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator)
 {
 	playerMovement(stage);
 	barrelMovement(stage);
 	collision(stage, SDL);
+	playerAnimations(SDL,stage, animator);
 }

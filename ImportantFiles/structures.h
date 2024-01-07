@@ -5,26 +5,6 @@ extern "C" {
 }
 #include "define.h"
 
-struct Coordinates
-{
-	double x;
-	double y;
-};
-
-struct Speed
-{
-	double speedX;
-	double speedY;
-};
-
-struct ShowText
-{
-	bool isVisible = false;
-	double showingTime = SHOWING_TIME;
-	double actualShowingTime = ZERO;
-	
-};
-
 struct SDLConst
 {
 	SDL_Event event;
@@ -39,11 +19,43 @@ struct Color
 {
 	int platformColor;
 	int black;
-	int white;	
+	int white;
 	int pink; //for 1st stage platforms
 	int indygo; //for 2nd stage platforms
 	int lime; //for 3th stage platforms	
 	int grey; //for ladders
+};
+
+struct Coordinates
+{
+	double x;
+	double y;
+};
+
+struct Speed
+{
+	double speedX;
+	double speedY;
+};
+
+struct Time
+{
+	double showingTime;
+	double actualShowingTime = ZERO;
+};
+
+struct ShowText
+{
+	bool isVisible = false;
+	Time time = { SHOWING_TEXT_TIME };
+};
+
+struct Animator
+{
+	SDL_Rect spriteArray;
+	bool changeAnimation;
+	int actualAnimation[2];
+	Time time = { SHOWING_ANIMATION_TIME };
 };
 
 struct PlayerInfo
@@ -118,12 +130,6 @@ struct Trophy
 	SDL_Rect animation; //sets look of the trophy
 	Coordinates lowerCoordinates;
 	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
-};
-
-struct Animator 
-{
-	SDL_Rect* spriteArray;
-	int actualAnimation;
 };
 
 enum StageSpecifier

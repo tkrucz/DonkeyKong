@@ -62,7 +62,7 @@ void quit(Stage* stage, SDLConst* SDL);
 void initializePlayer(Stage* stage)
 {
 	stage->player.lowerCoordinates = { PLAYER_SPAWN_POINT_X,PLAYER_SPAWN_POINT_Y };
-	stage->player.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,stage->player.realSize[0],stage->player.realSize[1] };
+	//stage->player.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,stage->player.realSize[0],stage->player.realSize[1] };
 	stage->player.speed.speedX = NULL_SPEED;
 	stage->player.speed.speedY = NULL_SPEED;
 }
@@ -149,7 +149,7 @@ void hitBottomOfThePlatform(Stage* stage) //check if player doesn't hit the bott
 				stage->player.lowerCoordinates.x <= stage->platforms[i].upperCorner.x + stage->platforms[i].length)
 			{
 				double elasticColision = stage->gameInfo.deltaTime * ELASTIC_COLISION_CONST * (stage->player.speed.speedY + GRAVITY_SPEED * stage->gameInfo.deltaTime);
-				stage->player.speed.speedY = elasticColision; //dodaæ elastic colision do sturktury skok kiedyœ?
+				stage->player.speed.speedY = elasticColision;
 			}
 	}
 }

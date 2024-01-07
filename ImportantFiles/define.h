@@ -59,7 +59,8 @@
 
 #define DEAFULT_PLAYER_SPRITE_I (PLAYER_WIDTH * 4) //DEAFULT_PLAYER_SPRITE_I describes from which column take a graphic 
 #define DEAFULT_PLAYER_SPRITE_II (PLAYER_HEIGHT * 0) //DEAFULT_PLAYER_SPRITE_II describes from which row take a graphic 
-#define MARIO_BMP_DISTANCE 10 //const which allows to show whole Mario graphic from the chosen row and column
+#define MARIO_BMP_COLUMN_DISTANCE 3 //const which allows to show whole Mario graphic from the chosen row 
+#define MARIO_BMP_ROW_DISTANCE 6 //const which allows to show whole Mario graphic from the chosen row 
 
 #define NUMBER_OF_PLATFORMS 10
 #define PLATFORM_WIDTH 20
@@ -80,7 +81,7 @@
 #define BARRELS_DIFFERENCE_IN_Y 5
 #define BARRELS_REAL_SIZE 20
 
-#define BARRELS_BOWLING_SPEED 7
+#define BARRELS_BOWLING_SPEED 8
 #define BARRELS_FALLING_SPEED GRAVITY_SPEED*10
 
 #define NUMBER_OF_TROPHIES 3
@@ -93,4 +94,6 @@
 #define JUMP_OVER_BARREL_POINTS 1000
 #define GET_TROPHY_POINTS 500
 #define END_THE_STAGE_POINTS 10000
-#define SHOWING_TIME 1
+
+#define SHOWING_TEXT_TIME 1
+#define SHOWING_ANIMATION_TIME 0.4
