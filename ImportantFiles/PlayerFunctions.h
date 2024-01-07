@@ -62,7 +62,6 @@ void quit(Stage* stage, SDLConst* SDL);
 void initializePlayer(Stage* stage)
 {
 	stage->player.lowerCoordinates = { PLAYER_SPAWN_POINT_X,PLAYER_SPAWN_POINT_Y };
-	//stage->player.animation = { DEAFULT_PLAYER_SPRITE_I + MARIO_BMP_DISTANCE, DEAFULT_PLAYER_SPRITE_II ,stage->player.realSize[0],stage->player.realSize[1] };
 	stage->player.speed.speedX = NULL_SPEED;
 	stage->player.speed.speedY = NULL_SPEED;
 }

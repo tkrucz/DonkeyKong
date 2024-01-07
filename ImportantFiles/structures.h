@@ -52,9 +52,12 @@ struct ShowText
 
 struct Animator
 {
-	SDL_Rect spriteArray;
-	bool changeAnimation;
-	int actualAnimation[2];
+	SDL_Rect playerSpriteArray;
+	SDL_Rect barrelsSpriteArray;
+	bool changePlayerAnimation;
+	bool changeBarrelsAnimation;
+	int actualPlayerAnimation[2];
+	int actualBarrelsAnimation[2];
 	Time time = { SHOWING_ANIMATION_TIME };
 };
 

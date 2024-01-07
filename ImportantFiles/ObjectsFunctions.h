@@ -96,7 +96,6 @@ void createBarrels(Stage* stage)
 		stage->barrels[i].fallDown = barrelsParameters[i][2];
 		stage->barrels[i].onPlatform = barrelsParameters[i][3];
 		stage->barrels[i].onGround = barrelsParameters[i][4];
-		stage->barrels[i].animation = { ZERO, ZERO, stage->barrels[i].realSize[0], stage->barrels[i].realSize[1] };
 	}
 }
 
@@ -108,7 +107,7 @@ void drawBarrels(Stage* stage, SDLConst* SDL)
 
 void initializeGameObjects(Stage* stage, Animator* animator)
 {
-	initializeAnimator(stage, animator);
+	initializePlayerAnimator(stage, animator);
 	if (stage->stageSpecifier == STAGE1)
 	{
 		createPlatforms(stage);
@@ -234,5 +233,5 @@ void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator)
 	playerMovement(stage);
 	barrelMovement(stage);
 	collision(stage, SDL);
-	playerAnimations(SDL,stage, animator);
+	checkAnimaitons(stage, animator);
 }
