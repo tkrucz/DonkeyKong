@@ -61,7 +61,7 @@ void quit(Stage* stage, SDLConst* SDL);
 
 void initializePlayer(Stage* stage)
 {
-	stage->player.lowerCoordinates = { PLAYER_SPAWN_POINT_X,PLAYER_SPAWN_POINT_Y };
+	stage->player.lowerCoordinates = { PLAYER_SPAWN_POINT_X, PLAYER_SPAWN_POINT_Y };
 	stage->player.speed.speedX = NULL_SPEED;
 	stage->player.speed.speedY = NULL_SPEED;
 }
@@ -223,7 +223,10 @@ void playerMovement(Stage* stage)
 
 void loseLive(Stage* stage, SDLConst* SDL)
 {
+	int pom;
 	stage->playerInfo.lives -= 1;
+	pom = stage->playerInfo.lives;
+	stage->lives[pom].animation = { ZERO,ZERO,ZERO,ZERO };	
 	if (stage->playerInfo.lives == ZERO)
 		quit(stage, SDL);
 }

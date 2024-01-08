@@ -53,7 +53,12 @@ void thirdStageSpecify(Stage* stage);
 
 void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
+void createLives(Stage* stage);
+
+void drawLives(Stage* stage, SDLConst* SDL);
+
 Stage whichStage(Stage* stage, Game* game);
+
 
 void createWindow(SDLConst* SDL, Stage* stage) // Create a window with specified size.
 {
@@ -91,8 +96,8 @@ void drawScene(Stage* stage, SDLConst* SDL, Color* colors)
 	drawPlatforms(stage, SDL, colors);
 	drawLadders(stage, SDL, colors);
 	drawTrophies(stage, SDL);
-	drawBarrels(stage, SDL);
-
+	drawBarrels(stage, SDL);	
+	drawLives(stage, SDL);
 } 
 
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors)
@@ -132,8 +137,9 @@ void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	DrawRectangle(SDL->screen, ZERO_COLUMN, EIGHTY_ROW, ONE_HUNDRED_TWENTY, THIRTY_FIVE, colors->white, colors->black);
 	sprintf(stage->gameInfo.text, "Score: %.6d", stage->playerInfo.score);
 	DrawString(SDL->screen, TEN_COLUMN, EIGHTY_FIVE_ROW, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "Lives: %d", stage->playerInfo.lives);
+	sprintf(stage->gameInfo.text, "Lives: ");
 	DrawString(SDL->screen, TEN_COLUMN, HUNDRED_ROW, stage->gameInfo.text, SDL->charset);
+	drawLives(stage, SDL);
 	sprintf(stage->gameInfo.text, "Trophies:");
 	DrawString(SDL->screen, FIVE_HUNDRED_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "LeftLowerXCorner: %.0f", stage->player.lowerCoordinates.x);
@@ -282,6 +288,22 @@ void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* sco
 		}		
 		loadStageSettings(stage, animator, score);
 	}
+}
+
+void createLives(Stage* stage)
+{
+	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
+	{
+		stage->lives[i].lowerCoordinates.x = LIVES_SPAWN_POINT_X + (LIVES_REAL_SIZE * i);
+		stage->lives[i].lowerCoordinates.y = HUNDRED_ROW + THREE;
+		stage->lives[i].animation = { ZERO,ZERO,stage->lives[i].realSize[0], stage->lives[i].realSize[1] };
+	}
+}
+
+void  drawLives(Stage* stage, SDLConst* SDL)
+{
+	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
+		DrawSurface(SDL->screen, SDL->lives, stage->lives[i].lowerCoordinates.x, stage->lives[i].lowerCoordinates.y, &stage->lives[i].animation);
 }
 
 Stage whichStage(Stage* stage, Game* game)

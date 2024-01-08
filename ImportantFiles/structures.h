@@ -10,7 +10,7 @@ struct SDLConst
 {
 	SDL_Event event;
 	SDL_Surface* screen, * charset;
-	SDL_Surface* player, * barrel, * trophy;
+	SDL_Surface* player, * barrel, * trophy, *lives;
 	SDL_Texture* scrtex;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -136,6 +136,13 @@ struct Trophy
 	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };
 
+struct Lives
+{
+	SDL_Rect animation; //sets look of the lives
+	Coordinates lowerCoordinates;
+	int realSize[2] = { LIVES_REAL_SIZE, LIVES_REAL_SIZE };
+};
+
 enum StageSpecifier
 {
 	STAGE1,
@@ -151,6 +158,7 @@ struct Stage
 	Ladder ladders[NUMBER_OF_LADDERS];
 	Barrel barrels[NUMBER_OF_BARRELS];
 	Trophy trophies[NUMBER_OF_TROPHIES];
+	Lives lives[PLAYER_DEFAULT_LIVES];
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;
 	Color platformColor;

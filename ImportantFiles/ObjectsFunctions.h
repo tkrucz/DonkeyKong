@@ -46,6 +46,7 @@ void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showTe
 
 void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator);
 
+void createLives(Stage* stage);
 
 int loadBMPs(SDLConst* SDL)
 {
@@ -53,6 +54,7 @@ int loadBMPs(SDLConst* SDL)
 	SDL->player = SDL_LoadBMP("./BMP/mario.bmp");
 	SDL->barrel = SDL_LoadBMP("./BMP/barrels.bmp");
 	SDL->trophy = SDL_LoadBMP("./BMP/trophy.bmp");
+	SDL->lives = SDL_LoadBMP("./BMP/HP.bmp");
 	if (SDL->charset == ZERO)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
@@ -107,6 +109,7 @@ void drawBarrels(Stage* stage, SDLConst* SDL)
 
 void initializeGameObjects(Stage* stage, Animator* animator)
 {
+	createLives(stage);
 	if (stage->stageSpecifier == STAGE1)
 	{
 		createPlatforms(stage);
