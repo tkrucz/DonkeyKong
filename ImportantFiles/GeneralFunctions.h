@@ -3,8 +3,8 @@
 #include<math.h>
 #include<stdio.h>
 #include<string.h>
-#include "define.h"
-#include "structures.h"
+#include "Define.h"
+#include "Structures.h"
 #include "GameStructure.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFunctions.h"
@@ -114,15 +114,15 @@ void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(stage->gameInfo.text, "King Donkey");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, TITLE_ROW, stage->gameInfo.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TITLE_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, E, F ");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Time from beginning: %.1lf s", stage->gameInfo.gameTime);
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, TIME_ROW, stage->gameInfo.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TIME_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Esc - quit, n - new game ");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, OPTIONS_ROW, stage->gameInfo.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, OPTIONS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "\30 - move up \31 - move down \32 - move left \33 - move right SPACE - jump");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, KEYS_ROW, stage->gameInfo.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, KEYS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Author: Tomasz Kruczalak 198049");
 	DrawString(SDL->screen, ZERO_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
 }

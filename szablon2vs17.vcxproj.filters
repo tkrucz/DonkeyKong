@@ -7,4 +7,14 @@
     <Image Include="BMP\enemies.bmp" />
     <Image Include="BMP\mario.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ImportantFiles\Animations.h" />
+    <ClInclude Include="ImportantFiles\GameStageFunctions.h" />
+    <ClInclude Include="ImportantFiles\GameStructure.h" />
+    <ClInclude Include="ImportantFiles\ObjectsFunctions.h" />
+    <ClInclude Include="ImportantFiles\PlayerFlags.h" />
+    <ClInclude Include="ImportantFiles\PlayerFunctions.h" />
+    <ClInclude Include="ImportantFiles\Score.h" />
+    <ClInclude Include="ImportantFiles\ObjectsDefine.h" />
+  </ItemGroup>
 </Project>

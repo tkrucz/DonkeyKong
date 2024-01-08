@@ -2,8 +2,8 @@
 #include<math.h>
 #include<stdio.h>
 #include<string.h>
-#include "ImportantFiles/define.h"
-#include "ImportantFiles/structures.h"
+#include "ImportantFiles/Define.h"
+#include "ImportantFiles/Structures.h"
 #include "ImportantFiles/GameStructure.h"
 #include "ImportantFiles/GeneralFunctions.h"
 
