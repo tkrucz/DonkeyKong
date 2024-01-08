@@ -129,7 +129,7 @@ void createTrophies(Stage* stage)
 	{
 		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		stage->trophies[i].animation = { ZERO, ZERO, 20, 20 };
+		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
 }
 
@@ -187,7 +187,7 @@ void createTrophies2(Stage* stage)
 	{
 		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		stage->trophies[i].animation = { ZERO, ZERO, 20, 20 };
+		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
 }
 
@@ -239,6 +239,6 @@ void createTrophies3(Stage* stage)
 	{
 		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		stage->trophies[i].animation = { ZERO, ZERO, 20, 20 };
+		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
 }

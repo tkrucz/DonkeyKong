@@ -11,8 +11,8 @@
 #include "SDLFunctions.h"
 
 extern "C" {
-#include"./SDL2-2.0.10/include/SDL.h"
-#include"./SDL2-2.0.10/include/SDL_main.h"
+#include"../SDL2-2.0.10/include/SDL.h"
+#include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
 void createWindow(SDLConst* SDL, Stage* stage);
@@ -39,7 +39,7 @@ void timeCounting(Stage* stage); //counting the game time
 
 void readKeys(Stage* stage,SDLConst* SDL,Score* score, Animator* animator); //read key input
 
-void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator);
+void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator); //read player key input
 
 void SDLSpace(SDLConst* SDL); //freeing all surfaces
 
@@ -115,7 +115,7 @@ void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(stage->gameInfo.text, "King Donkey");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, TITLE_ROW, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, F ");
+	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, E, F ");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Time from beginning: %.1lf s", stage->gameInfo.gameTime);
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * 8 / 2, TIME_ROW, stage->gameInfo.text, SDL->charset);

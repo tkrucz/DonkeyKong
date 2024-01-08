@@ -56,29 +56,3 @@ int main(int argc, char** argv) {
 	}
 	return 0;
 }
-
-/*
-// przyjmuje feedback od przyciskow w menu albo gry
-stageSpecifier handleSpecifier() {
-
-}
-
-Stage whichStage(stageSpecifier* specifier, Game game) {
-
-	switch (specifier) {
-	case STAGE1:
-		return game.stage1;
-	}
-}
-
-void animations(Player* player, Barrel* barrels) {
-	playerAnimation(player)
-	barrelsAnimations(barells);
-}
-
-void playerAnimation(Player* player) {
-	player->animator.actualAnimation++;
-	player->animator.spirtesArray[player->animator.actualAnimation]
-	(display spritesArray[actualAnimation)
-}
-*/
