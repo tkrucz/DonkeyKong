@@ -39,10 +39,11 @@ void barrelAnimations(Stage* stage, Animator* animator);
 
 void checkAnimaitons(Stage* stage, Animator* animator);
 
+
 void initializePlayerAnimator(Stage* stage, Animator* animator)
 {
 	animator->playerSpriteArray = { PLAYER_WIDTH * animator->actualPlayerAnimation[0] + MARIO_BMP_COLUMN_DISTANCE * animator->actualPlayerAnimation[0] ,
-		PLAYER_HEIGHT * animator->actualPlayerAnimation[1] + MARIO_BMP_ROW_DISTANCE * animator->actualPlayerAnimation[1],	PLAYER_REAL_SIZE, PLAYER_REAL_SIZE};
+	PLAYER_HEIGHT * animator->actualPlayerAnimation[1] + MARIO_BMP_ROW_DISTANCE * animator->actualPlayerAnimation[1],	PLAYER_REAL_SIZE, PLAYER_REAL_SIZE };
 }
 
 void initializeBarrelsAnimator(Stage* stage, Animator* animator)
@@ -67,7 +68,7 @@ void checkPlayerWalkingAnimation(Stage* stage, Animator* animator)
 		animator->changePlayerAnimation = true;
 		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
 		animator->actualPlayerAnimation[0] = PLAYER_WALK_LEFT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 		animator->actualPlayerAnimation[0] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 	}	
 	else if (stage->player.walkRight)
@@ -75,7 +76,7 @@ void checkPlayerWalkingAnimation(Stage* stage, Animator* animator)
 		animator->changePlayerAnimation = true;
 		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
 		animator->actualPlayerAnimation[0] = PLAYER_WALK_RIGHT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 		animator->actualPlayerAnimation[0] -= int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 	}
 	else 
@@ -88,16 +89,16 @@ void checkPlayerClimbingAnimation(Stage* stage, Animator* animator)
 	{
 		animator->changePlayerAnimation = true;
 		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
-		animator->actualPlayerAnimation[0] = PLAYER_CLIMP_LEFT_HAND_UP;
-		animator->actualPlayerAnimation[1] = 1;
+		animator->actualPlayerAnimation[0] = PLAYER_CLIMB_ONE;
+		animator->actualPlayerAnimation[1] = ONE;
 		animator->actualPlayerAnimation[0] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 	}
 	else if (stage->player.climbDown)
 	{
 		animator->changePlayerAnimation = true;
 		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
-		animator->actualPlayerAnimation[0] = PLAYER_CLIMP_RIGHT_HAND_UP;
-		animator->actualPlayerAnimation[1] = 1;
+		animator->actualPlayerAnimation[0] = PLAYER_CLIMB_TWO;
+		animator->actualPlayerAnimation[1] = ONE;
 		animator->actualPlayerAnimation[0] -= int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 	}
 }
@@ -108,35 +109,37 @@ void checkPlayerJumpingAnimation(Stage* stage, Animator* animator)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_JUMP_LEFT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 	}
 	else if ((stage->player.isJumping || stage->player.fallDown) && stage->player.walkRight)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_JUMP_RIGHT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 	}
 }
 
 void checkPlayerStandingAnimation(Stage* stage, Animator* animator)
 {
-	if (animator->actualPlayerAnimation[0] == 1 || animator->actualPlayerAnimation[0]==2 || animator->actualPlayerAnimation[0] == 3)
+	if (animator->actualPlayerAnimation[0] == PLAYER_JUMP_LEFT || animator->actualPlayerAnimation[0]==PLAYER_WALK_LEFT 
+	|| animator->actualPlayerAnimation[0] == PLAYER_STAND_LEFT)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_STAND_LEFT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 	}
-	else if (animator->actualPlayerAnimation[0] == 4 || animator->actualPlayerAnimation[0] == 5 || animator->actualPlayerAnimation[0] == 6)
+	else if (animator->actualPlayerAnimation[0] == PLAYER_STAND_RIGHT || animator->actualPlayerAnimation[0] == PLAYER_WALK_RIGHT 
+	|| animator->actualPlayerAnimation[0] == PLAYER_JUMP_RIGHT)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_STAND_RIGHT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 	}
 	else
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_STAND_RIGHT;
-		animator->actualPlayerAnimation[1] = 0;
+		animator->actualPlayerAnimation[1] = ZERO;
 	}
 }
 
@@ -161,8 +164,8 @@ void checkBarrelBowlingAnimation(Stage* stage, Animator* animator)
 		{
 			animator->changeBarrelsAnimation = true;
 			animator->time.actualShowingTime += stage->gameInfo.deltaTime;
-			animator->actualBarrelsAnimation[0] = 1;
-			animator->actualBarrelsAnimation[1] = 0;
+			animator->actualBarrelsAnimation[0] = ONE;
+			animator->actualBarrelsAnimation[1] = ZERO;
 			animator->actualBarrelsAnimation[1] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 		}		
 	}

@@ -25,6 +25,7 @@ void addScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText);
 
 void deltaScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText);
 
+
 void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -74,7 +75,7 @@ void endTheStage(Stage* stage, SDLConst* SDL, Score* score)
 	if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
 		sprintf(stage->player.text, "You have finished the stage. Press 1,2,3 to change the levels.");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->player.text) * 8 / 2, stage->player.lowerCoordinates.y - stage->player.realSize[1] - FIFTEEN , stage->player.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->player.text) * EIGHT / TWO, stage->player.lowerCoordinates.y - stage->player.realSize[1] - FIFTEEN , stage->player.text, SDL->charset);
 		stage->playerInfo.score += score->endTheStage;
 		score->deltaScore = score->endTheStage;
 		score->endTheStage = ZERO;

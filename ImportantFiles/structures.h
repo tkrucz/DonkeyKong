@@ -4,6 +4,7 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 #include "Define.h"
+#include "ObjectsDefine.h"
 
 struct SDLConst
 {

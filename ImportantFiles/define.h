@@ -60,10 +60,8 @@
 #define PLAYER_DEFAULT_LIVES 3
 #define PLAYER_DEFAULT_POINTS 0
 
-#define DEAFULT_PLAYER_SPRITE_I (PLAYER_WIDTH * 4) //DEAFULT_PLAYER_SPRITE_I describes from which column take a graphic 
-#define DEAFULT_PLAYER_SPRITE_II (PLAYER_HEIGHT * 0) //DEAFULT_PLAYER_SPRITE_II describes from which row take a graphic 
-#define MARIO_BMP_COLUMN_DISTANCE 3 //const which allows to show whole Mario graphic from the chosen row 
-#define MARIO_BMP_ROW_DISTANCE 6 //const which allows to show whole Mario graphic from the chosen row 
+#define MARIO_BMP_COLUMN_DISTANCE 3 //const which allows to show the whole Mario graphic
+#define MARIO_BMP_ROW_DISTANCE 6 //const which allows to show the whole Mario graphic
 
 #define JUMP_OVER_BARREL_POINTS 1000
 #define GET_TROPHY_POINTS 500
@@ -79,5 +77,5 @@
 #define PLAYER_STAND_RIGHT 4
 #define PLAYER_WALK_RIGHT 5 
 #define PLAYER_JUMP_RIGHT 6
-#define PLAYER_CLIMP_LEFT_HAND_UP 3
-#define PLAYER_CLIMP_RIGHT_HAND_UP 4
+#define PLAYER_CLIMB_ONE 3
+#define PLAYER_CLIMB_TWO 4

@@ -79,14 +79,14 @@ void createBarrels(Stage* stage)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
-		{BARRELS_I_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,false,true,false},
-		{BARRELS_II_SPAWN_POINT_X,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_III_SPAWN_POINT_X ,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_IV_SPAWN_POINT_X ,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_V_SPAWN_POINT_X ,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_VI_SPAWN_POINT_X ,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_VII_SPAWN_POINT_X ,BARRELS_SPAWN_POINT_Y,true,false,false},
-		{BARRELS_VIII_SPAWN_POINT_X ,PLATFORM_V_HEIGHT,false,false,false}
+		{ BARRELS_I_SPAWN_POINT_X, BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_II_SPAWN_POINT_X, BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_III_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_IV_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_V_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_VI_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_VII_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false },
+		{ BARRELS_VIII_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false }
 	};
 
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -107,7 +107,6 @@ void drawBarrels(Stage* stage, SDLConst* SDL)
 
 void initializeGameObjects(Stage* stage, Animator* animator)
 {
-	initializePlayerAnimator(stage, animator);
 	if (stage->stageSpecifier == STAGE1)
 	{
 		createPlatforms(stage);

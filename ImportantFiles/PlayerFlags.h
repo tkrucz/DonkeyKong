@@ -59,6 +59,7 @@ void playerNotClimbDown(Stage* stage);
 
 void playerNotClimbing(Stage* stage);
 
+
 void playerOnLadderBeg(Stage* stage)
 {
 	stage->player.begLadder = true;

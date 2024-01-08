@@ -15,7 +15,6 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-
 void initializePlayer(Stage* stage);
 
 void checkWalkDirection(Stage* stage);
@@ -58,6 +57,7 @@ void isPlayerOnGround(Stage* stage);
 void whereIsPLayer(Stage* stage);
 
 void quit(Stage* stage, SDLConst* SDL);
+
 
 void initializePlayer(Stage* stage)
 {

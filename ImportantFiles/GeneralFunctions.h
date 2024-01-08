@@ -33,7 +33,7 @@ void defaultSettings(Stage* stage); //set up the game at the beginning
 
 void newGameSettings(Stage* stage, Animator* animator); //set up settings after pressing "n"
 
-void loadStageSettings(Stage* stage, Animator* animator);
+void loadStageSettings(Stage* stage, Animator* animator, Score* score);
 
 void timeCounting(Stage* stage); //counting the game time
 
@@ -51,7 +51,7 @@ void secondStageSpecify(Stage* stage);
 
 void thirdStageSpecify(Stage* stage);
 
-void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator);
+void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
 Stage whichStage(Stage* stage, Game* game);
 
@@ -157,11 +157,12 @@ void newGameSettings(Stage* stage, Animator* animator)
 	initializeGameObjects(stage,animator);
 }
 
-void loadStageSettings(Stage* stage, Animator* animator)
+void loadStageSettings(Stage* stage, Animator* animator, Score* score)
 {
 	stage->gameInfo.quit = false;
 	stage->playerInfo.score = stage->playerInfo.score;
 	stage->playerInfo.lives = stage->playerInfo.lives;
+	score->endTheStage = END_THE_STAGE_POINTS;
 	initializePlayer(stage);
 	initializeGameObjects(stage,animator);
 }
@@ -212,11 +213,11 @@ void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animat
 		else if (keyPressed == SDLK_SPACE)
 			checkIfPlayerIsJumping(stage);
 		else if (keyPressed == SDLK_1)
-			handleSpecifier(stage, SDL, animator);
+			handleSpecifier(stage, SDL, animator,score);
 		else if (keyPressed == SDLK_2)
-			handleSpecifier(stage, SDL, animator);
+			handleSpecifier(stage, SDL, animator, score);
 		else if (keyPressed == SDLK_3)
-			handleSpecifier(stage, SDL, animator);
+			handleSpecifier(stage, SDL, animator, score);
 		break;
 	case SDL_KEYUP:
 		playerNotWalking(stage);
@@ -261,7 +262,7 @@ void thirdStageSpecify(Stage* stage)
 	stage->stageSpecifier = STAGE3;
 }
 
-void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator)
+void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* score)
 {
 	if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
@@ -279,7 +280,7 @@ void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator)
 		case SDL_KEYUP:
 			break;
 		}		
-		loadStageSettings(stage, animator);
+		loadStageSettings(stage, animator, score);
 	}
 }
 
