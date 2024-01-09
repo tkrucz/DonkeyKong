@@ -41,7 +41,7 @@
 #define FIFTEEN 15
 
 #define GRAVITY_SPEED 1
-#define JUMPING_SPEED 0.45
+#define JUMPING_SPEED 0.6
 #define ELASTIC_COLISION_CONST -106 
 
 #define NULL_SPEED 0

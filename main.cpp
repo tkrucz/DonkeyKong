@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 	//stage = whichStage(&stage, &game);
 	SDL_ShowCursor(SDL_DISABLE);
 
-	createWindow(&SDL, &stage);
+	createWindow(&stage, &SDL);
 	initializeColors(&SDL, &colors);
 	loadBMPs(&SDL);
 	defaultSettings(&stage);

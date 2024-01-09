@@ -77,6 +77,13 @@ struct GameInfo
 	char text[128];
 };
 
+struct Menu
+{
+	char text[128];
+	int options[4];
+	bool showMenu = true;
+};
+
 struct Score
 {
 	int getTrophy = GET_TROPHY_POINTS;
@@ -153,6 +160,7 @@ enum StageSpecifier
 struct Stage 
 {
 	StageSpecifier stageSpecifier = STAGE1;
+	Menu menu;
 	Player player;
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];

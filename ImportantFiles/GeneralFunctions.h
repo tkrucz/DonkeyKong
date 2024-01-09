@@ -15,11 +15,19 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-void createWindow(SDLConst* SDL, Stage* stage);
+void createWindow(Stage* stage, SDLConst* SDL);
+
+void drawMenu(Stage* stage, SDLConst* SDL, Color* colors);
+
+void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors);
+
+void writeName(Stage* stage, SDLConst* SDL);
 
 void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
 void drawScene(Stage* stage, SDLConst* SDL, Color* colors);
+
+void drawGame(Stage* stage, SDLConst* SDL, Color* colors);
 
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors);
 
@@ -60,7 +68,7 @@ void drawLives(Stage* stage, SDLConst* SDL);
 Stage whichStage(Stage* stage, Game* game);
 
 
-void createWindow(SDLConst* SDL, Stage* stage) // Create a window with specified size.
+void createWindow(Stage* stage, SDLConst* SDL) // Create a window with specified size.
 {
 	stage->gameInfo.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&SDL->window, &SDL->renderer);
@@ -84,6 +92,74 @@ void createWindow(SDLConst* SDL, Stage* stage) // Create a window with specified
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
+void drawMenu(Stage* stage, SDLConst* SDL, Color* colors)
+{
+	if (stage->menu.showMenu)
+	{
+		sprintf(stage->menu.text, "KING DONKEY");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 50, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "START NEW GAME - N");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 100, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "ENTER YOUR NAME - W");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "CHOOSE STAGE");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "CHECK PLAYER SCORE");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 160, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "EXIT THE GAME - ESC");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
+		readMenuKeys(stage, SDL, colors);
+	}
+	else
+		drawGame(stage, SDL, colors);
+}
+
+void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors)
+{
+	while (SDL_PollEvent(&SDL->event))
+	{
+		int keyPressed = SDL->event.key.keysym.sym;
+		switch (SDL->event.type)
+		{
+		case SDL_KEYDOWN:
+			if (keyPressed == SDLK_ESCAPE)
+				quit(stage, SDL);
+			else if (keyPressed == SDLK_n)
+				drawGame(stage, SDL, colors);
+			else if (keyPressed == SDLK_w)
+				writeName(stage,SDL);
+		//	else if (keyPressed == SDLK_s)
+				//chooseStage();
+		//	else if (keyPressed == SDLK_p)
+				//checkPlayersScore();
+			break;
+		case SDL_QUIT: //X button in right up corner
+			quit(stage, SDL);
+			break;
+		}
+	}
+}
+
+void writeName(Stage* stage, SDLConst* SDL)
+{
+	while (SDL_PollEvent(&SDL->event))
+	{
+		int keyPressed = SDL->event.key.keysym.sym;
+		switch (SDL->event.type)
+		{
+		case SDL_KEYDOWN:
+			*stage->menu.text += (char)(keyPressed);
+			break;
+		case SDL_KEYUP:
+			{
+				sprintf(stage->menu.text, "ENTERED NAME: %s", stage->menu.text);
+				DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
+				break;
+			}
+		}
+	}
+}
+
 void printInfo(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	printGameInfo(stage, SDL, colors);
@@ -100,12 +176,18 @@ void drawScene(Stage* stage, SDLConst* SDL, Color* colors)
 	drawLives(stage, SDL);
 } 
 
+void drawGame(Stage* stage, SDLConst* SDL, Color* colors)
+{
+	stage->menu.showMenu = false;
+	drawScene(stage, SDL, colors);
+	printInfo(stage,SDL,colors);
+	drawPlayer(stage, SDL);
+}
+
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawScene(stage,SDL,colors);
-	printInfo(stage,SDL,colors);
-	DrawSurface(SDL->screen, SDL->player, stage->player.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, stage->player.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &stage->player.animation); //draws the player
+	drawMenu(stage, SDL, colors);
 }
 
 void refreshWindow(SDLConst* SDL)
@@ -124,7 +206,7 @@ void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Time from beginning: %.1lf s", stage->gameInfo.gameTime);
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TIME_ROW, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "Esc - quit, n - new game ");
+	sprintf(stage->gameInfo.text, "Esc - quit, N - new game ");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, OPTIONS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "\30 - move up \31 - move down \32 - move left \33 - move right SPACE - jump");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, KEYS_ROW, stage->gameInfo.text, SDL->charset);

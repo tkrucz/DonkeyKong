@@ -6,6 +6,7 @@
 #include "Define.h"
 #include "Structures.h"
 #include "GameStructure.h"
+#include "SDLFunctions.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFlags.h"
 
@@ -16,6 +17,8 @@ extern "C" {
 }
 
 void initializePlayer(Stage* stage);
+
+void drawPlayer(Stage* stage, SDLConst* SDL);
 
 void checkWalkDirection(Stage* stage);
 
@@ -64,6 +67,11 @@ void initializePlayer(Stage* stage)
 	stage->player.lowerCoordinates = { PLAYER_SPAWN_POINT_X, PLAYER_SPAWN_POINT_Y };
 	stage->player.speed.speedX = NULL_SPEED;
 	stage->player.speed.speedY = NULL_SPEED;
+}
+
+void drawPlayer(Stage* stage,SDLConst* SDL)
+{
+	DrawSurface(SDL->screen, SDL->player, stage->player.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, stage->player.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &stage->player.animation); //draws the player
 }
 
 void checkWalkDirection(Stage* stage)
