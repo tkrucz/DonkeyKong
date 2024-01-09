@@ -17,7 +17,7 @@ extern "C" {
 
 void createWindow(Stage* stage, SDLConst* SDL);
 
-void drawMenu(Stage* stage, SDLConst* SDL, Color* colors);
+void displayMenu(Stage* stage, SDLConst* SDL, Color* colors);
 
 void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors);
 
@@ -27,7 +27,7 @@ void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
 void drawScene(Stage* stage, SDLConst* SDL, Color* colors);
 
-void drawGame(Stage* stage, SDLConst* SDL, Color* colors);
+void displayGame(Stage* stage, SDLConst* SDL, Color* colors);
 
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors);
 
@@ -92,7 +92,7 @@ void createWindow(Stage* stage, SDLConst* SDL) // Create a window with specified
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawMenu(Stage* stage, SDLConst* SDL, Color* colors)
+void displayMenu(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	if (stage->menu.showMenu)
 	{
@@ -110,32 +110,33 @@ void drawMenu(Stage* stage, SDLConst* SDL, Color* colors)
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
 		readMenuKeys(stage, SDL, colors);
 	}
-	else
-		drawGame(stage, SDL, colors);
 }
 
 void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors)
 {
-	while (SDL_PollEvent(&SDL->event))
+	if (stage->menu.showMenu)
 	{
-		int keyPressed = SDL->event.key.keysym.sym;
-		switch (SDL->event.type)
+		while (SDL_PollEvent(&SDL->event))
 		{
-		case SDL_KEYDOWN:
-			if (keyPressed == SDLK_ESCAPE)
+			int keyPressed = SDL->event.key.keysym.sym;
+			switch (SDL->event.type)
+			{
+			case SDL_KEYDOWN:
+				if (keyPressed == SDLK_ESCAPE)
+					quit(stage, SDL);
+				else if (keyPressed == SDLK_n)
+					stage->menu.showMenu = false;
+				else if (keyPressed == SDLK_w)
+					writeName(stage, SDL);
+				//	else if (keyPressed == SDLK_s)
+						//chooseStage();
+				//	else if (keyPressed == SDLK_p)
+						//checkPlayersScore();
+				break;
+			case SDL_QUIT: //X button in right up corner
 				quit(stage, SDL);
-			else if (keyPressed == SDLK_n)
-				drawGame(stage, SDL, colors);
-			else if (keyPressed == SDLK_w)
-				writeName(stage,SDL);
-		//	else if (keyPressed == SDLK_s)
-				//chooseStage();
-		//	else if (keyPressed == SDLK_p)
-				//checkPlayersScore();
-			break;
-		case SDL_QUIT: //X button in right up corner
-			quit(stage, SDL);
-			break;
+				break;
+			}
 		}
 	}
 }
@@ -148,6 +149,7 @@ void writeName(Stage* stage, SDLConst* SDL)
 		switch (SDL->event.type)
 		{
 		case SDL_KEYDOWN:
+			//else if (keyPressed == SDLK_BACKSPACE)
 			*stage->menu.text += (char)(keyPressed);
 			break;
 		case SDL_KEYUP:
@@ -176,9 +178,8 @@ void drawScene(Stage* stage, SDLConst* SDL, Color* colors)
 	drawLives(stage, SDL);
 } 
 
-void drawGame(Stage* stage, SDLConst* SDL, Color* colors)
+void displayGame(Stage* stage, SDLConst* SDL, Color* colors)
 {
-	stage->menu.showMenu = false;
 	drawScene(stage, SDL, colors);
 	printInfo(stage,SDL,colors);
 	drawPlayer(stage, SDL);
@@ -187,7 +188,10 @@ void drawGame(Stage* stage, SDLConst* SDL, Color* colors)
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
-	drawMenu(stage, SDL, colors);
+	if (stage->menu.showMenu)
+		displayMenu(stage, SDL, colors);
+	else
+		displayGame(stage, SDL, colors);
 }
 
 void refreshWindow(SDLConst* SDL)
