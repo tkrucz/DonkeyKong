@@ -17,11 +17,11 @@ extern "C" {
 
 void drawGround(SDLConst* SDL, Color* colors);
 
+void platformColor(Stage* stage, Color* colors);
+
 void createPlatforms(Stage* stage);
 
 void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors);
-
-void platformColor(Stage* stage, Color* colors);
 
 void createLadders(Stage* stage);
 
@@ -43,10 +43,33 @@ void createLadders3(Stage* stage);
 
 void createTrophies3(Stage* stage);
 
+void createLives(Stage* stage);
+
+void drawLives(Stage* stage, SDLConst* SDL);
+
 
 void drawGround(SDLConst* SDL, Color* colors)
 {
 	DrawLine(SDL->screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
+}
+
+void platformColor(Stage* stage, Color* colors)
+{
+	if (stage->stageSpecifier == STAGE1)
+	{
+		colors->platformColor = colors->pink;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
+	else if (stage->stageSpecifier == STAGE2)
+	{
+		colors->platformColor = colors->indygo;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
+	else if (stage->stageSpecifier == STAGE3)
+	{
+		colors->platformColor = colors->lime;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
 }
 
 void createPlatforms(Stage* stage)
@@ -73,25 +96,6 @@ void drawPlatforms(Stage* stage, SDLConst* SDL, Color* colors)
 	platformColor(stage, colors);
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 		DrawRectangle(SDL->screen, stage->platforms[i].upperCorner.x, stage->platforms[i].upperCorner.y, stage->platforms[i].length, stage->platforms[i].width, colors->black, stage->platformColor.platformColor);
-}
-
-void platformColor(Stage* stage, Color* colors)
-{
-	if (stage->stageSpecifier == STAGE1)
-	{
-		colors->platformColor = colors->pink;
-		stage->platformColor.platformColor = colors->platformColor;
-	}
-	else if (stage->stageSpecifier == STAGE2)
-	{
-		colors->platformColor = colors->indygo;
-		stage->platformColor.platformColor = colors->platformColor;
-	}
-	else if (stage->stageSpecifier == STAGE3)
-	{
-		colors->platformColor = colors->lime;
-		stage->platformColor.platformColor = colors->platformColor;
-	}
 }
 
 void createLadders(Stage* stage)
@@ -241,4 +245,20 @@ void createTrophies3(Stage* stage)
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
 		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
+}
+
+void createLives(Stage* stage)
+{
+	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
+	{
+		stage->lives[i].lowerCoordinates.x = LIVES_SPAWN_POINT_X + (LIVES_REAL_SIZE * i);
+		stage->lives[i].lowerCoordinates.y = HUNDRED_ROW + THREE;
+		stage->lives[i].animation = { ZERO,ZERO,stage->lives[i].realSize[0], stage->lives[i].realSize[1] };
+	}
+}
+
+void  drawLives(Stage* stage, SDLConst* SDL)
+{
+	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
+		DrawSurface(SDL->screen, SDL->lives, stage->lives[i].lowerCoordinates.x, stage->lives[i].lowerCoordinates.y, &stage->lives[i].animation);
 }

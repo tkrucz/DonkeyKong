@@ -61,10 +61,6 @@ void thirdStageSpecify(Stage* stage);
 
 void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
-void createLives(Stage* stage);
-
-void drawLives(Stage* stage, SDLConst* SDL);
-
 Stage whichStage(Stage* stage, Game* game);
 
 
@@ -252,8 +248,6 @@ void newGameSettings(Stage* stage, Animator* animator)
 void loadStageSettings(Stage* stage, Animator* animator, Score* score)
 {
 	stage->gameInfo.quit = false;
-	stage->playerInfo.score = stage->playerInfo.score;
-	stage->playerInfo.lives = stage->playerInfo.lives;
 	score->endTheStage = END_THE_STAGE_POINTS;
 	initializePlayer(stage);
 	initializeGameObjects(stage,animator);
@@ -266,7 +260,6 @@ void timeCounting(Stage* stage)
 	stage->gameInfo.gameTime += stage->gameInfo.deltaTime;
 }
 
-// TODO przejrzystosc kodu
 void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 {
 	while (SDL_PollEvent(&SDL->event))
@@ -374,22 +367,6 @@ void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* sco
 		}		
 		loadStageSettings(stage, animator, score);
 	}
-}
-
-void createLives(Stage* stage)
-{
-	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
-	{
-		stage->lives[i].lowerCoordinates.x = LIVES_SPAWN_POINT_X + (LIVES_REAL_SIZE * i);
-		stage->lives[i].lowerCoordinates.y = HUNDRED_ROW + THREE;
-		stage->lives[i].animation = { ZERO,ZERO,stage->lives[i].realSize[0], stage->lives[i].realSize[1] };
-	}
-}
-
-void  drawLives(Stage* stage, SDLConst* SDL)
-{
-	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
-		DrawSurface(SDL->screen, SDL->lives, stage->lives[i].lowerCoordinates.x, stage->lives[i].lowerCoordinates.y, &stage->lives[i].animation);
 }
 
 Stage whichStage(Stage* stage, Game* game)
