@@ -13,9 +13,13 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
+void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
-void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
+void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
+
+void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
+
+void readBarrelMenuKeys(Stage* stage, SDLConst* SDL);
 
 void emptyName(Stage* stage, SDLConst* SDL);
 
@@ -32,7 +36,7 @@ void setMessage(Stage* stage, SDLConst* SDL);
 void quit(Stage* stage, SDLConst* SDL);
 
 
-void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
+void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
 	if (stage->menu.showMenu)
 	{
@@ -74,14 +78,12 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 			sprintf(stage->menu.text, "CHOOSE STAGE FROM: 1, 2, 3");
 			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
 		}
-		readMenuKeys(stage, SDL, colors, animator, score);
+		readMainMenuKeys(stage, SDL, colors, animator, score);
 	}
 }
 
-void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
+void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
-	if (stage->menu.showMenu)
-	{
 		while (SDL_PollEvent(&SDL->event))
 		{
 			int keyPressed = SDL->event.key.keysym.sym;
@@ -108,6 +110,41 @@ void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator
 			else if (stage->menu.stageChoose)
 				chooseStage(stage, SDL, colors, animator, score);
 		}
+}
+
+void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
+{
+	if (stage->menu.showBarrelMenu)
+	{
+		sprintf(stage->menu.text, "Player score : %.6d", stage->playerInfo.score);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "You are hitted by barrel (fcking noob)");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "You want to continue?");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "YES - y , NO (quit the game) - Esc");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 250, stage->menu.text, SDL->charset);
+		readBarrelMenuKeys(stage, SDL);
+	}
+}
+
+void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
+{
+	while (SDL_PollEvent(&SDL->event))
+	{
+		int keyPressed = SDL->event.key.keysym.sym;
+		switch (SDL->event.type)
+		{
+		case SDL_KEYDOWN:
+			if (keyPressed == SDLK_ESCAPE)
+				quit(stage, SDL);
+			else if (keyPressed == SDLK_y)
+				stage->menu.showBarrelMenu = false;
+			break;
+		case SDL_QUIT: //X button in right up corner
+			quit(stage, SDL);
+			break;
+		}		
 	}
 }
 
@@ -217,8 +254,8 @@ void setMessage(Stage* stage, SDLConst* SDL)
 {
 	if (stage->menu.wrongStage)
 	{
-		char message[] = "CHOOSE THE CORRECT ROW";
-		for (int i = 0; i < 24; i++)
+		char message[] = "CHOOSE THE CORRECT STAGE";
+		for (int i = 0; i < 26; i++)
 			stage->menu.message[i] = message[i];
 	}
 }

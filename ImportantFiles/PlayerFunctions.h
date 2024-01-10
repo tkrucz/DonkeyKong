@@ -236,7 +236,10 @@ void loseLive(Stage* stage, SDLConst* SDL)
 	pom = stage->playerInfo.lives;
 	stage->lives[pom].animation = { ZERO,ZERO,ZERO,ZERO };	
 	if (stage->playerInfo.lives == ZERO)
-		quit(stage, SDL);
+	{
+		initializePlayer(stage);
+		stage->menu.showMenu = true;
+	}
 }
 
 void isPlayerOutsideTheBorders(Stage* stage)

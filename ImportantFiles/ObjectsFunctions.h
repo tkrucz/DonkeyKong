@@ -216,8 +216,10 @@ void collision(Stage* stage, SDLConst* SDL)
 			stage->barrels[i].lowerRightCoordinates.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] &&
 			stage->barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE >= stage->player.lowerCoordinates.x)
 		{
+			stage->menu.showBarrelMenu = true;
 			loseLive(stage, SDL);
 			stage->barrels[i].lowerRightCoordinates.y = BARRELS_SPAWN_POINT_Y;
+			initializePlayer(stage);
 			break;
 		}
 	}
@@ -232,7 +234,7 @@ void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showTe
 
 void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator)
 {
-	if (!stage->menu.showMenu)
+	if (!stage->menu.showMenu || !stage->menu.showBarrelMenu)
 	{
 		playerMovement(stage);
 		barrelMovement(stage);

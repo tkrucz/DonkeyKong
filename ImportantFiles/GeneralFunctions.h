@@ -104,7 +104,9 @@ void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animato
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	if (stage->menu.showMenu)
-		displayMenu(stage, SDL, colors, animator, score);
+		displayMainMenu(stage, SDL, colors, animator, score);
+	else if (stage->menu.showBarrelMenu)
+		displayHittedByBarrelMenu(stage, SDL);
 	else
 		displayGame(stage, SDL, colors);
 }
@@ -181,7 +183,7 @@ void loadStageSettings(Stage* stage, Animator* animator, Score* score)
 
 void timeCounting(Stage* stage)
 {
-	if (stage->menu.showMenu)
+	if (stage->menu.showMenu || stage->menu.showBarrelMenu)
 	{
 		stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
 		stage->gameInfo.t1 = stage->gameInfo.t2;		
