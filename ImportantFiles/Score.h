@@ -82,6 +82,7 @@ void endTheStage(Stage* stage, SDLConst* SDL, Score* score)
 		score->deltaScore = score->endTheStage;
 		score->endTheStage = ZERO;
 	}
+	finishGameMenu(stage, SDL, score);
 }
 
 void addScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)

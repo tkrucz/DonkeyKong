@@ -39,6 +39,8 @@ void setMessage(Stage* stage, SDLConst* SDL);
 
 void saveGame(Stage* stage);
 
+void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score);
+
 void quit(Stage* stage, SDLConst* SDL);
 
 
@@ -145,7 +147,7 @@ void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
 	{
 		sprintf(stage->menu.text, "Player score : %.6d", stage->playerInfo.score);
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
-		sprintf(stage->menu.text, "You are hitted by barrel (fcking noob)");
+		sprintf(stage->menu.text, "You are hitted by barrel");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "You want to continue?");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
@@ -301,12 +303,41 @@ void saveGame(Stage* stage)
 	char filename[] = "Saves.txt";
 	FILE* file = fopen(filename, "w");
 
-	if (file != NULL) 
-	{		
 		fprintf(file, "Player Name: %s\n", stage->player.name);
 		fprintf(file, "Score: %d\n", stage->playerInfo.score);
 		fprintf(file, "Lives: %d\n", stage->playerInfo.lives);
 
-		fclose(file);	
-	}	
+		fclose(file);		
+}
+
+void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score)
+{
+	if (stage->stageSpecifier == STAGE3 && score->endTheStage == ZERO)
+	{
+		stage->menu.showFinishMenu = true;
+		sprintf(stage->menu.text, "YOU HAVE FINISHED THE GAME");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "Player score : %.6d", stage->playerInfo.score);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "Player name : %s", stage->player.name);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "ESC-quit, S- save the game result");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
+		while (SDL_PollEvent(&SDL->event))
+		{
+			int keyPressed = SDL->event.key.keysym.sym;
+			switch (SDL->event.type)
+			{
+			case SDL_KEYDOWN:
+				if (keyPressed == SDLK_ESCAPE)
+					quit(stage, SDL);
+				else if (keyPressed == SDLK_s)
+					saveGame(stage);
+				break;
+			case SDL_QUIT: //X button in right up corner
+				quit(stage, SDL);
+				break;
+			}
+		}
+	}
 }

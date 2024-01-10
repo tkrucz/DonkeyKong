@@ -234,7 +234,7 @@ void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showTe
 
 void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator)
 {
-	if (!stage->menu.showMenu && !stage->menu.showBarrelMenu)
+	if (!stage->menu.showMenu && !stage->menu.showBarrelMenu || !stage->menu.showFinishMenu)
 	{
 		playerMovement(stage);
 		barrelMovement(stage);

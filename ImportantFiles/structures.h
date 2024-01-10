@@ -84,6 +84,7 @@ struct Menu
 	int index = -1;
 	bool showMenu = true;
 	bool showBarrelMenu = false;
+	bool showFinishMenu = false;
 	bool defaultMessage = true;
 	bool noneStage = false;
 	bool stageChoose = false;

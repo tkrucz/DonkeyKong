@@ -107,6 +107,8 @@ void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animato
 		displayMainMenu(stage, SDL, colors, animator, score);
 	else if (stage->menu.showBarrelMenu)
 		displayHittedByBarrelMenu(stage, SDL);
+	else if (stage->menu.showFinishMenu)
+		finishGameMenu(stage, SDL, score);
 	else
 		displayGame(stage, SDL, colors);
 }
@@ -179,7 +181,7 @@ void loadStageSettings(Stage* stage, Animator* animator, Score* score)
 
 void timeCounting(Stage* stage)
 {
-	if (stage->menu.showMenu || stage->menu.showBarrelMenu)
+	if (stage->menu.showMenu || stage->menu.showBarrelMenu || stage->menu.showFinishMenu)
 	{
 		stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
 		stage->gameInfo.t1 = stage->gameInfo.t2;		
