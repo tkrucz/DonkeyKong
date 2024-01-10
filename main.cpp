@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 	createWindow(&stage, &SDL);
 	initializeColors(&SDL, &colors);
 	loadBMPs(&SDL);
-	defaultSettings(&stage);
+	defaultSettings(&stage, &SDL);
 	initializeGameObjects(&stage, &animator);
 
 	stage.gameInfo.t1 = SDL_GetTicks();

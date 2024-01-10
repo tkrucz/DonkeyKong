@@ -82,12 +82,13 @@ struct Menu
 	char text[128];
 	char name[16];
 	char message[40];
-	int index = ZERO;
+	int index = -1;
 	bool showMenu = true;
 	bool defaultMessage = true;
 	bool stageChoose = false;
 	bool wrongStage = false;
 	bool nameEnter = false;
+	bool nameConfirmed = false;
 };
 
 struct Score

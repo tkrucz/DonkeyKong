@@ -32,9 +32,9 @@ void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
 void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
-void defaultSettings(Stage* stage); //set up the game at the beginning
+void defaultSettings(Stage* stage, SDLConst* SDL); //set up the game at the beginning
 
-void newGameSettings(Stage* stage, Animator* animator); 
+void newGameSettings(Stage* stage, SDLConst* SDL, Animator* animator);
 
 void loadStageSettings(Stage* stage, Animator* animator, Score* score);
 
@@ -155,8 +155,9 @@ void printInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	printPlayerInfo(stage, SDL, colors);
 }
 
-void defaultSettings(Stage* stage)
+void defaultSettings(Stage* stage, SDLConst* SDL)
 {
+	emptyName(stage, SDL);
 	stage->gameInfo.quit = false;
 	stage->gameInfo.gameTime = ZERO;
 	stage->playerInfo.score = PLAYER_DEFAULT_POINTS;
@@ -164,9 +165,9 @@ void defaultSettings(Stage* stage)
 	initializePlayer(stage);
 }
 
-void newGameSettings(Stage* stage, Animator* animator)
+void newGameSettings(Stage* stage, SDLConst* SDL, Animator* animator)
 {
-	defaultSettings(stage);
+	defaultSettings(stage, SDL);
 	initializeGameObjects(stage,animator);
 }
 
@@ -206,7 +207,7 @@ void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 				if (keyPressed == SDLK_ESCAPE)
 					quit(stage, SDL);
 				else if (keyPressed == SDLK_n)
-					newGameSettings(stage, animator);
+					newGameSettings(stage, SDL, animator);
 				break;
 			case SDL_QUIT: //X button in right up corner
 				quit(stage, SDL);

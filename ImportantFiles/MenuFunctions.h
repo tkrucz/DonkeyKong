@@ -34,7 +34,6 @@ void quit(Stage* stage, SDLConst* SDL);
 
 void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
-	emptyName(stage, SDL);
 	if (stage->menu.showMenu)
 	{
 		defaultMessage(stage, SDL);
@@ -42,8 +41,16 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 50, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "START NEW GAME - N");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 100, stage->menu.text, SDL->charset);
-		sprintf(stage->menu.text, "ENTER YOUR NAME - W");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
+		if (!stage->menu.nameConfirmed)
+		{
+			sprintf(stage->menu.text, "ENTER YOUR NAME - W");
+			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
+		}
+		else
+		{
+			sprintf(stage->menu.text, "ENTERED NAME: %s", stage->menu.name);
+			DrawString(SDL->screen, NAME_COLUMN, 120, stage->menu.text, SDL->charset);
+		}
 		sprintf(stage->menu.text, "CHOOSE STAGE - S");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
 		if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
@@ -59,8 +66,8 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
 		if (stage->menu.nameEnter)
 		{
-			sprintf(stage->menu.text, "ENTERED NAME: %s", stage->menu.name);
-			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
+			sprintf(stage->menu.text, "ENTERED NAME (confirm by pressing c) : %s", stage->menu.name);
+			DrawString(SDL->screen, WRITING_NAME_COLUMN, 220, stage->menu.text, SDL->charset);
 		}
 		if (stage->menu.stageChoose)
 		{
@@ -123,7 +130,10 @@ void writeName(Stage* stage, SDLConst* SDL)
 			stage->menu.index--;
 		}
 		else if (keyPressed == SDLK_c)
+		{
 			stage->menu.nameEnter = false;
+			stage->menu.nameConfirmed = true;
+		}
 		else
 		{
 			stage->menu.name[stage->menu.index] = (char)(keyPressed);
