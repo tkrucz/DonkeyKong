@@ -34,6 +34,7 @@ void quit(Stage* stage, SDLConst* SDL);
 
 void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
+	emptyName(stage, SDL);
 	if (stage->menu.showMenu)
 	{
 		defaultMessage(stage, SDL);
@@ -116,10 +117,19 @@ void writeName(Stage* stage, SDLConst* SDL)
 	switch (SDL->event.type)
 	{
 	case SDL_KEYDOWN:
-		if (keyPressed == SDLK_a)
-			*stage->menu.name += (char)(keyPressed);
-		else if (keyPressed == SDLK_BACKSPACE)
-			*stage->menu.name -= ONE;
+		if (keyPressed == SDLK_BACKSPACE)
+		{
+			stage->menu.name[stage->menu.index] = '\0';
+			stage->menu.index--;
+		}
+		else if (keyPressed == SDLK_c)
+			stage->menu.nameEnter = false;
+		else
+		{
+			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->menu.index++;
+		}
+	case SDL_KEYUP:
 		break;
 	}
 }
@@ -171,7 +181,6 @@ void defaultMessage(Stage* stage, SDLConst* SDL)
 			stage->menu.message[i] = ' ';
 		}
 		stage->menu.message[39] = '\0';
-		emptyName(stage, SDL);
 	}
 	else if (!stage->menu.defaultMessage)
 		setMessage(stage, SDL);

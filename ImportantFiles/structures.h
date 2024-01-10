@@ -82,6 +82,7 @@ struct Menu
 	char text[128];
 	char name[16];
 	char message[40];
+	int index = ZERO;
 	bool showMenu = true;
 	bool defaultMessage = true;
 	bool stageChoose = false;
