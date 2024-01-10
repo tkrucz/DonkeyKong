@@ -33,8 +33,8 @@ void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 		if (stage->player.isJumping || stage->player.fallDown)
 		{
 			if (stage->player.lowerCoordinates.y <= stage->barrels[i].lowerRightCoordinates.y - BARRELS_DIFFERENCE_IN_Y &&
-				stage->barrels[i].lowerRightCoordinates.x >= stage->player.lowerCoordinates.x &&
-				stage->barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE <= stage->player.lowerCoordinates.x + stage->player.realSize[0])
+				stage->barrels[i].lowerRightCoordinates.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] &&
+				stage->barrels[i].lowerRightCoordinates.x - BARRELS_HITBOX_SIZE >= stage->player.lowerCoordinates.x)
 			{
 				stage->playerInfo.score += stage->barrels[i].barrelScore;
 				if (stage->barrels[i].barrelScore > 0)
@@ -49,6 +49,8 @@ void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 		}
 		stage->barrels[i].barrelScore = JUMP_OVER_BARREL_POINTS;
 	}
+	//stage->barrels[i].lowerRightCoordinates.x >= stage->player.lowerCoordinates.x &&
+	//stage->barrels[i].lowerRightCoordinates.x + BARRELS_HITBOX_SIZE <= stage->player.lowerCoordinates.x + stage->player.realSize[0])
 }
 
 void getTrophy(Stage* stage, Score* score, ShowText* showText)

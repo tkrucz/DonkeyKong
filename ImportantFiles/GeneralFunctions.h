@@ -255,9 +255,17 @@ void loadStageSettings(Stage* stage, Animator* animator, Score* score)
 
 void timeCounting(Stage* stage)
 {
-	stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
-	stage->gameInfo.t1 = stage->gameInfo.t2;
-	stage->gameInfo.gameTime += stage->gameInfo.deltaTime;
+	if (stage->menu.showMenu)
+	{
+		stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
+		stage->gameInfo.t1 = stage->gameInfo.t2;		
+	}	
+	else
+	{
+		stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
+		stage->gameInfo.t1 = stage->gameInfo.t2;
+		stage->gameInfo.gameTime += stage->gameInfo.deltaTime;
+	} 
 }
 
 void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)

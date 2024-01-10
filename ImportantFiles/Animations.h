@@ -85,21 +85,24 @@ void checkPlayerWalkingAnimation(Stage* stage, Animator* animator)
 
 void checkPlayerClimbingAnimation(Stage* stage, Animator* animator)
 {
-	if (stage->player.climbUp)
+	if (stage->player.onLadder)
 	{
-		animator->changePlayerAnimation = true;
-		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
-		animator->actualPlayerAnimation[0] = PLAYER_CLIMB_ONE;
-		animator->actualPlayerAnimation[1] = ONE;
-		animator->actualPlayerAnimation[0] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
-	}
-	else if (stage->player.climbDown)
-	{
-		animator->changePlayerAnimation = true;
-		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
-		animator->actualPlayerAnimation[0] = PLAYER_CLIMB_TWO;
-		animator->actualPlayerAnimation[1] = ONE;
-		animator->actualPlayerAnimation[0] -= int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
+		if (stage->player.climbUp)
+		{
+			animator->changePlayerAnimation = true;
+			animator->time.actualShowingTime += stage->gameInfo.deltaTime;
+			animator->actualPlayerAnimation[0] = PLAYER_CLIMB_ONE;
+			animator->actualPlayerAnimation[1] = ONE;
+			animator->actualPlayerAnimation[0] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
+		}
+		else if (stage->player.climbDown)
+		{
+			animator->changePlayerAnimation = true;
+			animator->time.actualShowingTime += stage->gameInfo.deltaTime;
+			animator->actualPlayerAnimation[0] = PLAYER_CLIMB_TWO;
+			animator->actualPlayerAnimation[1] = ONE;
+			animator->actualPlayerAnimation[0] -= int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
+		}
 	}
 }
 
