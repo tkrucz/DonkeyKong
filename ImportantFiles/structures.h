@@ -80,8 +80,10 @@ struct GameInfo
 struct Menu
 {
 	char text[128];
-	char name[16];	
+	char name[16];
+	char message[40];
 	bool showMenu = true;
+	bool defaultMessage = true;
 	bool stageChoose = false;
 	bool wrongStage = false;
 	bool nameEnter = false;
@@ -162,7 +164,7 @@ enum StageSpecifier
 
 struct Stage 
 {
-	StageSpecifier stageSpecifier = STAGE1;
+	StageSpecifier stageSpecifier;
 	Menu menu;
 	Player player;
 	Platform platforms[NUMBER_OF_PLATFORMS];
@@ -174,23 +176,3 @@ struct Stage
 	GameInfo gameInfo;
 	Color platformColor;
 };
-
-// TODO
-/*
-struct Game {
-	Stage stage1 {
-		player = mario ....
-	}
-	Stage stage2 ...
-}
-struct Stage {
-	Player player;
-	Platform platforms;
-	Ladder ladders;
-};
-
-// struct animator {
-	SDL_Rect * spritesArray;
-	int actualAnimation;
-}
-*/

@@ -17,11 +17,17 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 
 void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
+void emptyName(Stage* stage, SDLConst* SDL);
+
 void writeName(Stage* stage, SDLConst* SDL);
 
 void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
+
+void defaultMessage(Stage* stage, SDLConst* SDL);
+
+void setMessage(Stage* stage, SDLConst* SDL);
 
 void quit(Stage* stage, SDLConst* SDL);
 
@@ -30,6 +36,7 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 {
 	if (stage->menu.showMenu)
 	{
+		defaultMessage(stage, SDL);
 		sprintf(stage->menu.text, "KING DONKEY");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 50, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "START NEW GAME - N");
@@ -38,10 +45,17 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "CHOOSE STAGE - S");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+		if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
+		{
+			sprintf(stage->menu.text, "CHOOSEN STAGE: %d", stage->stageSpecifier + 1);
+			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+		}
 		sprintf(stage->menu.text, "CHECK PLAYER SCORE");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 160, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "EXIT THE GAME - ESC");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "%s", stage->menu.message);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
 		if (stage->menu.nameEnter)
 		{
 			sprintf(stage->menu.text, "ENTERED NAME: %s", stage->menu.name);
@@ -49,16 +63,8 @@ void displayMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 		}
 		if (stage->menu.stageChoose)
 		{
-			if (stage->menu.wrongStage)
-			{
-				sprintf(stage->menu.text, "SUCH LEVEL IS NOT AVILABLE");
-				DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
-			}
-			else
-			{
-				sprintf(stage->menu.text, "CHOOSE STAGE FROM 1, 2, 3");
-				DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
-			}
+			sprintf(stage->menu.text, "CHOOSE STAGE FROM: 1, 2, 3");
+			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
 		}
 		readMenuKeys(stage, SDL, colors, animator, score);
 	}
@@ -89,12 +95,19 @@ void readMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator
 				quit(stage, SDL);
 				break;
 			}
-			if (keyPressed == SDLK_w)
+			if (stage->menu.nameEnter)
 				writeName(stage, SDL);
-			else if (keyPressed == SDLK_s)
+			else if (stage->menu.stageChoose)
 				chooseStage(stage, SDL, colors, animator, score);
 		}
 	}
+}
+
+void emptyName(Stage* stage, SDLConst* SDL)
+{
+	for (int i = 0; i < 15; i++)
+		stage->menu.name[i] = ' ';
+	stage->menu.name[15] = '\0';
 }
 
 void writeName(Stage* stage, SDLConst* SDL)
@@ -118,15 +131,58 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 	{
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_1)
+		{
 			stageSpecifierKeyHandle(stage, SDL, animator, score);
+			stage->menu.stageChoose = false;
+			stage->menu.wrongStage = false;
+			stage->menu.defaultMessage = true;
+		}
 		else if (keyPressed == SDLK_2)
+		{
 			stageSpecifierKeyHandle(stage, SDL, animator, score);
+			stage->menu.stageChoose = false;
+			stage->menu.wrongStage = false;
+			stage->menu.defaultMessage = true;
+		}
 		else if (keyPressed == SDLK_3)
+		{
 			stageSpecifierKeyHandle(stage, SDL, animator, score);
-		else
+			stage->menu.stageChoose = false;
+			stage->menu.wrongStage = false;
+			stage->menu.defaultMessage = true;
+		}
+		else if (keyPressed != SDLK_1 && keyPressed != SDLK_2 && keyPressed != SDLK_3)
+		{
 			stage->menu.wrongStage = true;
+			stage->menu.defaultMessage = false;
+		}
 		break;	
 	case SDL_KEYUP:
 		break;
+	}
+}
+
+void defaultMessage(Stage* stage, SDLConst* SDL)
+{
+	if (stage->menu.defaultMessage)
+	{
+		for (int i = 0; i < 39; i++)
+		{
+			stage->menu.message[i] = ' ';
+		}
+		stage->menu.message[39] = '\0';
+		emptyName(stage, SDL);
+	}
+	else if (!stage->menu.defaultMessage)
+		setMessage(stage, SDL);
+}
+
+void setMessage(Stage* stage, SDLConst* SDL)
+{
+	if (stage->menu.wrongStage)
+	{
+		char message[] = "CHOOSE THE CORRECT ROW";
+		for (int i = 0; i < 24; i++)
+			stage->menu.message[i] = message[i];
 	}
 }
