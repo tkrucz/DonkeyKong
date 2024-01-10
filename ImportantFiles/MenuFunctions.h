@@ -250,6 +250,7 @@ void defaultMessage(Stage* stage, SDLConst* SDL)
 		setMessage(stage, SDL);
 }
 
+//TO DO: set message kiedy wybierm opcjê której nie ma 
 void setMessage(Stage* stage, SDLConst* SDL)
 {
 	if (stage->menu.wrongStage)
