@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 		timeCounting(&stage);
 
 		refreshWindow(&SDL);
-		displayWindow(&stage, &SDL, &colors);
+		displayWindow(&stage, &SDL, &colors, &animator, &score);
 		
 		readKeys(&stage, &SDL, &score, &animator);
 

@@ -232,8 +232,11 @@ void whereAreObjects(Stage* stage, SDLConst* SDL, Score* score, ShowText* showTe
 
 void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator)
 {
-	playerMovement(stage);
-	barrelMovement(stage);
-	collision(stage, SDL);
-	checkAnimaitons(stage, animator);
+	if (!stage->menu.showMenu)
+	{
+		playerMovement(stage);
+		barrelMovement(stage);
+		collision(stage, SDL);
+		checkAnimaitons(stage, animator);
+	}
 }

@@ -80,8 +80,11 @@ struct GameInfo
 struct Menu
 {
 	char text[128];
-	int options[4];
+	char name[16];	
 	bool showMenu = true;
+	bool stageChoose = false;
+	bool wrongStage = false;
+	bool nameEnter = false;
 };
 
 struct Score

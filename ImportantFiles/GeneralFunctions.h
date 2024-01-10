@@ -18,13 +18,11 @@ extern "C" {
 
 void createWindow(Stage* stage, SDLConst* SDL);
 
-void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
-
 void drawScene(Stage* stage, SDLConst* SDL, Color* colors);
 
 void displayGame(Stage* stage, SDLConst* SDL, Color* colors);
 
-void displayWindow(Stage* stage, SDLConst* SDL, Color* colors);
+void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void refreshWindow(SDLConst* SDL);
 
@@ -32,9 +30,11 @@ void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
 void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
+void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
+
 void defaultSettings(Stage* stage); //set up the game at the beginning
 
-void newGameSettings(Stage* stage, Animator* animator); //set up settings after pressing "n"
+void newGameSettings(Stage* stage, Animator* animator); 
 
 void loadStageSettings(Stage* stage, Animator* animator, Score* score);
 
@@ -54,9 +54,9 @@ void secondStageSpecify(Stage* stage);
 
 void thirdStageSpecify(Stage* stage);
 
-void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
+void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
-Stage whichStage(Stage* stage, Game* game);
+Stage whichStage(Stage* stage, Game* game); //NOT USED
 
 
 void createWindow(Stage* stage, SDLConst* SDL) // Create a window with specified size.
@@ -83,12 +83,6 @@ void createWindow(Stage* stage, SDLConst* SDL) // Create a window with specified
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void printInfo(Stage* stage, SDLConst* SDL, Color* colors)
-{
-	printGameInfo(stage, SDL, colors);
-	printPlayerInfo(stage, SDL, colors);
-}
-
 void drawScene(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	drawGround(SDL, colors);
@@ -106,11 +100,11 @@ void displayGame(Stage* stage, SDLConst* SDL, Color* colors)
 	drawPlayer(stage, SDL);
 }
 
-void displayWindow(Stage* stage, SDLConst* SDL, Color* colors)
+void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
 	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
 	if (stage->menu.showMenu)
-		displayMenu(stage, SDL, colors);
+		displayMenu(stage, SDL, colors, animator, score);
 	else
 		displayGame(stage, SDL, colors);
 }
@@ -155,6 +149,12 @@ void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_SEVENTY_COLUMN, stage->gameInfo.text, SDL->charset);
 }
 
+void printInfo(Stage* stage, SDLConst* SDL, Color* colors)
+{
+	printGameInfo(stage, SDL, colors);
+	printPlayerInfo(stage, SDL, colors);
+}
+
 void defaultSettings(Stage* stage)
 {
 	stage->gameInfo.quit = false;
@@ -195,7 +195,7 @@ void timeCounting(Stage* stage)
 
 void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 {
-	if (!(stage->menu.showMenu))
+	if (!stage->menu.showMenu)
 	{
 		while (SDL_PollEvent(&SDL->event))
 		{
@@ -234,11 +234,11 @@ void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animat
 		else if (keyPressed == SDLK_SPACE)
 			checkIfPlayerIsJumping(stage);
 		else if (keyPressed == SDLK_1)
-			handleSpecifier(stage, SDL, animator,score);
+			stageSpecifierKeyHandle(stage, SDL, animator,score);
 		else if (keyPressed == SDLK_2)
-			handleSpecifier(stage, SDL, animator, score);
+			stageSpecifierKeyHandle(stage, SDL, animator, score);
 		else if (keyPressed == SDLK_3)
-			handleSpecifier(stage, SDL, animator, score);
+			stageSpecifierKeyHandle(stage, SDL, animator, score);
 		break;
 	case SDL_KEYUP:
 		playerNotWalking(stage);
@@ -283,9 +283,9 @@ void thirdStageSpecify(Stage* stage)
 	stage->stageSpecifier = STAGE3;
 }
 
-void handleSpecifier(Stage* stage, SDLConst* SDL, Animator* animator, Score* score)
+void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score)
 {
-	if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT)
+	if (stage->menu.showMenu || stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT)
 	{
 		int keyPressed = SDL->event.key.keysym.sym;
 		switch (SDL->event.type)
