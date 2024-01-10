@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	Game game;
 
 	specifier = stage.stageSpecifier;
-	//stage = whichStage(&stage, &game);
+	//stage = whichStage(&stage, &game); <--nie korzystam na razie
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow(&stage, &SDL);

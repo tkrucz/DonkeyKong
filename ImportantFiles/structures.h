@@ -80,7 +80,6 @@ struct GameInfo
 struct Menu
 {
 	char text[128];
-	char name[16];
 	char message[40];
 	int index = -1;
 	bool showMenu = true;
@@ -105,6 +104,7 @@ struct Player
 	SDL_Rect animation; //sets the look of player
 	Coordinates lowerCoordinates;
 	Speed speed;	
+	char name[16];
 	int realSize[2] = { PLAYER_REAL_SIZE,PLAYER_REAL_SIZE }; //pixels size of Mario
 	bool isJumping = false;
 	bool onPlatform = false;

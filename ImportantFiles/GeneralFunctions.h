@@ -145,10 +145,6 @@ void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	drawLives(stage, SDL);
 	sprintf(stage->gameInfo.text, "Trophies:");
 	DrawString(SDL->screen, FIVE_HUNDRED_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "LeftLowerXCorner: %.0f", stage->player.lowerCoordinates.x);
-	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_FIFTHY_COLUMN, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "LeftLowerYCorner: %.0f", stage->player.lowerCoordinates.y);
-	DrawString(SDL->screen, TEN_COLUMN, ONE_HUNDRED_SEVENTY_COLUMN, stage->gameInfo.text, SDL->charset);
 }
 
 void printInfo(Stage* stage, SDLConst* SDL, Color* colors)

@@ -15,6 +15,10 @@ extern "C" {
 
 void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
+void displayNamePart(Stage* stage, SDLConst* SDL);
+
+void displayStagePart(Stage* stage, SDLConst* SDL);
+
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
@@ -33,6 +37,8 @@ void defaultMessage(Stage* stage, SDLConst* SDL);
 
 void setMessage(Stage* stage, SDLConst* SDL);
 
+void saveGame(Stage* stage);
+
 void quit(Stage* stage, SDLConst* SDL);
 
 
@@ -45,40 +51,50 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 50, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "START NEW GAME - N");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 100, stage->menu.text, SDL->charset);
-		if (!stage->menu.nameConfirmed)
-		{
-			sprintf(stage->menu.text, "ENTER YOUR NAME - W");
-			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
-		}
-		else
-		{
-			sprintf(stage->menu.text, "ENTERED NAME: %s", stage->menu.name);
-			DrawString(SDL->screen, NAME_COLUMN, 120, stage->menu.text, SDL->charset);
-		}
-		sprintf(stage->menu.text, "CHOOSE STAGE - S");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
-		if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
-		{
-			sprintf(stage->menu.text, "CHOOSEN STAGE: %d", stage->stageSpecifier + 1);
-			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
-		}
-		sprintf(stage->menu.text, "CHECK PLAYER SCORE");
+		displayNamePart(stage, SDL);
+		displayStagePart(stage, SDL);		
+		sprintf(stage->menu.text, "CHECK PLAYER SCORE - P");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 160, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "EXIT THE GAME - ESC");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "%s", stage->menu.message);
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
-		if (stage->menu.nameEnter)
-		{
-			sprintf(stage->menu.text, "ENTERED NAME (press ENTER to confirm) : %s", stage->menu.name);
-			DrawString(SDL->screen, WRITING_NAME_COLUMN, 220, stage->menu.text, SDL->charset);
-		}
-		if (stage->menu.stageChoose)
-		{
-			sprintf(stage->menu.text, "CHOOSE STAGE FROM: 1, 2, 3");
-			DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
-		}
 		readMainMenuKeys(stage, SDL, colors, animator, score);
+	}
+}
+
+void displayNamePart(Stage* stage, SDLConst* SDL)
+{
+	if (!stage->menu.nameConfirmed)
+	{
+		sprintf(stage->menu.text, "ENTER YOUR NAME - W");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
+	}
+	else
+	{
+		sprintf(stage->menu.text, "ENTERED NAME: %s", stage->player.name);
+		DrawString(SDL->screen, NAME_COLUMN, 120, stage->menu.text, SDL->charset);
+	}
+	if (stage->menu.nameEnter)
+	{
+		sprintf(stage->menu.text, "ENTERED NAME (press ENTER to confirm) : %s", stage->player.name);
+		DrawString(SDL->screen, WRITING_NAME_COLUMN, 220, stage->menu.text, SDL->charset);
+	}
+}
+
+void displayStagePart(Stage* stage, SDLConst* SDL)
+{
+	sprintf(stage->menu.text, "CHOOSE STAGE - L");
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+	if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
+	{
+		sprintf(stage->menu.text, "CHOOSEN STAGE: %d", stage->stageSpecifier + 1);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+	}
+	if (stage->menu.stageChoose)
+	{
+		sprintf(stage->menu.text, "CHOOSE STAGE FROM: 1, 2, 3");
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
 	}
 }
 
@@ -106,13 +122,11 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 					stage->menu.nameEnter = true;
 					stage->menu.defaultMessage = true;
 				}
-				else if (keyPressed == SDLK_s)
+				else if (keyPressed == SDLK_l)
 				{
 					stage->menu.stageChoose = true;
 					stage->menu.defaultMessage = true;
 				}
-				//	else if (keyPressed == SDLK_p)
-						//checkPlayersScore();
 				break;
 			case SDL_QUIT: //X button in right up corner
 				quit(stage, SDL);
@@ -135,7 +149,7 @@ void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "You want to continue?");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
-		sprintf(stage->menu.text, "YES - y , NO (quit the game) - Esc");
+		sprintf(stage->menu.text, "YES - Y , NO (quit the game) - Esc, NO (save score) - S");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 250, stage->menu.text, SDL->charset);
 		readBarrelMenuKeys(stage, SDL);
 	}
@@ -153,6 +167,8 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 				quit(stage, SDL);
 			else if (keyPressed == SDLK_y)
 				stage->menu.showBarrelMenu = false;
+			else if (keyPressed == SDLK_s)
+				saveGame(stage);
 			break;
 		case SDL_QUIT: //X button in right up corner
 			quit(stage, SDL);
@@ -164,8 +180,8 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 void emptyName(Stage* stage, SDLConst* SDL)
 {
 	for (int i = 0; i < 15; i++)
-		stage->menu.name[i] = ' ';
-	stage->menu.name[15] = '\0';
+		stage->player.name[i] = ' ';
+	stage->player.name[15] = '\0';
 }
 
 void writeName(Stage* stage, SDLConst* SDL)
@@ -176,7 +192,7 @@ void writeName(Stage* stage, SDLConst* SDL)
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_BACKSPACE)
 		{
-			stage->menu.name[stage->menu.index] = '\0';
+			stage->player.name[stage->menu.index] = '\0';
 			stage->menu.index--;
 		}
 		else if (keyPressed == SDLK_RETURN)
@@ -187,23 +203,23 @@ void writeName(Stage* stage, SDLConst* SDL)
 		else if (keyPressed == SDLK_n)
 		{
 			stage->menu.showMenu = true;
-			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->player.name[stage->menu.index] = (char)(keyPressed);
 			stage->menu.index++;
 		}
 		else if (keyPressed == SDLK_w)
 		{
-			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->player.name[stage->menu.index] = (char)(keyPressed);
 			stage->menu.index++;
 		}
-		else if (keyPressed == SDLK_s)
+		else if (keyPressed == SDLK_l)
 		{
 			stage->menu.stageChoose = false;
-			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->player.name[stage->menu.index] = (char)(keyPressed);
 			stage->menu.index++;
 		}
 		else
 		{
-			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->player.name[stage->menu.index] = (char)(keyPressed);
 			stage->menu.index++;
 		}
 	case SDL_KEYUP:
@@ -269,13 +285,28 @@ void setMessage(Stage* stage, SDLConst* SDL)
 	if (stage->menu.wrongStage)
 	{
 		char message[] = "CHOOSE THE CORRECT STAGE";
-		for (int i = 0; i < 26; i++)
+		for (int i = 0; i < 25; i++)
 			stage->menu.message[i] = message[i];
 	}	
 	else if (stage->menu.noneStage)
 	{
 		char message[] = "YOU CAN'T START A GAME WITHOUT STAGE";
-		for (int i = 0; i < 38; i++)
+		for (int i = 0; i < 37; i++)
 			stage->menu.message[i] = message[i];
 	}
+}
+
+void saveGame(Stage* stage)
+{
+	char filename[] = "Saves.txt";
+	FILE* file = fopen(filename, "w");
+
+	if (file != NULL) 
+	{		
+		fprintf(file, "Player Name: %s\n", stage->player.name);
+		fprintf(file, "Score: %d\n", stage->playerInfo.score);
+		fprintf(file, "Lives: %d\n", stage->playerInfo.lives);
+
+		fclose(file);	
+	}	
 }
