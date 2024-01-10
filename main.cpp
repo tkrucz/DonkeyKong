@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 
 		refreshWindow(&SDL);
 		displayWindow(&stage, &SDL, &colors);
-
+		
 		readKeys(&stage, &SDL, &score, &animator);
 
 		gravityApply(&stage);

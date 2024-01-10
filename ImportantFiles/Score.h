@@ -103,6 +103,9 @@ void deltaScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)
 			showText->time.actualShowingTime += stage->gameInfo.deltaTime;
 		}
 		else
+		{
 			showText->isVisible = false;
+			score->deltaScore = ZERO;
+		}
 	}
 }

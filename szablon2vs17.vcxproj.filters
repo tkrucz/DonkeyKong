@@ -16,5 +16,6 @@
     <ClInclude Include="ImportantFiles\PlayerFunctions.h" />
     <ClInclude Include="ImportantFiles\Score.h" />
     <ClInclude Include="ImportantFiles\ObjectsDefine.h" />
+    <ClInclude Include="ImportantFiles\MenuFunctions.h" />
   </ItemGroup>
 </Project>
