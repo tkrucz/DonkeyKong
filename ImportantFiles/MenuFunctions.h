@@ -96,11 +96,21 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 					if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
 						stage->menu.showMenu = false;
 					else
+					{
+						stage->menu.noneStage = true;
+						stage->menu.defaultMessage = false;
 						break;
+					}
 				else if (keyPressed == SDLK_w)
+				{
 					stage->menu.nameEnter = true;
+					stage->menu.defaultMessage = true;
+				}
 				else if (keyPressed == SDLK_s)
+				{
 					stage->menu.stageChoose = true;
+					stage->menu.defaultMessage = true;
+				}
 				//	else if (keyPressed == SDLK_p)
 						//checkPlayersScore();
 				break;
@@ -262,4 +272,10 @@ void setMessage(Stage* stage, SDLConst* SDL)
 		for (int i = 0; i < 26; i++)
 			stage->menu.message[i] = message[i];
 	}	
+	else if (stage->menu.noneStage)
+	{
+		char message[] = "YOU CAN'T START A GAME WITHOUT STAGE";
+		for (int i = 0; i < 38; i++)
+			stage->menu.message[i] = message[i];
+	}
 }
