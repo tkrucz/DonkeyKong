@@ -70,7 +70,7 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
 		if (stage->menu.nameEnter)
 		{
-			sprintf(stage->menu.text, "ENTERED NAME (confirm by pressing c) : %s", stage->menu.name);
+			sprintf(stage->menu.text, "ENTERED NAME (press ENTER to confirm) : %s", stage->menu.name);
 			DrawString(SDL->screen, WRITING_NAME_COLUMN, 220, stage->menu.text, SDL->charset);
 		}
 		if (stage->menu.stageChoose)
@@ -93,7 +93,10 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 				if (keyPressed == SDLK_ESCAPE)
 					quit(stage, SDL);
 				else if (keyPressed == SDLK_n)
-					stage->menu.showMenu = false;
+					if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
+						stage->menu.showMenu = false;
+					else
+						break;
 				else if (keyPressed == SDLK_w)
 					stage->menu.nameEnter = true;
 				else if (keyPressed == SDLK_s)
@@ -166,7 +169,7 @@ void writeName(Stage* stage, SDLConst* SDL)
 			stage->menu.name[stage->menu.index] = '\0';
 			stage->menu.index--;
 		}
-		else if (keyPressed == SDLK_c)
+		else if (keyPressed == SDLK_RETURN)
 		{
 			stage->menu.nameEnter = false;
 			stage->menu.nameConfirmed = true;
@@ -258,5 +261,5 @@ void setMessage(Stage* stage, SDLConst* SDL)
 		char message[] = "CHOOSE THE CORRECT STAGE";
 		for (int i = 0; i < 26; i++)
 			stage->menu.message[i] = message[i];
-	}
+	}	
 }
