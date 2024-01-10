@@ -134,6 +134,23 @@ void writeName(Stage* stage, SDLConst* SDL)
 			stage->menu.nameEnter = false;
 			stage->menu.nameConfirmed = true;
 		}
+		else if (keyPressed == SDLK_n)
+		{
+			stage->menu.showMenu = true;
+			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->menu.index++;
+		}
+		else if (keyPressed == SDLK_w)
+		{
+			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->menu.index++;
+		}
+		else if (keyPressed == SDLK_s)
+		{
+			stage->menu.stageChoose = false;
+			stage->menu.name[stage->menu.index] = (char)(keyPressed);
+			stage->menu.index++;
+		}
 		else
 		{
 			stage->menu.name[stage->menu.index] = (char)(keyPressed);
