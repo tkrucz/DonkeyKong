@@ -255,6 +255,7 @@ void SDLSpace(SDLConst* SDL)
 	SDL_FreeSurface(SDL->player);
 	SDL_FreeSurface(SDL->barrel);
 	SDL_FreeSurface(SDL->trophy);
+	SDL_FreeSurface(SDL->lives);
 	SDL_DestroyTexture(SDL->scrtex);
 	SDL_DestroyRenderer(SDL->renderer);
 	SDL_DestroyWindow(SDL->window);

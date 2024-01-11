@@ -1,0 +1,3 @@
+Player Name: tomek          
+Score: 38000
+Lives: 2

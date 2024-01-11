@@ -249,7 +249,7 @@ void createTrophies3(Stage* stage)
 
 void createLives(Stage* stage)
 {
-	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
+	for (int i = 0; i < stage->playerInfo.lives; i++)
 	{
 		stage->lives[i].lowerCoordinates.x = LIVES_SPAWN_POINT_X + (LIVES_REAL_SIZE * i);
 		stage->lives[i].lowerCoordinates.y = HUNDRED_ROW + THREE;
