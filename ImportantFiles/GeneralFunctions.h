@@ -18,25 +18,25 @@ extern "C" {
 
 void createWindow(Stage* stage, SDLConst* SDL);
 
-void drawScene(Stage* stage, SDLConst* SDL, Color* colors);
+void drawScene(Stage* stage, SDLConst* SDL, Color* colors); //draws objects (without player)
 
-void displayGame(Stage* stage, SDLConst* SDL, Color* colors);
+void displayGame(Stage* stage, SDLConst* SDL, Color* colors); 
 
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void refreshWindow(SDLConst* SDL);
 
-void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors);
+void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors); 
 
 void printPlayerInfo(Stage* stage, SDLConst* SDL, Color* colors);
 
-void printInfo(Stage* stage, SDLConst* SDL, Color* colors);
+void printInfo(Stage* stage, SDLConst* SDL, Color* colors); //print GameInfo+ print PlayerInfo
 
 void defaultSettings(Stage* stage, SDLConst* SDL); //set up the game at the beginning
 
-void newGameSettings(Stage* stage, SDLConst* SDL, Animator* animator);
+void newGameSettings(Stage* stage, SDLConst* SDL, Animator* animator); //set up new game
 
-void loadStageSettings(Stage* stage, Animator* animator, Score* score);
+void loadStageSettings(Stage* stage, Animator* animator, Score* score); //set up next level
 
 void timeCounting(Stage* stage); //counting the game time
 
@@ -54,12 +54,12 @@ void secondStageSpecify(Stage* stage);
 
 void thirdStageSpecify(Stage* stage);
 
-void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
+void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score); //read key input to change stages
 
 Stage whichStage(Stage* stage, Game* game); //NOT USED
 
 
-void createWindow(Stage* stage, SDLConst* SDL) // Create a window with specified size.
+void createWindow(Stage* stage, SDLConst* SDL)
 {
 	stage->gameInfo.err = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
 		&SDL->window, &SDL->renderer);
@@ -102,7 +102,7 @@ void displayGame(Stage* stage, SDLConst* SDL, Color* colors)
 
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
-	SDL_FillRect(SDL->screen, ZERO, colors->black); //because FillRect in second parameter has NULL this function fill in the color of the window (into black)
+	SDL_FillRect(SDL->screen, ZERO, colors->black);
 	if (stage->menu.showMenu)
 		displayMainMenu(stage, SDL, colors, animator, score);
 	else if (stage->menu.showBarrelMenu)
@@ -125,7 +125,7 @@ void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors)
 	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(stage->gameInfo.text, "King Donkey");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TITLE_ROW, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, E, F ");
+	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, D, E, F ");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Time from beginning: %.1lf s", stage->gameInfo.gameTime);
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TIME_ROW, stage->gameInfo.text, SDL->charset);

@@ -16,7 +16,7 @@ extern "C" {
 #include"../SDL2-2.0.10/include/SDL_main.h"
 }
 
-void initializePlayer(Stage* stage);
+void initializePlayer(Stage* stage); //set defaults "values" for player
 
 void drawPlayer(Stage* stage, SDLConst* SDL);
 
@@ -24,7 +24,7 @@ void checkWalkDirection(Stage* stage);
 
 void checkClimbDirection(Stage* stage);
 
-void checkDirection(Stage* stage);
+void checkDirection(Stage* stage); //check WalkDirection + check ClimbDirection
 
 void playerWalk(Stage* stage); //move player in X axis by the current speedX
 
@@ -51,11 +51,11 @@ void loseLive(Stage* stage, SDLConst* SDL);
 
 void isPlayerOutsideTheBorders(Stage* stage); //check if player isn't outside of the screen borders
 
-void isPlayerOnLadder(Stage* stage);
+void isPlayerOnLadder(Stage* stage); //chceck if player is on ladder
 
-void isPlayerOnPlatform(Stage* stage);
+void isPlayerOnPlatform(Stage* stage); //chceck if player is on platform
 
-void isPlayerOnGround(Stage* stage); 
+void isPlayerOnGround(Stage* stage); //chceck if player is on ground
 
 void whereIsPLayer(Stage* stage);
 

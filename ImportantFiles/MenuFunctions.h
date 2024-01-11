@@ -33,7 +33,7 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
-void defaultMessage(Stage* stage, SDLConst* SDL);
+void printMessage(Stage* stage, SDLConst* SDL);
 
 void setMessage(Stage* stage, SDLConst* SDL);
 
@@ -48,7 +48,7 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 {
 	if (stage->menu.showMenu)
 	{
-		defaultMessage(stage, SDL);
+		printMessage(stage, SDL);
 		sprintf(stage->menu.text, "KING DONKEY");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 50, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "START NEW GAME - N");
@@ -267,7 +267,7 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 	}
 }
 
-void defaultMessage(Stage* stage, SDLConst* SDL)
+void printMessage(Stage* stage, SDLConst* SDL)
 {
 	if (stage->menu.defaultMessage)
 	{
