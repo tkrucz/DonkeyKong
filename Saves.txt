@@ -10,3 +10,6 @@ Lives: 3
 Player Name: wileq          
 Score: 35000
 Lives: 2
+Player Name: wiko
+Score: 33000
+Lives: 3

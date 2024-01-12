@@ -19,6 +19,8 @@ void displayNamePart(Stage* stage, SDLConst* SDL);
 
 void displayStagePart(Stage* stage, SDLConst* SDL);
 
+void displayScores(Stage* stage, SDLConst* SDL, Color* colors);
+
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
@@ -39,7 +41,9 @@ void printMessage(Stage* stage, SDLConst* SDL);
 
 void setMessage(Stage* stage, SDLConst* SDL);
 
-void saveGame(Stage* stage);
+void savePlayerScore(Stage* stage);
+
+void loadPlayersScore(Stage* stage);
 
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
@@ -59,12 +63,14 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 100, stage->menu.text, SDL->charset);
 		displayNamePart(stage, SDL);
 		displayStagePart(stage, SDL);		
-		sprintf(stage->menu.text, "CHECK PLAYER SCORE - P");
+		sprintf(stage->menu.text, "CHECK THE BEST SCORES - P");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 160, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "EXIT THE GAME - ESC");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "%s", stage->menu.message);
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
+		if (stage->menu.scoreboard)
+			displayScores(stage, SDL, colors);
 		readMainMenuKeys(stage, SDL, colors, animator, score);
 	}
 }
@@ -104,6 +110,13 @@ void displayStagePart(Stage* stage, SDLConst* SDL)
 	}
 }
 
+void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
+{
+	sprintf(stage->menu.text, "SCOREBOARD");
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_ROW, stage->menu.text, SDL->charset);
+	DrawRectangle(SDL->screen, 200, SCOREBOARD_ROW + 10, 300, 80, colors->white, colors->black);
+}
+
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
 		while (SDL_PollEvent(&SDL->event))
@@ -133,6 +146,8 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 					stage->menu.stageChoose = true;
 					stage->menu.defaultMessage = true;
 				}
+				else if (keyPressed == SDLK_p)
+					stage->menu.scoreboard = true;
 				break;
 			case SDL_QUIT: //X button in right up corner
 				quit(stage, SDL);
@@ -142,6 +157,8 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 				writeName(stage, SDL);
 			else if (stage->menu.stageChoose)
 				chooseStage(stage, SDL, colors, animator, score);
+			else if (stage->menu.scoreboard)
+				displayScores(stage, SDL, colors);
 		}
 }
 
@@ -175,7 +192,7 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 				stage->menu.showBarrelMenu = false;
 			else if (keyPressed == SDLK_s)
 			{
-				saveGame(stage);
+				savePlayerScore(stage);
 				quit(stage, SDL);
 			}
 			break;
@@ -283,7 +300,7 @@ void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score)
 		sprintf(stage->menu.text, "YOU HAVE FINISHED THE GAME");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "Player name (edit by pressing W, confirm by pressing ENTER) : %s", stage->player.name);
-		DrawString(SDL->screen, NAME_COLUMN, 220, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "Player score : %.6d", stage->playerInfo.score);
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "ESC-quit, S- save the game result");
@@ -303,7 +320,7 @@ void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL)
 			if (keyPressed == SDLK_ESCAPE)
 				quit(stage, SDL);
 			else if (keyPressed == SDLK_s)
-				saveGame(stage);
+				savePlayerScore(stage);
 			else if (keyPressed == SDLK_w)
 			{
 				stage->menu.nameEnter = true;
@@ -350,7 +367,7 @@ void setMessage(Stage* stage, SDLConst* SDL)
 	}
 }
 
-void saveGame(Stage* stage)
+void savePlayerScore(Stage* stage)
 {
 	char filename[] = "Saves.txt";
 	FILE* file = fopen(filename, "a");
@@ -360,4 +377,19 @@ void saveGame(Stage* stage)
 	fprintf(file, "Lives: %d\n", stage->playerInfo.lives);
 
 	fclose(file);
+}
+
+void loadPlayersScore(Stage* stage)
+{
+	char filename[] = "Saves.txt";
+	FILE* file = fopen(filename, "r");
+
+	if (file != NULL)
+	{		
+		fscanf(file, "Player Name: %s\n", &stage->player.name);
+		fscanf(file, "Score: %d\n", &stage->playerInfo.score);
+		fscanf(file, "Lives: %d\n", &stage->playerInfo.lives);
+
+		fclose(file);
+	}
 }
