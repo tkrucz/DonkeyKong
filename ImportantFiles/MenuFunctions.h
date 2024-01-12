@@ -274,6 +274,12 @@ void writeName(Stage* stage, SDLConst* SDL)
 			stage->player.name[stage->menu.index] = (char)(keyPressed);
 			stage->menu.index++;
 		}
+		else if (keyPressed == SDLK_p)
+		{
+			stage->menu.scoreboard = false;
+			stage->player.name[stage->menu.index] = (char)(keyPressed);
+			stage->menu.index++;
+		}
 		else
 		{
 			stage->player.name[stage->menu.index] = (char)(keyPressed);
