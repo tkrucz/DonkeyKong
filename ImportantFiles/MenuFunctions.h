@@ -21,6 +21,8 @@ void displayStagePart(Stage* stage, SDLConst* SDL);
 
 void displayScores(Stage* stage, SDLConst* SDL, Color* colors);
 
+void sortScore(Stage* stage, SDLConst* SDL);
+
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
@@ -112,33 +114,37 @@ void displayStagePart(Stage* stage, SDLConst* SDL)
 
 void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 {
-	loadPlayersScore(stage);
+	sortScore(stage, SDL);
 	sprintf(stage->menu.text, "SCOREBOARD");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_ROW, stage->menu.text, SDL->charset);
 	DrawRectangle(SDL->screen, 200, SCOREBOARD_ROW + 10, 350, 110, colors->white, colors->black);
 	int startY = SCOREBOARD_ROW + 20; 
-	
-	for (int j = 0; j < NUMBER_OF_PLAYERS; j++)
-	{
-		int max = stage->scoreboard[j].score;
-		int index = j;
-		for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
-		{
-			if (max < stage->scoreboard[i].score)
-			{
-					max = stage->scoreboard[i].score;
-					index = i;
-			}
-			stage->scoreboard[j].score = stage->scoreboard[index].score;
-			strcpy(stage->scoreboard[j].name, stage->scoreboard[index].name);
-			stage->scoreboard[j].lives = stage->scoreboard[index].lives;
-		}
-	}
 
 	for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
 	{
 		sprintf(stage->menu.text, "Player: %s | Score: %d | Lives: %d ", stage->scoreboard[i].name, stage->scoreboard[i].score, stage->scoreboard[i].lives);
 		DrawString(SDL->screen, 220, startY + i * 20, stage->menu.text, SDL->charset);
+	}
+}
+
+void sortScore(Stage* stage, SDLConst* SDL)
+{
+	loadPlayersScore(stage);
+	for (int j = 0; j < NUMBER_OF_PLAYERS; j++)
+	{
+		int max = stage->scoreboard[j].score;
+		int index = j;
+		for (int i = j + 1; i < NUMBER_OF_PLAYERS; i++)
+		{
+			if (max < stage->scoreboard[i].score)
+			{
+				max = stage->scoreboard[i].score;
+				index = i;
+			}
+		}
+		Scoreboard temp = stage->scoreboard[j];
+		stage->scoreboard[j] = stage->scoreboard[index];
+		stage->scoreboard[index] = temp;
 	}
 }
 
