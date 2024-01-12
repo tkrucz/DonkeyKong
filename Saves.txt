@@ -7,3 +7,6 @@ Lives: 2
 Player Name: igor           
 Score: 34000
 Lives: 3
+Player Name: wileq          
+Score: 35000
+Lives: 2
