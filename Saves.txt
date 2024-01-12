@@ -1,3 +1,9 @@
 Player Name: tomek          
 Score: 38000
 Lives: 2
+Player Name: tkrucz         
+Score: 43000
+Lives: 2
+Player Name: igor           
+Score: 34000
+Lives: 3

@@ -271,13 +271,11 @@ void quit(Stage* stage, SDLConst* SDL)
 void firstStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE1;
-
 }
 
 void secondStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE2;
-
 }
 
 void thirdStageSpecify(Stage* stage)
