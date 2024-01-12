@@ -74,6 +74,8 @@
 #define SHOWING_TEXT_TIME 1
 #define SHOWING_ANIMATION_TIME 1
 
+#define NUMBER_OF_PLAYERS 5
+
 ///Animation defines
 #define PLAYER_JUMP_LEFT 1
 #define PLAYER_WALK_LEFT 2

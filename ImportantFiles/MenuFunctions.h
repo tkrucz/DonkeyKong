@@ -386,10 +386,15 @@ void loadPlayersScore(Stage* stage)
 
 	if (file != NULL)
 	{		
-		fscanf(file, "Player Name: %s\n", &stage->player.name);
-		fscanf(file, "Score: %d\n", &stage->playerInfo.score);
-		fscanf(file, "Lives: %d\n", &stage->playerInfo.lives);
-
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
+		{
+			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != 1 ||
+				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != 1 ||
+				fscanf(file, "Lives: %d\n", &stage->scoreboard[i].lives) != 1)
+			{
+				break;
+			}
+		}
 		fclose(file);
 	}
 }
