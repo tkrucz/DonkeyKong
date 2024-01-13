@@ -14,11 +14,11 @@ Player Name: wiko
 Score: 33000
 Lives: 3
 Player Name: player1        
-Score: 2000
-Lives: 1
-Player Name: player2        
 Score: 3000
 Lives: 2
+Player Name: player2        
+Score: 2000
+Lives: 1
 Player Name: player3
 Score: 12500
 Lives: 1

@@ -75,6 +75,7 @@
 #define SHOWING_ANIMATION_TIME 1
 
 #define NUMBER_OF_PLAYERS 5
+#define MAX_NUMBER_OF_PLAYERS 10
 
 ///Animation defines
 #define PLAYER_JUMP_LEFT 1

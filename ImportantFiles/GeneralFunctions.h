@@ -209,7 +209,7 @@ void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 				else if (keyPressed == SDLK_n)
 					newGameSettings(stage, SDL, animator);
 				break;
-			case SDL_QUIT: //X button in right up corner
+			case SDL_QUIT: 
 				quit(stage, SDL);
 				break;
 			}

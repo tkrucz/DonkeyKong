@@ -23,6 +23,8 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors);
 
 void sortScore(Stage* stage, SDLConst* SDL);
 
+void readScoreKeys(Stage* stage, SDLConst* SDL);
+
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
@@ -116,27 +118,41 @@ void displayStagePart(Stage* stage, SDLConst* SDL)
 
 void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 {
+	int startRow = SCOREBOARD_ROW + 20;
 	sortScore(stage, SDL);
+	readScoreKeys(stage, SDL);
 	sprintf(stage->menu.text, "SCOREBOARD");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_ROW, stage->menu.text, SDL->charset);
 	DrawRectangle(SDL->screen, 200, SCOREBOARD_ROW + 10, 350, 110, colors->white, colors->black);
-	int startY = SCOREBOARD_ROW + 20; 
+	int page = stage->scoreboard->page;
+	int startIndex = page * NUMBER_OF_PLAYERS;
+	int endIndex = startIndex + NUMBER_OF_PLAYERS;
+	if (endIndex > MAX_NUMBER_OF_PLAYERS)
+		endIndex = MAX_NUMBER_OF_PLAYERS;
 
-	for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
+	for (int i = startIndex; i < endIndex; i++)
 	{
-		sprintf(stage->menu.text, "Player: %s | Score: %d | Lives: %d ", stage->scoreboard[i].name, stage->scoreboard[i].score, stage->scoreboard[i].lives);
-		DrawString(SDL->screen, 220, startY + i * 20, stage->menu.text, SDL->charset);
+		if (stage->scoreboard[i].score >= 0)
+		{
+			sprintf(stage->menu.text, "Player: %s | Score: %d | Lives: %d ", stage->scoreboard[i].name, stage->scoreboard[i].score, stage->scoreboard[i].lives);
+			DrawString(SDL->screen, 220, startRow + i * 20, stage->menu.text, SDL->charset);
+		}
+		else
+		{
+			sprintf(stage->menu.text, " ");
+			DrawString(SDL->screen, 220, startRow + i * 20, stage->menu.text, SDL->charset);
+		}
 	}
 }
 
 void sortScore(Stage* stage, SDLConst* SDL)
 {
 	loadPlayersScore(stage);
-	for (int j = 0; j < NUMBER_OF_PLAYERS; j++)
+	for (int j = 0; j < MAX_NUMBER_OF_PLAYERS; j++)
 	{
 		int max = stage->scoreboard[j].score;
 		int index = j;
-		for (int i = j + 1; i < NUMBER_OF_PLAYERS; i++)
+		for (int i = j + 1; i < MAX_NUMBER_OF_PLAYERS; i++)
 		{
 			if (max < stage->scoreboard[i].score)
 			{
@@ -147,6 +163,28 @@ void sortScore(Stage* stage, SDLConst* SDL)
 		Scoreboard temp = stage->scoreboard[j];
 		stage->scoreboard[j] = stage->scoreboard[index];
 		stage->scoreboard[index] = temp;
+	}
+}
+
+void readScoreKeys(Stage* stage, SDLConst* SDL)
+{
+	int keyPressed = SDL->event.key.keysym.sym;
+	switch (SDL->event.type)
+	{
+	case SDL_KEYDOWN:
+		if (keyPressed == SDLK_RIGHT)
+		{
+			stage->scoreboard->page++;
+		}
+		if (keyPressed == SDLK_LEFT)
+		{
+			stage->scoreboard->page--;
+			if (stage->scoreboard->page < 0)
+				stage->scoreboard->page = 0;
+		}
+		break;
+	case SDL_KEYUP:
+		break;
 	}
 }
 
@@ -173,16 +211,18 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 				{
 					stage->menu.nameEnter = true;
 					stage->menu.defaultMessage = true;
+					stage->menu.scoreboard = false;
 				}
 				else if (keyPressed == SDLK_l)
 				{
 					stage->menu.stageChoose = true;
-					stage->menu.defaultMessage = true;
+					stage->menu.defaultMessage = true; 
+					stage->menu.scoreboard = false;
 				}
 				else if (keyPressed == SDLK_p)
 					stage->menu.scoreboard = true;
 				break;
-			case SDL_QUIT: //X button in right up corner
+			case SDL_QUIT:
 				quit(stage, SDL);
 				break;
 			}
@@ -229,7 +269,7 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 				quit(stage, SDL);
 			}
 			break;
-		case SDL_QUIT: //X button in right up corner
+		case SDL_QUIT:
 			quit(stage, SDL);
 			break;
 		}		
@@ -366,7 +406,7 @@ void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL)
 				stage->menu.nameConfirmed = false;
 			}
 			break;
-		case SDL_QUIT: //X button in right up corner
+		case SDL_QUIT:
 			quit(stage, SDL);
 			break;
 		}
@@ -424,7 +464,7 @@ void loadPlayersScore(Stage* stage)
 
 	if (file != NULL)
 	{		
-		for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
+		for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
 		{
 			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != 1 ||
 				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != 1 ||

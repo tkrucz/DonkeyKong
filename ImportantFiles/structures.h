@@ -106,6 +106,7 @@ struct Scoreboard
 	char name[16];
 	int score;
 	int lives;
+	int page = ZERO;
 };
 
 struct Player
@@ -179,7 +180,7 @@ struct Stage
 {
 	StageSpecifier stageSpecifier;
 	Menu menu;
-	Scoreboard scoreboard[NUMBER_OF_PLAYERS];
+	Scoreboard scoreboard[MAX_NUMBER_OF_PLAYERS];
 	Player player;
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];
