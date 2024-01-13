@@ -48,7 +48,6 @@ void drawGround(SDLConst* SDL, Color* colors)
 	DrawLine(SDL->screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
-//TODO to function again, maybe switch case
 void platformColor(Stage* stage, Color* colors)
 {
 	if (stage->stageSpecifier == STAGE1)

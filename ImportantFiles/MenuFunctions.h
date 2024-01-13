@@ -36,6 +36,8 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 
 void changeStageFlags(Stage* stage);
 
+void noSuchStage(Stage* stage);
+
 void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score);
 
 void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL);
@@ -51,24 +53,23 @@ void quit(Stage* stage, SDLConst* SDL);
 void initializePlayer(Stage* stage);
 
 
-//TODO magic numbers
 void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
 	if (stage->menu.showMenu)
 	{
 		printMessage(stage, SDL);
 		sprintf(stage->menu.text, "KING DONKEY");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 50, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_TITLE_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "START NEW GAME - N");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 100, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_START_KEY_ROW, stage->menu.text, SDL->charset);
 		displayNamePart(stage, SDL);
 		displayStagePart(stage, SDL);		
 		sprintf(stage->menu.text, "CHECK THE BEST SCORES - P");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 160, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_SCORE_KEY_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "EXIT THE GAME - ESC");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_EXIT_KEY_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "%s", stage->menu.message);
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_MESSAGE_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->gameInfo.text, "Author: Tomasz Kruczalak 198049");
 		DrawString(SDL->screen, ZERO_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
 		if (stage->menu.scoreboard)
@@ -77,40 +78,38 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 	}
 }
 
-//TODO magic numbers
 void displayNamePart(Stage* stage, SDLConst* SDL)
 {
 	if (!stage->menu.nameConfirmed)
 	{
 		sprintf(stage->menu.text, "ENTER YOUR NAME - W");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 120, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_NAME_ROW, stage->menu.text, SDL->charset);
 	}
 	else
 	{
 		sprintf(stage->menu.text, "PLAYER NAME: %s", stage->player.name);
-		DrawString(SDL->screen, NAME_COLUMN, 120, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, NAME_COLUMN, MENU_NAME_ROW, stage->menu.text, SDL->charset);
 	}
 	if (stage->menu.nameEnter)
 	{
 		sprintf(stage->menu.text, "ENTERED NAME (press ENTER to confirm) : %s", stage->player.name);
-		DrawString(SDL->screen, WRITING_NAME_COLUMN, 220, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, WRITING_NAME_COLUMN, MENU_WRITING_NAME_ROW, stage->menu.text, SDL->charset);
 	}
 }
 
-//TODO magic numbers
 void displayStagePart(Stage* stage, SDLConst* SDL)
 {
 	sprintf(stage->menu.text, "CHOOSE STAGE - L");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_STAGE_ROW, stage->menu.text, SDL->charset);
 	if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
 	{
-		sprintf(stage->menu.text, "CHOOSEN STAGE: %d", stage->stageSpecifier + 1);
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 140, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "CHOOSEN STAGE: %d", stage->stageSpecifier + ONE);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_STAGE_ROW, stage->menu.text, SDL->charset);
 	}
 	if (stage->menu.stageChoose)
 	{
 		sprintf(stage->menu.text, "CHOOSE STAGE FROM: 1, 2, 3");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, MENU_CHOOSE_STAGE_ROW, stage->menu.text, SDL->charset);
 	}
 }
 
@@ -165,19 +164,18 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 		}
 }
 
-//TODO magic numbers 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
 {
 	if (stage->menu.showBarrelMenu)
 	{
 		sprintf(stage->menu.text, "Player score : %.6d", stage->playerInfo.score);
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, BARREL_MENU_PLAYER_SCORE, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "You are hitted by barrel");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, BARREL_MENU_ALERT, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "You want to continue?");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, BARREL_MENU_CONTINUE, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "YES - Y , NO (quit the game) - Esc, NO (save score and then quit) - S");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 250, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, BARREL_MENU_KEYS, stage->menu.text, SDL->charset);
 		readBarrelMenuKeys(stage, SDL);
 	}
 }
@@ -208,12 +206,11 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 	}
 }
 
-//TODO magic numbers
 void emptyName(Stage* stage, SDLConst* SDL)
 {
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < NAME_LENGTH; i++)
 		stage->player.name[i] = ' ';
-	stage->player.name[15] = '\0';
+	stage->player.name[NAME_LENGTH] = '\0';
 }
 
 // TODO: the same, one function in every key statement like here
@@ -292,10 +289,7 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 			changeStageFlags(stage);
 		}
 		else if (keyPressed != SDLK_1 && keyPressed != SDLK_2 && keyPressed != SDLK_3)
-		{
-			stage->menu.wrongStage = true;
-			stage->menu.defaultMessage = false;
-		}
+			noSuchStage(stage);
 		break;	
 	case SDL_KEYUP:
 		break;
@@ -309,6 +303,11 @@ void changeStageFlags(Stage* stage)
 	stage->menu.defaultMessage = true;
 }
 
+void noSuchStage(Stage* stage)
+{
+	stage->menu.wrongStage = true;
+	stage->menu.defaultMessage = false;
+}
 
 void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score)
 {
@@ -358,34 +357,32 @@ void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL)
 	}
 }
 
-//TODO ale magia
 void printMessage(Stage* stage, SDLConst* SDL)
 {
 	if (stage->menu.defaultMessage)
 	{
-		for (int i = 0; i < 39; i++)
+		for (int i = 0; i < DEFAULT_MESSAGE_LENGTH; i++)
 		{
 			stage->menu.message[i] = ' ';
 		}
-		stage->menu.message[39] = '\0';
+		stage->menu.message[DEFAULT_MESSAGE_LENGTH] = '\0';
 	}
 	else if (!stage->menu.defaultMessage)
 		setMessage(stage, SDL);
 }
 
-//TODO znowu magia
 void setMessage(Stage* stage, SDLConst* SDL)
 {
 	if (stage->menu.wrongStage)
 	{
 		char message[] = "CHOOSE THE CORRECT STAGE";
-		for (int i = 0; i < 25; i++)
+		for (int i = 0; i < STAGE_MESSAGE_LENGTH; i++)
 			stage->menu.message[i] = message[i];
 	}
 	else if (stage->menu.noneStage)
 	{
 		char message[] = "YOU CAN'T START A GAME WITHOUT STAGE";
-		for (int i = 0; i < 37; i++)
+		for (int i = 0; i < NEW_GAME_MESSAGE_LENGTH; i++)
 			stage->menu.message[i] = message[i];
 	}
 }

@@ -221,7 +221,6 @@ void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 	}
 }
 
-// PREFECTO
 void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator)
 {
 	int keyPressed = SDL->event.key.keysym.sym;

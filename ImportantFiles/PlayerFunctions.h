@@ -33,16 +33,16 @@ void approximateOnGround(Stage* stage); //check if player is near the ground
 
 void approximateOnPlatform(Stage* stage); //check if player is near the platform, while falling down
 
-void hitBottomOfThePlatform(Stage* stage); //check if player hit the bottom of platform
+void hitBottomOfThePlatform(Stage* stage); //check if player hit the bottom of the platform
 
 void hitSidesOfThePlatform(Stage* stage); //check if player hit the sides of platform
 
-//check if player is jumping||falling down change his position by the current speedY, check if there is collision or if player should get points 
+//check if player is jumping||falling down, change his position by the current speedY
 void gravityApply(Stage* stage);
 
 void playerJump(Stage* stage); //give the speedY value -JumpingSpeed
 
-void checkIfPlayerIsJumping(Stage* stage);
+void checkIfPlayerIsJumping(Stage* stage); //no "double" jump or inifinity jump
 
 void playerMovement(Stage* stage);
 
@@ -70,7 +70,7 @@ void initializePlayer(Stage* stage)
 
 void drawPlayer(Stage* stage,SDLConst* SDL)
 {
-	DrawSurface(SDL->screen, SDL->player, stage->player.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, stage->player.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &stage->player.animation); //draws the player
+	DrawSurface(SDL->screen, SDL->player, stage->player.lowerCoordinates.x + PLAYER_DIFFERENCE_IN_X, stage->player.lowerCoordinates.y + PLAYER_DIFFERENCE_IN_Y, &stage->player.animation);
 }
 
 void checkWalkDirection(Stage* stage)
@@ -144,7 +144,7 @@ void approximateOnPlatform(Stage* stage)
 	}
 }
 
-void hitBottomOfThePlatform(Stage* stage) //check if player doesn't hit the bottom of the platform
+void hitBottomOfThePlatform(Stage* stage) 
 {
 	double upperYCorner = stage->player.lowerCoordinates.y - stage->player.realSize[1]; //"-" beacuse y increases in down direction
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
@@ -167,14 +167,18 @@ void hitSidesOfThePlatform(Stage* stage)
 	double RightCorner = stage->player.lowerCoordinates.x + stage->player.realSize[0];
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (LeftCorner <= stage->platforms[i].upperCorner.x + stage->platforms[i].length && LeftCorner >= stage->platforms[i].upperCorner.x + stage->platforms[i].length - ONE)
-			if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width && upperYCorner > stage->platforms[i].upperCorner.y)
+		if (LeftCorner <= stage->platforms[i].upperCorner.x + stage->platforms[i].length &&
+			LeftCorner >= stage->platforms[i].upperCorner.x + stage->platforms[i].length - ONE)
+			if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
+				upperYCorner > stage->platforms[i].upperCorner.y)
 			{
 				stage->player.lowerCoordinates.x = stage->platforms[i].upperCorner.x + stage->platforms[i].length;
 				return;
 			}
-		if (RightCorner >= stage->platforms[i].upperCorner.x && RightCorner <= stage->platforms[i].upperCorner.x + ONE)
-			if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width && upperYCorner > stage->platforms[i].upperCorner.y)
+		if (RightCorner >= stage->platforms[i].upperCorner.x &&
+			RightCorner <= stage->platforms[i].upperCorner.x + ONE)
+			if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
+				upperYCorner > stage->platforms[i].upperCorner.y)
 				stage->player.lowerCoordinates.x = stage->platforms[i].upperCorner.x - stage->player.realSize[0];
 	}
 }
@@ -197,7 +201,7 @@ void playerJump(Stage* stage)
 	stage->player.speed.speedY = -JUMPING_SPEED;
 }
 
-void checkIfPlayerIsJumping(Stage* stage) //no "double" jump or inifinity jump
+void checkIfPlayerIsJumping(Stage* stage)
 {
 	if (stage->player.isJumping == true)
 		return;
@@ -254,7 +258,8 @@ void isPlayerOnLadder(Stage* stage)
 	int leftLowerCorner[2] = { stage->player.lowerCoordinates.x, stage->player.lowerCoordinates.y };
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
-		if (stage->ladders[i].upperCorner.x <= stage->player.lowerCoordinates.x && stage->player.lowerCoordinates.x <= stage->ladders[i].upperCorner.x + stage->ladders[i].width) //x increses in right direciton
+		if (stage->ladders[i].upperCorner.x <= stage->player.lowerCoordinates.x &&
+			stage->player.lowerCoordinates.x <= stage->ladders[i].upperCorner.x + stage->ladders[i].width) //x increses in right direciton
 		{
 			//is Mario at the beginning of ladder?
 			if (leftLowerCorner[1] == stage->ladders[i].upperCorner.y + stage->ladders[i].height) //y increases in down direction
@@ -294,7 +299,8 @@ void isPlayerOnPlatform(Stage* stage)
 		// is Mario on platform height?
 		if (stage->player.lowerCoordinates.y == stage->platforms[i].upperCorner.y)
 			// how far from edges?
-			if (stage->platforms[i].upperCorner.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] && stage->player.lowerCoordinates.x <= stage->platforms[i].upperCorner.x + stage->platforms[i].length)
+			if (stage->platforms[i].upperCorner.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] &&
+				stage->player.lowerCoordinates.x <= stage->platforms[i].upperCorner.x + stage->platforms[i].length)
 			{
 				playerOnPlatform(stage);
 				return;
@@ -305,7 +311,8 @@ void isPlayerOnPlatform(Stage* stage)
 
 void isPlayerOnGround(Stage* stage)
 {
-	if (!stage->player.onPlatform && !stage->player.onLadder && stage->player.lowerCoordinates.y != GROUND_HEIGHT)
+	if (!stage->player.onPlatform && !stage->player.onLadder &&
+		stage->player.lowerCoordinates.y != GROUND_HEIGHT)
 		playerFallingDown(stage);
 	if (stage->player.lowerCoordinates.y == GROUND_HEIGHT)
 	{

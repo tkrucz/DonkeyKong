@@ -165,7 +165,7 @@ void areBarrelsOnGround(Stage* stage)
 
 		if (stage->barrels[i].onGround)
 		{
-			if (stage->barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH / 2)
+			if (stage->barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH / TWO)
 				stage->barrels[i].speed.speedX = BARRELS_BOWLING_SPEED;
 			if (stage->barrels[i].lowerRightCoordinates.x < SCREEN_WIDTH)
 				stage->barrels[i].speed.speedX = -BARRELS_BOWLING_SPEED;
