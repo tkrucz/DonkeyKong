@@ -42,7 +42,7 @@ struct Speed
 struct Time
 {
 	double showingTime;
-	double actualShowingTime = ZERO;
+	double actualShowingTime = NULL;
 };
 
 struct ShowText
@@ -98,7 +98,7 @@ struct Score
 {
 	int getTrophy = GET_TROPHY_POINTS;
 	int endTheStage = END_THE_STAGE_POINTS;
-	int deltaScore = ZERO;
+	int deltaScore = NULL_POINTS;
 };
 
 struct Scoreboard
@@ -178,8 +178,8 @@ enum StageSpecifier
 struct Stage 
 {
 	bool canChangePage = false;
-	int numberOfPlayersInFile = ZERO;
-	int page = ZERO;
+	int numberOfPlayersInFile = NULL;
+	int page = NULL;
 	StageSpecifier stageSpecifier;
 	Menu menu;
 	Scoreboard* scoreboard;

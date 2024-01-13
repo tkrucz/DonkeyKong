@@ -5,7 +5,6 @@
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
-#include "GameStructure.h"
 #include "GeneralFunctions.h"
 #include "PlayerFunctions.h"
 #include "SDLFunctions.h"
@@ -49,6 +48,7 @@ void drawGround(SDLConst* SDL, Color* colors)
 	DrawLine(SDL->screen, ZERO_COLUMN, GROUND_HEIGHT, SCREEN_WIDTH, 1, 0, colors->white);
 }
 
+//TODO to function again, maybe switch case
 void platformColor(Stage* stage, Color* colors)
 {
 	if (stage->stageSpecifier == STAGE1)
@@ -129,7 +129,7 @@ void createTrophies(Stage* stage)
 	{
 		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
+		stage->trophies[i].animation = { 0, 0, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
 }
 
@@ -170,7 +170,7 @@ void createTrophies2(Stage* stage)
 	{
 		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
+		stage->trophies[i].animation = { 0, 0, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
 }
 
@@ -205,7 +205,7 @@ void createTrophies3(Stage* stage)
 	{
 		stage->trophies[i].lowerCoordinates.x = trophiesParameters[i][0];
 		stage->trophies[i].lowerCoordinates.y = trophiesParameters[i][1];
-		stage->trophies[i].animation = { ZERO, ZERO, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
+		stage->trophies[i].animation = { 0, 0, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 	}
 }
 
@@ -215,7 +215,7 @@ void createLives(Stage* stage)
 	{
 		stage->lives[i].lowerCoordinates.x = LIVES_SPAWN_POINT_X + (LIVES_REAL_SIZE * i);
 		stage->lives[i].lowerCoordinates.y = HUNDRED_ROW + THREE;
-		stage->lives[i].animation = { ZERO,ZERO,stage->lives[i].realSize[0], stage->lives[i].realSize[1] };
+		stage->lives[i].animation = { 0, 0, stage->lives[i].realSize[0], stage->lives[i].realSize[1] };
 	}
 }
 

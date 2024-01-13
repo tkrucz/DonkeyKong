@@ -5,7 +5,6 @@
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
-#include "GameStructure.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFlags.h"
 
@@ -61,6 +60,12 @@ void checkPlayerAnimation(Stage* stage, Animator* animator)
 	stage->player.animation = animator->playerSpriteArray;
 }
 
+//TODO shorten (function)
+// animator->changePlayerAnimation = true;
+// animator->time.actualShowingTime += stage->gameInfo.deltaTime;
+// animator->actualPlayerAnimation[0] = PLAYER_WALK_LEFT;
+// animator->actualPlayerAnimation[1] = ZERO;
+// animator->actualPlayerAnimation[0] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 void checkPlayerWalkingAnimation(Stage* stage, Animator* animator)
 {
 	if (stage->player.walkLeft)
@@ -68,7 +73,7 @@ void checkPlayerWalkingAnimation(Stage* stage, Animator* animator)
 		animator->changePlayerAnimation = true;
 		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
 		animator->actualPlayerAnimation[0] = PLAYER_WALK_LEFT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 		animator->actualPlayerAnimation[0] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 	}	
 	else if (stage->player.walkRight)
@@ -76,13 +81,14 @@ void checkPlayerWalkingAnimation(Stage* stage, Animator* animator)
 		animator->changePlayerAnimation = true;
 		animator->time.actualShowingTime += stage->gameInfo.deltaTime;
 		animator->actualPlayerAnimation[0] = PLAYER_WALK_RIGHT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 		animator->actualPlayerAnimation[0] -= int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 	}
 	else 
 		checkPlayerStandingAnimation(stage, animator);
 }
 
+//TODO analogicznie
 void checkPlayerClimbingAnimation(Stage* stage, Animator* animator)
 {
 	if (stage->player.onLadder)
@@ -106,22 +112,24 @@ void checkPlayerClimbingAnimation(Stage* stage, Animator* animator)
 	}
 }
 
+//TODO znowu
 void checkPlayerJumpingAnimation(Stage* stage, Animator* animator)
 {
 	if ((stage->player.isJumping || stage->player.fallDown) && stage->player.walkLeft)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_JUMP_LEFT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 	}
 	else if ((stage->player.isJumping || stage->player.fallDown) && stage->player.walkRight)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_JUMP_RIGHT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 	}
 }
 
+//TODO znowu
 void checkPlayerStandingAnimation(Stage* stage, Animator* animator)
 {
 	if (animator->actualPlayerAnimation[0] == PLAYER_JUMP_LEFT || animator->actualPlayerAnimation[0]==PLAYER_WALK_LEFT 
@@ -129,20 +137,20 @@ void checkPlayerStandingAnimation(Stage* stage, Animator* animator)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_STAND_LEFT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 	}
 	else if (animator->actualPlayerAnimation[0] == PLAYER_STAND_RIGHT || animator->actualPlayerAnimation[0] == PLAYER_WALK_RIGHT 
 	|| animator->actualPlayerAnimation[0] == PLAYER_JUMP_RIGHT)
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_STAND_RIGHT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 	}
 	else
 	{
 		animator->changePlayerAnimation = true;
 		animator->actualPlayerAnimation[0] = PLAYER_STAND_RIGHT;
-		animator->actualPlayerAnimation[1] = ZERO;
+		animator->actualPlayerAnimation[1] = 0;
 	}
 }
 
@@ -159,6 +167,7 @@ void chceckBarrelAnimation(Stage* stage, Animator* animator)
 		stage->barrels[i].animation = animator->barrelsSpriteArray;
 }
 
+//TODO ewentualnie (estetyka)
 void checkBarrelBowlingAnimation(Stage* stage, Animator* animator)
 {
 	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
@@ -168,7 +177,7 @@ void checkBarrelBowlingAnimation(Stage* stage, Animator* animator)
 			animator->changeBarrelsAnimation = true;
 			animator->time.actualShowingTime += stage->gameInfo.deltaTime;
 			animator->actualBarrelsAnimation[0] = ONE;
-			animator->actualBarrelsAnimation[1] = ZERO;
+			animator->actualBarrelsAnimation[1] = 0;
 			animator->actualBarrelsAnimation[1] += int(animator->time.actualShowingTime / animator->time.showingTime) % 2;
 		}		
 	}

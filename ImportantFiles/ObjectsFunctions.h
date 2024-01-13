@@ -5,7 +5,6 @@
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
-#include "GameStructure.h"
 #include "GameStageFunctions.h"
 #include "GeneralFunctions.h"
 #include "PlayerFunctions.h"
@@ -48,6 +47,7 @@ void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator);
 
 void createLives(Stage* stage);
 
+// maybe validation() to check if load was successful
 int loadBMPs(SDLConst* SDL)
 {
 	SDL->charset = SDL_LoadBMP("./BMP/cs8x8.bmp");
@@ -55,7 +55,7 @@ int loadBMPs(SDLConst* SDL)
 	SDL->barrel = SDL_LoadBMP("./BMP/barrels.bmp");
 	SDL->trophy = SDL_LoadBMP("./BMP/trophy.bmp");
 	SDL->lives = SDL_LoadBMP("./BMP/HP.bmp");
-	if (SDL->charset == ZERO)
+	if (SDL->charset == 0)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
 		SDL_FreeSurface(SDL->screen);
@@ -107,6 +107,7 @@ void drawBarrels(Stage* stage, SDLConst* SDL)
 		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
 }
 
+//TODO maybe functions (estetyka)
 void initializeGameObjects(Stage* stage, Animator* animator)
 {
 	createLives(stage);

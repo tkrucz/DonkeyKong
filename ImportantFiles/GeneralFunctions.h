@@ -5,7 +5,6 @@
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
-#include "GameStructure.h"
 #include "MenuFunctions.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFunctions.h"
@@ -40,6 +39,8 @@ void loadStageSettings(Stage* stage, Animator* animator, Score* score); //set up
 
 void timeCounting(Stage* stage); //counting the game time
 
+void timeTransformation(Stage* stage);
+
 void readKeys(Stage* stage,SDLConst* SDL,Score* score, Animator* animator); //read key input
 
 void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator); //read player key input
@@ -52,11 +53,9 @@ void thirdStageSpecify(Stage* stage);
 
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score); //read key input to change stages
 
-void SDLSpace(SDLConst* SDL); //freeing all surfaces
+void SDLFree(SDLConst* SDL); //freeing all surfaces
 
 void quit(Stage* stage, SDLConst* SDL);
-
-Stage whichStage(Stage* stage, Game* game); //NOT USED
 
 
 void createWindow(Stage* stage, SDLConst* SDL)
@@ -102,7 +101,7 @@ void displayGame(Stage* stage, SDLConst* SDL, Color* colors)
 
 void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
-	SDL_FillRect(SDL->screen, ZERO, colors->black);
+	SDL_FillRect(SDL->screen, 0, colors->black);
 	if (stage->menu.showMenu)
 		displayMainMenu(stage, SDL, colors, animator, score);
 	else if (stage->menu.showBarrelMenu)
@@ -115,8 +114,8 @@ void displayWindow(Stage* stage, SDLConst* SDL, Color* colors, Animator* animato
 
 void refreshWindow(SDLConst* SDL)
 {
-	SDL_UpdateTexture(SDL->scrtex, ZERO, SDL->screen->pixels, SDL->screen->pitch);
-	SDL_RenderCopy(SDL->renderer, SDL->scrtex, ZERO, ZERO);
+	SDL_UpdateTexture(SDL->scrtex, 0, SDL->screen->pixels, SDL->screen->pitch);
+	SDL_RenderCopy(SDL->renderer, SDL->scrtex, 0, 0);
 	SDL_RenderPresent(SDL->renderer);
 }
 
@@ -159,7 +158,7 @@ void defaultSettings(Stage* stage, SDLConst* SDL)
 {
 	emptyName(stage, SDL);
 	stage->gameInfo.quit = false;
-	stage->gameInfo.gameTime = ZERO;
+	stage->gameInfo.gameTime = 0;
 	stage->playerInfo.score = PLAYER_DEFAULT_POINTS;
 	stage->playerInfo.lives = PLAYER_DEFAULT_LIVES;
 	initializePlayer(stage);
@@ -183,15 +182,19 @@ void timeCounting(Stage* stage)
 {
 	if (stage->menu.showMenu || stage->menu.showBarrelMenu || stage->menu.showFinishMenu)
 	{
-		stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
-		stage->gameInfo.t1 = stage->gameInfo.t2;		
+		timeTransformation(stage);
 	}	
 	else
 	{
-		stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
-		stage->gameInfo.t1 = stage->gameInfo.t2;
+		timeTransformation(stage);
 		stage->gameInfo.gameTime += stage->gameInfo.deltaTime;
 	} 
+}
+
+void timeTransformation(Stage* stage)
+{
+	stage->gameInfo.deltaTime = (stage->gameInfo.t2 - stage->gameInfo.t1) * MILI;
+	stage->gameInfo.t1 = stage->gameInfo.t2;
 }
 
 void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
@@ -218,6 +221,7 @@ void readKeys(Stage* stage, SDLConst* SDL,Score* score, Animator* animator)
 	}
 }
 
+// PREFECTO
 void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
@@ -285,7 +289,7 @@ void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Sc
 	}
 }
 
-void SDLSpace(SDLConst* SDL)
+void SDLFree(SDLConst* SDL)
 {
 	SDL_FreeSurface(SDL->charset);
 	SDL_FreeSurface(SDL->screen);
@@ -301,18 +305,6 @@ void SDLSpace(SDLConst* SDL)
 void quit(Stage* stage, SDLConst* SDL)
 {
 	stage->gameInfo.quit = true;
-	SDLSpace(SDL);
+	SDLFree(SDL);
 	SDL_Quit();
-}
-
-Stage whichStage(Stage* stage, Game* game)
-{
-	switch (stage->stageSpecifier) {
-	case STAGE1:
-		return game->stage1;
-	case STAGE2:
-		return game->stage2;
-	case STAGE3:
-		return game->stage3;
-	}
 }

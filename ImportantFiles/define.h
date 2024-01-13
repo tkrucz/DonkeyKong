@@ -34,7 +34,6 @@
 #define GAME_TABLE_HEIGHT 80
 
 #define MILI 0.001
-#define ZERO 0
 #define HALF 0.5
 #define ONE 1
 #define TWO 2
@@ -67,6 +66,7 @@
 #define MARIO_BMP_COLUMN_DISTANCE 3 //const which allows to show the whole Mario graphic
 #define MARIO_BMP_ROW_DISTANCE 6 //const which allows to show the whole Mario graphic
 
+#define NULL_POINTS 0
 #define JUMP_OVER_BARREL_POINTS 1000
 #define GET_TROPHY_POINTS 500
 #define END_THE_STAGE_POINTS 10000

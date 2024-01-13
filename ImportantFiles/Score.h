@@ -5,7 +5,6 @@
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
-#include "GameStructure.h"
 #include "GeneralFunctions.h"
 #include "PlayerFunctions.h"
 #include "SDLFunctions.h"
@@ -38,13 +37,13 @@ void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 				stage->barrels[i].lowerRightCoordinates.x - BARRELS_HITBOX_SIZE >= stage->player.lowerCoordinates.x)
 			{
 				stage->playerInfo.score += stage->barrels[i].barrelScore;
-				if (stage->barrels[i].barrelScore > 0)
+				if (stage->barrels[i].barrelScore > NULL_POINTS)
 				{
 					score->deltaScore = stage->barrels[i].barrelScore;
-					showText->time.actualShowingTime = ZERO;
+					showText->time.actualShowingTime = 0;
 					showText->isVisible = true;
 				}
-				stage->barrels[i].barrelScore = ZERO;
+				stage->barrels[i].barrelScore = NULL_POINTS;
 				break;
 			}
 		}
@@ -62,7 +61,7 @@ void getTrophy(Stage* stage, Score* score, ShowText* showText)
 		{
 			stage->playerInfo.score += score->getTrophy;
 			score->deltaScore = score->getTrophy;
-			showText->time.actualShowingTime = ZERO;
+			showText->time.actualShowingTime = 0;
 			showText->isVisible = true;
 			stage->trophies[i].lowerCoordinates.x = FIVE_HUNDRED_EIGHTY_COLUMN + (i * TROPHIES_REAL_SIZE);
 			stage->trophies[i].lowerCoordinates.y = AUTHOR_INFO_ROW + THREE;
@@ -79,13 +78,13 @@ void endTheStage(Stage* stage, SDLConst* SDL, Score* score)
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->player.text) * EIGHT / TWO, stage->player.lowerCoordinates.y - stage->player.realSize[1] - FIFTEEN , stage->player.text, SDL->charset);
 		stage->playerInfo.score += score->endTheStage;
 		score->deltaScore = score->endTheStage;
-		score->endTheStage = ZERO;
+		score->endTheStage = NULL_POINTS;
 	}
 	else if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT && stage->stageSpecifier == STAGE3)
 	{
 		stage->playerInfo.score += score->endTheStage;
 		score->deltaScore = score->endTheStage;
-		score->endTheStage = ZERO;
+		score->endTheStage = NULL_POINTS;
 		finishGameMenu(stage, SDL, score);
 	}
 }
@@ -100,7 +99,7 @@ void addScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)
 void deltaScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)
 {
 	addScore(stage, SDL, score, showText);
-	if (score->deltaScore > 0)
+	if (score->deltaScore > NULL_POINTS)
 	{
 		if( showText->time.actualShowingTime <= showText->time.showingTime)
 		{
@@ -111,7 +110,7 @@ void deltaScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText)
 		else
 		{
 			showText->isVisible = false;
-			score->deltaScore = ZERO;
+			score->deltaScore = NULL_POINTS;
 		}
 	}
 }

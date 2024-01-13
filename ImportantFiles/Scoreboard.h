@@ -133,7 +133,7 @@ void loadPlayersScore(Stage* stage)
 
 void checkFileRowsNumber(Stage* stage)
 {
-	int rowsNumber=ZERO;
+	int rowsNumber=0;
 	int character;
 	char filename[] = "Saves.txt";
 	FILE* file = fopen(filename, "r");

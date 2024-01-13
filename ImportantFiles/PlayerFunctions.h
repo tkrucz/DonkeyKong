@@ -5,7 +5,6 @@
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
-#include "GameStructure.h"
 #include "SDLFunctions.h"
 #include "ObjectsFunctions.h"
 #include "PlayerFlags.h"
@@ -234,8 +233,8 @@ void loseLive(Stage* stage, SDLConst* SDL)
 	int pom;
 	stage->playerInfo.lives -= 1;
 	pom = stage->playerInfo.lives;
-	stage->lives[pom].animation = { ZERO,ZERO,ZERO,ZERO };	
-	if (stage->playerInfo.lives == ZERO)
+	stage->lives[pom].animation = { 0,0,0,0 };
+	if (stage->playerInfo.lives == 0)
 	{
 		initializePlayer(stage);
 		stage->menu.showMenu = true;
@@ -244,8 +243,8 @@ void loseLive(Stage* stage, SDLConst* SDL)
 
 void isPlayerOutsideTheBorders(Stage* stage)
 {
-	if (stage->player.lowerCoordinates.x <= ZERO)
-		stage->player.lowerCoordinates.x = ZERO;
+	if (stage->player.lowerCoordinates.x <= 0)
+		stage->player.lowerCoordinates.x = 0;
 	if (stage->player.lowerCoordinates.x + stage->player.realSize[0] >= SCREEN_WIDTH)
 		stage->player.lowerCoordinates.x = SCREEN_WIDTH - stage->player.realSize[0];
 }
