@@ -54,7 +54,7 @@ void initializeBarrelsAnimator(Stage* stage, Animator* animator)
 }
 
 void checkPlayerAnimation(Stage* stage, Animator* animator)
-{
+{	
 	checkPlayerWalkingAnimation(stage, animator);
 	checkPlayerClimbingAnimation(stage, animator);
 	checkPlayerJumpingAnimation(stage, animator);

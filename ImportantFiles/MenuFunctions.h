@@ -71,6 +71,8 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 180, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "%s", stage->menu.message);
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
+		sprintf(stage->gameInfo.text, "Author: Tomasz Kruczalak 198049");
+		DrawString(SDL->screen, ZERO_COLUMN, AUTHOR_INFO_ROW, stage->gameInfo.text, SDL->charset);
 		if (stage->menu.scoreboard)
 			displayScores(stage, SDL, colors);
 		readMainMenuKeys(stage, SDL, colors, animator, score);
