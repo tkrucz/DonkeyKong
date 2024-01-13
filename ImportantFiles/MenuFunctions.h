@@ -30,7 +30,11 @@ void emptyName(Stage* stage, SDLConst* SDL);
 
 void writeName(Stage* stage, SDLConst* SDL);
 
+void addingLetterToName(Stage* stage, SDLConst* SDL);
+
 void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
+
+void changeStageFlags(Stage* stage);
 
 void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score);
 
@@ -222,34 +226,32 @@ void writeName(Stage* stage, SDLConst* SDL)
 		{
 			stage->menu.showMenu = true;
 			stage->menu.noneStage = false;
-			stage->player.name[stage->menu.index] = (char)(keyPressed);
-			stage->menu.index++;
+			addingLetterToName(stage, SDL);
 		}
 		else if (keyPressed == SDLK_w)
-		{
-			stage->player.name[stage->menu.index] = (char)(keyPressed);
-			stage->menu.index++;
-		}
+			addingLetterToName(stage, SDL);		
 		else if (keyPressed == SDLK_l)
 		{
 			stage->menu.stageChoose = false;
-			stage->player.name[stage->menu.index] = (char)(keyPressed);
-			stage->menu.index++;
+			addingLetterToName(stage, SDL);
 		}
 		else if (keyPressed == SDLK_p)
 		{
 			stage->menu.scoreboard = false;
-			stage->player.name[stage->menu.index] = (char)(keyPressed);
-			stage->menu.index++;
+			addingLetterToName(stage, SDL);
 		}
 		else
-		{
-			stage->player.name[stage->menu.index] = (char)(keyPressed);
-			stage->menu.index++;
-		}
+			addingLetterToName(stage, SDL);
 	case SDL_KEYUP:
 		break;
 	}
+}
+
+void addingLetterToName(Stage* stage, SDLConst* SDL)
+{
+	int keyPressed = SDL->event.key.keysym.sym;
+	stage->player.name[stage->menu.index] = (char)(keyPressed);
+	stage->menu.index++;
 }
 
 void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
@@ -261,23 +263,17 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 		if (keyPressed == SDLK_1)
 		{
 			stageSpecifierKeyHandle(stage, SDL, animator, score);
-			stage->menu.stageChoose = false;
-			stage->menu.wrongStage = false;
-			stage->menu.defaultMessage = true;
+			changeStageFlags(stage);
 		}
 		else if (keyPressed == SDLK_2)
 		{
 			stageSpecifierKeyHandle(stage, SDL, animator, score);
-			stage->menu.stageChoose = false;
-			stage->menu.wrongStage = false;
-			stage->menu.defaultMessage = true;
+			changeStageFlags(stage);
 		}
 		else if (keyPressed == SDLK_3)
 		{
 			stageSpecifierKeyHandle(stage, SDL, animator, score);
-			stage->menu.stageChoose = false;
-			stage->menu.wrongStage = false;
-			stage->menu.defaultMessage = true;
+			changeStageFlags(stage);
 		}
 		else if (keyPressed != SDLK_1 && keyPressed != SDLK_2 && keyPressed != SDLK_3)
 		{
@@ -290,6 +286,13 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 	}
 }
 
+void changeStageFlags(Stage* stage)
+{
+	stage->menu.stageChoose = false;
+	stage->menu.wrongStage = false;
+	stage->menu.defaultMessage = true;
+}
+
 void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score)
 {
 	if (stage->stageSpecifier == STAGE3 && score->endTheStage == ZERO)
@@ -297,13 +300,15 @@ void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score)
 		initializePlayer(stage);
 		stage->menu.showFinishMenu = true;
 		sprintf(stage->menu.text, "YOU HAVE FINISHED THE GAME");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 200, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, FINISH_GAME_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "Player name (edit by pressing W, confirm by pressing ENTER) : %s", stage->player.name);
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 220, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, FINISH_NAME_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "Player score : %.6d", stage->playerInfo.score);
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, FINISH_SCORE_ROW, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "Game Time %.1lf s", stage->gameInfo.gameTime);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, FINISH_TIME_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "ESC-quit, S- save the game result");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 260, stage->menu.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, FINISH_KEYS_ROW, stage->menu.text, SDL->charset);
 		readFinishGameMenuKeys(stage, SDL);
 	}
 }

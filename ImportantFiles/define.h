@@ -83,6 +83,12 @@
 #define SCOREBOARD_HEIGHT 110
 #define SCORES_PER_PAGE 5
 
+#define FINISH_GAME_ROW 200
+#define FINISH_NAME_ROW 220
+#define	FINISH_SCORE_ROW 240
+#define FINISH_TIME_ROW 260
+#define FINISH_KEYS_ROW 280
+
 ///Animation defines
 #define PLAYER_JUMP_LEFT 1
 #define PLAYER_WALK_LEFT 2
