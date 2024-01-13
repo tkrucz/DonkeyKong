@@ -33,7 +33,7 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 	sprintf(stage->menu.text, "SCOREBOARD");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_TITLE_ROW, stage->menu.text, SDL->charset);
 	DrawRectangle(SDL->screen, SCOREBOARD_COLUMN, SCOREBOARD_ROW, SCOREBOARD_LENGTH, SCOREBOARD_HEIGHT, colors->white, colors->black);
-	int page = stage->scoreboard->page;
+	int page = stage->page;
 	int startIndex = page * SCORES_PER_PAGE;
 	int endIndex = startIndex + SCORES_PER_PAGE;
 	if (endIndex > stage->numberOfPlayersInFile)
@@ -79,21 +79,21 @@ void readScoreKeys(Stage* stage, SDLConst* SDL)
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_RIGHT)
 		{
-			if (stage->scoreboard->canChangePage == false)
+			if (stage->canChangePage == false)
 			{
-				stage->scoreboard->canChangePage = true;
-				stage->scoreboard->page++;
+				stage->canChangePage = true;
+				stage->page++;
 			}
 		}
-		if (keyPressed == SDLK_LEFT)
+		else if (keyPressed == SDLK_LEFT)
 		{
-			stage->scoreboard->page--;
-			if (stage->scoreboard->page < 0)
-				stage->scoreboard->page = 0;
+			stage->page--;
+			if (stage->page < 0)
+				stage->page = 0;
 		}
 		break;
 	case SDL_KEYUP:
-		stage->scoreboard->canChangePage = false;
+		stage->canChangePage = false;
 		break;
 	}
 }

@@ -106,8 +106,6 @@ struct Scoreboard
 	char name[16];
 	int score;
 	int lives;
-	int page = ZERO;
-	bool canChangePage = false;
 };
 
 struct Player
@@ -179,7 +177,9 @@ enum StageSpecifier
 
 struct Stage 
 {
+	bool canChangePage = false;
 	int numberOfPlayersInFile = ZERO;
+	int page = ZERO;
 	StageSpecifier stageSpecifier;
 	Menu menu;
 	Scoreboard* scoreboard;
