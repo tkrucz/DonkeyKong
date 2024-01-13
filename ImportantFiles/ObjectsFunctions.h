@@ -120,14 +120,14 @@ void initializeGameObjects(Stage* stage, Animator* animator)
 	else if (stage->stageSpecifier == STAGE2)
 	{
 		createPlatforms2(stage);
-		createLadders2(stage);
+		createLadders(stage);
 		createBarrels(stage);
 		createTrophies2(stage);
 	}
 	else if (stage->stageSpecifier == STAGE3)
 	{
 		createPlatforms3(stage);
-		createLadders3(stage);
+		createLadders(stage);
 		createBarrels(stage);
 		createTrophies3(stage);
 	}

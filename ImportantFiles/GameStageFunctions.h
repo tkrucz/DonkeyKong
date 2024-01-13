@@ -33,13 +33,9 @@ void drawTrophies(Stage* stage, SDLConst* SDL);
 
 void createPlatforms2(Stage* stage);
 
-void createLadders2(Stage* stage);
-
 void createTrophies2(Stage* stage);
 
 void createPlatforms3(Stage* stage);
-
-void createLadders3(Stage* stage);
 
 void createTrophies3(Stage* stage);
 
@@ -102,9 +98,9 @@ void createLadders(Stage* stage)
 {
 	//laddersParameters {X cordinate, Y cordinate, ladder height}
 	int laddersParameters[NUMBER_OF_LADDERS][3] = {
-		{ 365, PLATFORM_V_HEIGHT, LADDER_I_HEIGHT }, { 600, PLATFORM_IV_HEIGHT, LADDER_HEIGHT },
-		{ 150, PLATFORM_III_HEIGHT, LADDER_HEIGHT}, { 550, PLATFORM_II_HEIGHT, LADDER_HEIGHT },
-		{ 110, PLATFORM_I_HEIGHT, LADDER_V_HEIGHT }
+		{ LADDER_I_X_CORD, PLATFORM_V_HEIGHT, LADDER_I_HEIGHT }, { LADDER_II_X_CORD, PLATFORM_IV_HEIGHT, LADDER_HEIGHT },
+		{ LADDER_III_X_CORD, PLATFORM_III_HEIGHT, LADDER_HEIGHT}, { LADDER_IV_X_CORD, PLATFORM_II_HEIGHT, LADDER_HEIGHT },
+		{ LADDER_V_X_CORD, PLATFORM_I_HEIGHT, LADDER_V_HEIGHT }
 	};
 
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
@@ -162,23 +158,6 @@ void createPlatforms2(Stage* stage)
 	}
 }
 
-void createLadders2(Stage* stage)
-{
-	//laddersParameters {X cordinate, Y cordinate, ladder height}
-	int laddersParameters[NUMBER_OF_LADDERS][3] = {
-		{ 340, PLATFORM_V_HEIGHT, LADDER_I_HEIGHT }, { 600, PLATFORM_IV_HEIGHT, LADDER_HEIGHT },
-		{ 150, PLATFORM_III_HEIGHT, LADDER_HEIGHT }, { 550, PLATFORM_II_HEIGHT, LADDER_HEIGHT },
-		{ 110, PLATFORM_I_HEIGHT, LADDER_V_HEIGHT }
-	};
-
-	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
-	{
-		stage->ladders[i].upperCorner.x = laddersParameters[i][0];
-		stage->ladders[i].upperCorner.y = laddersParameters[i][1];
-		stage->ladders[i].height = laddersParameters[i][2];
-	}
-}
-
 void createTrophies2(Stage* stage)
 {
 	int trophiesParameters[NUMBER_OF_TROPHIES][2] = {
@@ -211,23 +190,6 @@ void createPlatforms3(Stage* stage)
 		stage->platforms[i].upperCorner.x = platformsParameters[i][0];
 		stage->platforms[i].upperCorner.y = platformsParameters[i][1];
 		stage->platforms[i].length = platformsParameters[i][2];
-	}
-}
-
-void createLadders3(Stage* stage)
-{
-	//laddersParameters {X cordinate, Y cordinate, ladder height}
-	int laddersParameters[NUMBER_OF_LADDERS][3] = {
-		{ 365, PLATFORM_V_HEIGHT, LADDER_I_HEIGHT }, { 600, PLATFORM_IV_HEIGHT, LADDER_HEIGHT },
-		{ 150, PLATFORM_III_HEIGHT, LADDER_HEIGHT }, { 550, PLATFORM_II_HEIGHT, LADDER_HEIGHT },
-		{ 110, PLATFORM_I_HEIGHT, LADDER_V_HEIGHT }
-	};
-
-	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
-	{
-		stage->ladders[i].upperCorner.x = laddersParameters[i][0];
-		stage->ladders[i].upperCorner.y = laddersParameters[i][1];
-		stage->ladders[i].height = laddersParameters[i][2];
 	}
 }
 

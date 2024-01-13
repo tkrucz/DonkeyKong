@@ -32,7 +32,7 @@ void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 	{
 		if (stage->player.isJumping || stage->player.fallDown)
 		{
-			if (stage->player.lowerCoordinates.y <= stage->barrels[i].lowerRightCoordinates.y - BARRELS_DIFFERENCE_IN_Y &&
+			if (stage->player.lowerCoordinates.y <= stage->barrels[i].lowerRightCoordinates.y + BARRELS_DIFFERENCE_IN_Y &&
 				stage->player.lowerCoordinates.y >= stage->barrels[i].lowerRightCoordinates.y - MAX_DIFFERNECE_DISTANCE &&
 				stage->barrels[i].lowerRightCoordinates.x <= stage->player.lowerCoordinates.x + stage->player.realSize[0] &&
 				stage->barrels[i].lowerRightCoordinates.x - BARRELS_HITBOX_SIZE >= stage->player.lowerCoordinates.x)
