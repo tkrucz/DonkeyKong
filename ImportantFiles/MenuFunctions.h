@@ -22,13 +22,35 @@ void displayStagePart(Stage* stage, SDLConst* SDL);
 
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
+void noMainMenuFlag(Stage* stage);
+
+void noStageFlags(Stage* stage);
+
+void writeNameFlagsOne(Stage* stage);
+
+void chooseStageFlags(Stage* stage);
+
+void scoreboardFlag(Stage* stage);
+
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
 
 void readBarrelMenuKeys(Stage* stage, SDLConst* SDL);
 
+void stopShowingBarrelMenu(Stage* stage);
+
 void emptyName(Stage* stage, SDLConst* SDL);
 
 void writeName(Stage* stage, SDLConst* SDL);
+
+void deletingLetterFromName(Stage* stage);
+
+void nameConfirmFlags(Stage* stage);
+
+void noNewGameFlags(Stage* stage);
+
+void noChooseStageFlag(Stage* stage);
+
+void noScoreboardFlag(Stage* stage);
 
 void addingLetterToName(Stage* stage, SDLConst* SDL);
 
@@ -41,6 +63,8 @@ void noSuchStage(Stage* stage);
 void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score);
 
 void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL);
+
+void writeNameFlagsTwo(Stage* stage);
 
 void printMessage(Stage* stage, SDLConst* SDL);
 
@@ -113,10 +137,6 @@ void displayStagePart(Stage* stage, SDLConst* SDL)
 	}
 }
 
-
-// TODO: the same, one function in every key statement like here
-// if (keyPressed == SDLK_ESCAPE)
-// quit(stage, SDL);
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
 		while (SDL_PollEvent(&SDL->event))
@@ -129,27 +149,18 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 					quit(stage, SDL);
 				else if (keyPressed == SDLK_n)
 					if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
-						stage->menu.showMenu = false;
+						noMainMenuFlag(stage);
 					else
 					{
-						stage->menu.noneStage = true;
-						stage->menu.defaultMessage = false;
+						noStageFlags(stage);
 						break;
 					}
 				else if (keyPressed == SDLK_w)
-				{
-					stage->menu.nameEnter = true;
-					stage->menu.defaultMessage = true;
-					stage->menu.scoreboard = false;
-				}
+					writeNameFlagsOne(stage);
 				else if (keyPressed == SDLK_l)
-				{
-					stage->menu.stageChoose = true;
-					stage->menu.defaultMessage = true; 
-					stage->menu.scoreboard = false;
-				}
+					chooseStageFlags(stage);
 				else if (keyPressed == SDLK_p)
-					stage->menu.scoreboard = true;
+					scoreboardFlag(stage);
 				break;
 			case SDL_QUIT:
 				quit(stage, SDL);
@@ -162,6 +173,36 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 			else if (stage->menu.scoreboard)
 				displayScores(stage, SDL, colors);
 		}
+}
+
+void noMainMenuFlag(Stage* stage)
+{
+	stage->menu.showMenu = false;
+}
+
+void noStageFlags(Stage* stage)
+{
+	stage->menu.noneStage = true;
+	stage->menu.defaultMessage = false;
+}
+
+void writeNameFlagsOne(Stage* stage)
+{
+	stage->menu.nameEnter = true;
+	stage->menu.defaultMessage = true;
+	stage->menu.scoreboard = false;
+}
+
+void chooseStageFlags(Stage* stage)
+{
+	stage->menu.stageChoose = true;
+	stage->menu.defaultMessage = true;
+	stage->menu.scoreboard = false;
+}
+
+void scoreboardFlag(Stage* stage)
+{
+	stage->menu.scoreboard = true;
 }
 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
@@ -180,7 +221,6 @@ void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
 	}
 }
 
-//TODO to fucntion -> stage->menu.showBarrelMenu = false; 
 void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 {
 	while (SDL_PollEvent(&SDL->event))
@@ -192,7 +232,7 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 			if (keyPressed == SDLK_ESCAPE)
 				quit(stage, SDL);
 			else if (keyPressed == SDLK_y)
-				stage->menu.showBarrelMenu = false; 
+				stopShowingBarrelMenu(stage);
 			else if (keyPressed == SDLK_s)
 			{
 				savePlayerScore(stage);
@@ -206,6 +246,11 @@ void readBarrelMenuKeys(Stage* stage, SDLConst* SDL)
 	}
 }
 
+void stopShowingBarrelMenu(Stage* stage)
+{
+	stage->menu.showBarrelMenu = false;
+}
+
 void emptyName(Stage* stage, SDLConst* SDL)
 {
 	for (int i = 0; i < NAME_LENGTH; i++)
@@ -213,9 +258,6 @@ void emptyName(Stage* stage, SDLConst* SDL)
 	stage->player.name[NAME_LENGTH] = '\0';
 }
 
-// TODO: the same, one function in every key statement like here
-// if (keyPressed == SDLK_ESCAPE)
-// quit(stage, SDL);
 void writeName(Stage* stage, SDLConst* SDL)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
@@ -223,31 +265,24 @@ void writeName(Stage* stage, SDLConst* SDL)
 	{
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_BACKSPACE)
-		{
-			stage->player.name[stage->menu.index] = '\0';
-			stage->menu.index--;
-		}
+			deletingLetterFromName(stage);	
 		else if (keyPressed == SDLK_RETURN)
-		{
-			stage->menu.nameEnter = false;
-			stage->menu.nameConfirmed = true;
-		}
+			nameConfirmFlags(stage);
 		else if (keyPressed == SDLK_n)
 		{
-			stage->menu.showMenu = true;
-			stage->menu.noneStage = false;
+			noNewGameFlags(stage);
 			addingLetterToName(stage, SDL);
 		}
 		else if (keyPressed == SDLK_w)
 			addingLetterToName(stage, SDL);		
 		else if (keyPressed == SDLK_l)
 		{
-			stage->menu.stageChoose = false;
+			noChooseStageFlag(stage);
 			addingLetterToName(stage, SDL);
 		}
 		else if (keyPressed == SDLK_p)
 		{
-			stage->menu.scoreboard = false;
+			noScoreboardFlag(stage);
 			addingLetterToName(stage, SDL);
 		}
 		else
@@ -257,6 +292,33 @@ void writeName(Stage* stage, SDLConst* SDL)
 	}
 }
 
+void deletingLetterFromName(Stage* stage)
+{
+	stage->player.name[stage->menu.index] = '\0';
+	stage->menu.index--;
+}
+
+void nameConfirmFlags(Stage* stage)
+{
+	stage->menu.nameEnter = false;
+	stage->menu.nameConfirmed = true;
+}
+
+void noNewGameFlags(Stage* stage)
+{
+	stage->menu.showMenu = true;
+	stage->menu.noneStage = false;
+}
+
+void noChooseStageFlag(Stage* stage)
+{
+	stage->menu.stageChoose = false;
+}
+
+void noScoreboardFlag(Stage* stage)
+{
+	stage->menu.scoreboard = false;
+}
 void addingLetterToName(Stage* stage, SDLConst* SDL)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
@@ -264,9 +326,6 @@ void addingLetterToName(Stage* stage, SDLConst* SDL)
 	stage->menu.index++;
 }
 
-// TODO: the same, one function in every key statement like here
-// if (keyPressed == SDLK_ESCAPE)
-// quit(stage, SDL);
 void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
@@ -329,7 +388,6 @@ void finishGameMenu(Stage* stage, SDLConst* SDL, Score* score)
 	}
 }
 
-//TODO jak chcesz
 void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL)
 {
 	while (SDL_PollEvent(&SDL->event))
@@ -343,10 +401,7 @@ void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL)
 			else if (keyPressed == SDLK_s)
 				savePlayerScore(stage);
 			else if (keyPressed == SDLK_w)
-			{
-				stage->menu.nameEnter = true;
-				stage->menu.nameConfirmed = false;
-			}
+				writeNameFlagsTwo(stage);
 			break;
 		case SDL_QUIT:
 			quit(stage, SDL);
@@ -355,6 +410,12 @@ void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL)
 		if (stage->menu.nameEnter)
 			writeName(stage, SDL);	
 	}
+}
+
+void writeNameFlagsTwo(Stage* stage)
+{
+	stage->menu.nameEnter = true;
+	stage->menu.nameConfirmed = false;
 }
 
 void printMessage(Stage* stage, SDLConst* SDL)

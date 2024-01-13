@@ -20,13 +20,9 @@ int main(int argc, char** argv) {
 	Color colors;
 	Score score;
 	ShowText showText;
-	Animator animator;
-	
-	Stage stage;
-	StageSpecifier specifier;
-	
-	specifier = stage.stageSpecifier;
-	
+	Animator animator;	
+	Stage stage;	
+
 	SDL_ShowCursor(SDL_DISABLE);
 
 	createWindow(&stage, &SDL);
