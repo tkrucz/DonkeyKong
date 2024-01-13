@@ -107,6 +107,7 @@ struct Scoreboard
 	int score;
 	int lives;
 	int page = ZERO;
+	bool canChangePage = false;
 };
 
 struct Player

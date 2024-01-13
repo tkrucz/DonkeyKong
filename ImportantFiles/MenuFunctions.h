@@ -123,10 +123,10 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 	readScoreKeys(stage, SDL);
 	sprintf(stage->menu.text, "SCOREBOARD");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_ROW, stage->menu.text, SDL->charset);
-	DrawRectangle(SDL->screen, 200, SCOREBOARD_ROW + 10, 350, 110, colors->white, colors->black);
+	DrawRectangle(SDL->screen, SCOREBOARD_COLUMN, SCOREBOARD_PLAYERS_ROW, SCOREBOARD_LENGTH, SCOREBOARD_HEIGHT, colors->white, colors->black);
 	int page = stage->scoreboard->page;
-	int startIndex = page * NUMBER_OF_PLAYERS;
-	int endIndex = startIndex + NUMBER_OF_PLAYERS;
+	int startIndex = page * SCORE_PER_PAGE;
+	int endIndex = startIndex + SCORE_PER_PAGE;
 	if (endIndex > MAX_NUMBER_OF_PLAYERS)
 		endIndex = MAX_NUMBER_OF_PLAYERS;
 
@@ -135,12 +135,7 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 		if (stage->scoreboard[i].score >= 0)
 		{
 			sprintf(stage->menu.text, "Player: %s | Score: %d | Lives: %d ", stage->scoreboard[i].name, stage->scoreboard[i].score, stage->scoreboard[i].lives);
-			DrawString(SDL->screen, 220, startRow + i * 20, stage->menu.text, SDL->charset);
-		}
-		else
-		{
-			sprintf(stage->menu.text, " ");
-			DrawString(SDL->screen, 220, startRow + i * 20, stage->menu.text, SDL->charset);
+			DrawString(SDL->screen, 220, startRow + (i -startIndex) * 20, stage->menu.text, SDL->charset);
 		}
 	}
 }
@@ -169,12 +164,17 @@ void sortScore(Stage* stage, SDLConst* SDL)
 void readScoreKeys(Stage* stage, SDLConst* SDL)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
+	//bool decreaseStage = false;
 	switch (SDL->event.type)
 	{
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_RIGHT)
 		{
-			stage->scoreboard->page++;
+			if (stage->scoreboard->canChangePage == false)
+			{
+				stage->scoreboard->canChangePage = true;
+				stage->scoreboard->page++;
+			}
 		}
 		if (keyPressed == SDLK_LEFT)
 		{
@@ -184,6 +184,7 @@ void readScoreKeys(Stage* stage, SDLConst* SDL)
 		}
 		break;
 	case SDL_KEYUP:
+		stage->scoreboard->canChangePage = false;
 		break;
 	}
 }
@@ -468,7 +469,7 @@ void loadPlayersScore(Stage* stage)
 		{
 			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != 1 ||
 				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != 1 ||
-				fscanf(file, "Lives: %d\n", &stage->scoreboard[i].lives) != 1)
+				fscanf(file, "Lives: %d\n", &stage->scoreboard[i].lives) < 1)
 			{
 				break;
 			}
