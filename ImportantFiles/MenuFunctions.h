@@ -6,6 +6,7 @@
 #include "Define.h"
 #include "Structures.h"
 #include "GeneralFunctions.h"
+#include "Scoreboard.h"
 #include "SDLFunctions.h"
 
 extern "C" {
@@ -18,12 +19,6 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 void displayNamePart(Stage* stage, SDLConst* SDL);
 
 void displayStagePart(Stage* stage, SDLConst* SDL);
-
-void displayScores(Stage* stage, SDLConst* SDL, Color* colors);
-
-void sortScore(Stage* stage, SDLConst* SDL);
-
-void readScoreKeys(Stage* stage, SDLConst* SDL);
 
 void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
 
@@ -44,10 +39,6 @@ void readFinishGameMenuKeys(Stage* stage, SDLConst* SDL);
 void printMessage(Stage* stage, SDLConst* SDL);
 
 void setMessage(Stage* stage, SDLConst* SDL);
-
-void savePlayerScore(Stage* stage);
-
-void loadPlayersScore(Stage* stage);
 
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
@@ -113,79 +104,6 @@ void displayStagePart(Stage* stage, SDLConst* SDL)
 	{
 		sprintf(stage->menu.text, "CHOOSE STAGE FROM: 1, 2, 3");
 		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, 240, stage->menu.text, SDL->charset);
-	}
-}
-
-void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
-{
-	int startRow = SCOREBOARD_ROW + 20;
-	sortScore(stage, SDL);
-	readScoreKeys(stage, SDL);
-	sprintf(stage->menu.text, "SCOREBOARD");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_ROW, stage->menu.text, SDL->charset);
-	DrawRectangle(SDL->screen, SCOREBOARD_COLUMN, SCOREBOARD_PLAYERS_ROW, SCOREBOARD_LENGTH, SCOREBOARD_HEIGHT, colors->white, colors->black);
-	int page = stage->scoreboard->page;
-	int startIndex = page * SCORE_PER_PAGE;
-	int endIndex = startIndex + SCORE_PER_PAGE;
-	if (endIndex > MAX_NUMBER_OF_PLAYERS)
-		endIndex = MAX_NUMBER_OF_PLAYERS;
-
-	for (int i = startIndex; i < endIndex; i++)
-	{
-		if (stage->scoreboard[i].score >= 0)
-		{
-			sprintf(stage->menu.text, "Player: %s | Score: %d | Lives: %d ", stage->scoreboard[i].name, stage->scoreboard[i].score, stage->scoreboard[i].lives);
-			DrawString(SDL->screen, 220, startRow + (i -startIndex) * 20, stage->menu.text, SDL->charset);
-		}
-	}
-}
-
-void sortScore(Stage* stage, SDLConst* SDL)
-{
-	loadPlayersScore(stage);
-	for (int j = 0; j < MAX_NUMBER_OF_PLAYERS; j++)
-	{
-		int max = stage->scoreboard[j].score;
-		int index = j;
-		for (int i = j + 1; i < MAX_NUMBER_OF_PLAYERS; i++)
-		{
-			if (max < stage->scoreboard[i].score)
-			{
-				max = stage->scoreboard[i].score;
-				index = i;
-			}
-		}
-		Scoreboard temp = stage->scoreboard[j];
-		stage->scoreboard[j] = stage->scoreboard[index];
-		stage->scoreboard[index] = temp;
-	}
-}
-
-void readScoreKeys(Stage* stage, SDLConst* SDL)
-{
-	int keyPressed = SDL->event.key.keysym.sym;
-	//bool decreaseStage = false;
-	switch (SDL->event.type)
-	{
-	case SDL_KEYDOWN:
-		if (keyPressed == SDLK_RIGHT)
-		{
-			if (stage->scoreboard->canChangePage == false)
-			{
-				stage->scoreboard->canChangePage = true;
-				stage->scoreboard->page++;
-			}
-		}
-		if (keyPressed == SDLK_LEFT)
-		{
-			stage->scoreboard->page--;
-			if (stage->scoreboard->page < 0)
-				stage->scoreboard->page = 0;
-		}
-		break;
-	case SDL_KEYUP:
-		stage->scoreboard->canChangePage = false;
-		break;
 	}
 }
 
@@ -303,6 +221,7 @@ void writeName(Stage* stage, SDLConst* SDL)
 		else if (keyPressed == SDLK_n)
 		{
 			stage->menu.showMenu = true;
+			stage->menu.noneStage = false;
 			stage->player.name[stage->menu.index] = (char)(keyPressed);
 			stage->menu.index++;
 		}
@@ -443,37 +362,5 @@ void setMessage(Stage* stage, SDLConst* SDL)
 		char message[] = "YOU CAN'T START A GAME WITHOUT STAGE";
 		for (int i = 0; i < 37; i++)
 			stage->menu.message[i] = message[i];
-	}
-}
-
-void savePlayerScore(Stage* stage)
-{
-	char filename[] = "Saves.txt";
-	FILE* file = fopen(filename, "a");
-
-	fprintf(file, "Player Name: %s\n", stage->player.name);
-	fprintf(file, "Score: %d\n", stage->playerInfo.score);
-	fprintf(file, "Lives: %d\n", stage->playerInfo.lives);
-
-	fclose(file);
-}
-
-void loadPlayersScore(Stage* stage)
-{
-	char filename[] = "Saves.txt";
-	FILE* file = fopen(filename, "r");
-
-	if (file != NULL)
-	{		
-		for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
-		{
-			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != 1 ||
-				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != 1 ||
-				fscanf(file, "Lives: %d\n", &stage->scoreboard[i].lives) < 1)
-			{
-				break;
-			}
-		}
-		fclose(file);
 	}
 }

@@ -122,10 +122,10 @@ void refreshWindow(SDLConst* SDL)
 
 void printGameInfo(Stage* stage, SDLConst* SDL, Color* colors)
 {
-	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, TABLE_HEIGHT, colors->white, colors->black);
+	DrawRectangle(SDL->screen, ZERO_COLUMN, FIRST_ROW, SCREEN_WIDTH, GAME_TABLE_HEIGHT, colors->white, colors->black);
 	sprintf(stage->gameInfo.text, "King Donkey");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TITLE_ROW, stage->gameInfo.text, SDL->charset);
-	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, D, E, F ");
+	sprintf(stage->gameInfo.text, "Implemented requirements: mandatory, A, B, C, D, E, F, G ");
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, REQUIREMENTS_ROW, stage->gameInfo.text, SDL->charset);
 	sprintf(stage->gameInfo.text, "Time from beginning: %.1lf s", stage->gameInfo.gameTime);
 	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->gameInfo.text) * EIGHT / TWO, TIME_ROW, stage->gameInfo.text, SDL->charset);
