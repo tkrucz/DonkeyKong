@@ -44,10 +44,6 @@ void readKeys(Stage* stage,SDLConst* SDL,Score* score, Animator* animator); //re
 
 void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animator); //read player key input
 
-void SDLSpace(SDLConst* SDL); //freeing all surfaces
-
-void quit(Stage* stage, SDLConst* SDL);
-
 void firstStageSpecify(Stage* stage);
 
 void secondStageSpecify(Stage* stage);
@@ -55,6 +51,10 @@ void secondStageSpecify(Stage* stage);
 void thirdStageSpecify(Stage* stage);
 
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score); //read key input to change stages
+
+void SDLSpace(SDLConst* SDL); //freeing all surfaces
+
+void quit(Stage* stage, SDLConst* SDL);
 
 Stage whichStage(Stage* stage, Game* game); //NOT USED
 
@@ -248,26 +248,6 @@ void playerKeyHandle(Stage* stage, SDLConst* SDL, Score* score, Animator* animat
 	}
 }
 
-void SDLSpace(SDLConst* SDL)
-{
-	SDL_FreeSurface(SDL->charset);
-	SDL_FreeSurface(SDL->screen);
-	SDL_FreeSurface(SDL->player);
-	SDL_FreeSurface(SDL->barrel);
-	SDL_FreeSurface(SDL->trophy);
-	SDL_FreeSurface(SDL->lives);
-	SDL_DestroyTexture(SDL->scrtex);
-	SDL_DestroyRenderer(SDL->renderer);
-	SDL_DestroyWindow(SDL->window);
-}
-
-void quit(Stage* stage, SDLConst* SDL)
-{
-	stage->gameInfo.quit = true;
-	SDLSpace(SDL);
-	SDL_Quit();
-}
-
 void firstStageSpecify(Stage* stage)
 {
 	stage->stageSpecifier = STAGE1;
@@ -303,6 +283,26 @@ void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Sc
 		}		
 		loadStageSettings(stage, animator, score);
 	}
+}
+
+void SDLSpace(SDLConst* SDL)
+{
+	SDL_FreeSurface(SDL->charset);
+	SDL_FreeSurface(SDL->screen);
+	SDL_FreeSurface(SDL->player);
+	SDL_FreeSurface(SDL->barrel);
+	SDL_FreeSurface(SDL->trophy);
+	SDL_FreeSurface(SDL->lives);
+	SDL_DestroyTexture(SDL->scrtex);
+	SDL_DestroyRenderer(SDL->renderer);
+	SDL_DestroyWindow(SDL->window);
+}
+
+void quit(Stage* stage, SDLConst* SDL)
+{
+	stage->gameInfo.quit = true;
+	SDLSpace(SDL);
+	SDL_Quit();
 }
 
 Stage whichStage(Stage* stage, Game* game)

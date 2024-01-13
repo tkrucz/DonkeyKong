@@ -82,7 +82,6 @@
 #define SCOREBOARD_LENGTH 360
 #define SCOREBOARD_HEIGHT 110
 #define SCORES_PER_PAGE 5
-#define MAX_NUMBER_OF_PLAYERS 10 //pozbyæ siê tego
 
 ///Animation defines
 #define PLAYER_JUMP_LEFT 1

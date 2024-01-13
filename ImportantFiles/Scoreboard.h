@@ -23,6 +23,7 @@ void savePlayerScore(Stage* stage);
 
 void loadPlayersScore(Stage* stage);
 
+void checkFileRowsNumber(Stage* stage);
 
 void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 {
@@ -35,8 +36,8 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 	int page = stage->scoreboard->page;
 	int startIndex = page * SCORES_PER_PAGE;
 	int endIndex = startIndex + SCORES_PER_PAGE;
-	if (endIndex > MAX_NUMBER_OF_PLAYERS)
-		endIndex = MAX_NUMBER_OF_PLAYERS;
+	if (endIndex > stage->numberOfPlayersInFile)
+		endIndex = stage->numberOfPlayersInFile;
 
 	for (int i = startIndex; i < endIndex; i++)
 	{
@@ -50,12 +51,13 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 
 void sortScore(Stage* stage, SDLConst* SDL)
 {
+	checkFileRowsNumber(stage);
 	loadPlayersScore(stage);
-	for (int j = 0; j < MAX_NUMBER_OF_PLAYERS; j++)
+	for (int j = 0; j < stage->numberOfPlayersInFile; j++)
 	{
 		int max = stage->scoreboard[j].score;
 		int index = j;
-		for (int i = j + 1; i < MAX_NUMBER_OF_PLAYERS; i++)
+		for (int i = j + 1; i < stage->numberOfPlayersInFile; i++)
 		{
 			if (max < stage->scoreboard[i].score)
 			{
@@ -72,7 +74,6 @@ void sortScore(Stage* stage, SDLConst* SDL)
 void readScoreKeys(Stage* stage, SDLConst* SDL)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
-	//bool decreaseStage = false;
 	switch (SDL->event.type)
 	{
 	case SDL_KEYDOWN:
@@ -111,12 +112,13 @@ void savePlayerScore(Stage* stage)
 
 void loadPlayersScore(Stage* stage)
 {
+	checkFileRowsNumber(stage);
 	char filename[] = "Saves.txt";
 	FILE* file = fopen(filename, "r");
 
 	if (file != NULL)
 	{
-		for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
+		for (int i = 0; i < stage->numberOfPlayersInFile; i++)
 		{
 			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != 1 ||
 				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != 1 ||
@@ -127,4 +129,21 @@ void loadPlayersScore(Stage* stage)
 		}
 		fclose(file);
 	}
+}
+
+void checkFileRowsNumber(Stage* stage)
+{
+	int rowsNumber=ZERO;
+	int character;
+	char filename[] = "Saves.txt";
+	FILE* file = fopen(filename, "r");
+
+	while ((character = fgetc(file)) != EOF) {
+		if (character == '\n') {
+			rowsNumber++;
+		}
+	}
+	stage->numberOfPlayersInFile = rowsNumber/3;
+	stage->scoreboard = new Scoreboard [rowsNumber / 3];
+	fclose(file);
 }

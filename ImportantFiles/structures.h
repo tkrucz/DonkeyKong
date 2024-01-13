@@ -179,9 +179,10 @@ enum StageSpecifier
 
 struct Stage 
 {
+	int numberOfPlayersInFile = ZERO;
 	StageSpecifier stageSpecifier;
 	Menu menu;
-	Scoreboard scoreboard[MAX_NUMBER_OF_PLAYERS];
+	Scoreboard* scoreboard;
 	Player player;
 	Platform platforms[NUMBER_OF_PLATFORMS];
 	Ladder ladders[NUMBER_OF_LADDERS];
