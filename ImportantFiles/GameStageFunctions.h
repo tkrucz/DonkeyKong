@@ -73,6 +73,11 @@ void platformColor(Stage* stage, Color* colors)
 		colors->platformColor = colors->lime;
 		stage->platformColor.platformColor = colors->platformColor;
 	}
+	else if (stage->stageSpecifier == STAGE4)
+	{
+		colors->platformColor = colors->white;
+		stage->platformColor.platformColor = colors->platformColor;
+	}
 }
 
 void createPlatforms(Stage* stage)
@@ -234,6 +239,7 @@ void  drawLives(Stage* stage, SDLConst* SDL)
 
 void drawPlatformsFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
+	platformColor(stage, colors);
 	for (int i = 0; i < stage->numberOfPlatformsInFile; i++)
 		DrawRectangle(SDL->screen, stage->platforms[i].upperCorner.x, stage->platforms[i].upperCorner.y, stage->platforms[i].length, stage->platforms[i].width, colors->black, stage->platformColor.platformColor);
 }
@@ -247,11 +253,16 @@ void drawLaddersFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 void drawBarrelsFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
+	{
 		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
+	}
 }
 
 void drawTrohpiesFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	for (int i = 0; i < stage->numberOfTrohpiesInFile; i++)
+	{
+		
 		DrawSurface(SDL->screen, SDL->trophy, stage->trophies[i].lowerCoordinates.x, stage->trophies[i].lowerCoordinates.y, &stage->trophies[i].animation);
+	}
 }

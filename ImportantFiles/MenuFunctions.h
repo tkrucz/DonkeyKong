@@ -530,7 +530,7 @@ void loadStageFromFile(Stage* stage, SDLConst* SDL, Animator* animator, Color* c
 			case 'L':
 				if (laddersCounter < maxLadderNumber)
 				{
-					ladders[laddersCounter] = { x, y, w };
+					ladders[laddersCounter] = { x, y, LADDER_WIDTH, w };
 					laddersCounter++;
 				}
 				else
@@ -600,8 +600,6 @@ void loadStageFromFile(Stage* stage, SDLConst* SDL, Animator* animator, Color* c
 void loadStageObjects(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors)
 {
 	stage->stageSpecifier = STAGE4;
-	colors->platformColor = colors->pink;
-	stage->platformColor.platformColor = colors->platformColor;
 	initializeGameObjects(stage, SDL, animator, colors);
 }
 

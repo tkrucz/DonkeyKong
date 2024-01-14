@@ -17,9 +17,9 @@ extern "C" {
 
 void createWindow(Stage* stage, SDLConst* SDL);
 
-void drawScene(Stage* stage, SDLConst* SDL, Color* colors); //draws objects (without player)
+void drawScene(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors); //draws objects (without player)
 
-void displayGame(Stage* stage, SDLConst* SDL, Color* colors); 
+void displayGame(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors);
 
 void displayWindow(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors, Score* score);
 
@@ -82,19 +82,24 @@ void createWindow(Stage* stage, SDLConst* SDL)
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void drawScene(Stage* stage, SDLConst* SDL, Color* colors)
+void drawScene(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors)
 {
 	drawGround(SDL, colors);
-	drawPlatforms(stage, SDL, colors);
-	drawLadders(stage, SDL, colors);
-	drawTrophies(stage, SDL);
-	drawBarrels(stage, SDL);	
 	drawLives(stage, SDL);
+	if (stage->stageSpecifier != STAGE4)
+	{
+		drawPlatforms(stage, SDL, colors);
+		drawLadders(stage, SDL, colors);
+		drawTrophies(stage, SDL);
+		drawBarrels(stage, SDL);
+	}
+	else
+		initializeGameObjects(stage, SDL, animator, colors);
 } 
 
-void displayGame(Stage* stage, SDLConst* SDL, Color* colors)
+void displayGame(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors)
 {
-	drawScene(stage, SDL, colors);
+	drawScene(stage, SDL, animator, colors);
 	printInfo(stage,SDL,colors);
 	drawPlayer(stage, SDL);
 }
@@ -109,7 +114,7 @@ void displayWindow(Stage* stage, SDLConst* SDL, Animator* animator, Color* color
 	else if (stage->menu.showFinishMenu)
 		finishGameMenu(stage, SDL, score);
 	else
-		displayGame(stage, SDL, colors);
+		displayGame(stage, SDL, animator, colors);
 }
 
 void refreshWindow(SDLConst* SDL)
