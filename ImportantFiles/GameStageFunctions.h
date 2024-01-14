@@ -262,7 +262,7 @@ void drawTrohpiesFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
 	for (int i = 0; i < stage->numberOfTrohpiesInFile; i++)
 	{
-		
+		stage->trophies[i].animation = { 0, 0, TROPHIES_REAL_SIZE, TROPHIES_REAL_SIZE };
 		DrawSurface(SDL->screen, SDL->trophy, stage->trophies[i].lowerCoordinates.x, stage->trophies[i].lowerCoordinates.y, &stage->trophies[i].animation);
 	}
 }

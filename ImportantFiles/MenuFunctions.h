@@ -542,7 +542,7 @@ void loadStageFromFile(Stage* stage, SDLConst* SDL, Animator* animator, Color* c
 			case 'B':
 				if (barrelsCounter < maxBarrelNumber)
 				{
-					barrels[barrelsCounter] = { int(x), int(y) };
+					barrels[barrelsCounter] = { x, y };
 					barrelsCounter++;
 				}
 				else
@@ -554,7 +554,7 @@ void loadStageFromFile(Stage* stage, SDLConst* SDL, Animator* animator, Color* c
 			case 'T':
 				if (trophiesCounter < maxTrohpiesNumber)
 				{
-					trophies[trophiesCounter] = { int(x), int(y) };
+					trophies[trophiesCounter] = { x, y - TROPHIES_DIFFERENCE_IN_Y };
 					trophiesCounter++;
 				}
 				else

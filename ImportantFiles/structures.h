@@ -131,8 +131,8 @@ struct Player
 
 struct Barrel
 {
-	SDL_Rect animation; //sets the look of barrels
 	Coordinates lowerRightCoordinates;
+	SDL_Rect animation; //sets the look of barrels
 	Speed speed = { BARRELS_BOWLING_SPEED,BARRELS_FALLING_SPEED };
 	int realSize[TWO] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
 	bool fallDown = false;
@@ -157,8 +157,8 @@ struct Ladder
 
 struct Trophy
 {
-	SDL_Rect animation; //sets look of the trophy
 	Coordinates lowerCoordinates;
+	SDL_Rect animation; //sets look of the trophy
 	int realSize[TWO] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };
 
