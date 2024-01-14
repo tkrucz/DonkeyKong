@@ -75,7 +75,7 @@ void endTheStage(Stage* stage, SDLConst* SDL, Score* score)
 	if (stage->player.lowerCoordinates.y == PLATFORM_V_HEIGHT && stage->stageSpecifier != STAGE3)
 	{
 		sprintf(stage->player.text, "You have finished the stage. Press 1,2,3 to change the levels.");
-		DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->player.text) * EIGHT / TWO, stage->player.lowerCoordinates.y - stage->player.realSize[1] - FIFTEEN , stage->player.text, SDL->charset);
+		DrawString(SDL->screen, SDL->screen->w / TWO - strlen(stage->player.text) * EIGHT / TWO, stage->player.lowerCoordinates.y - stage->player.realSize[1] - FIFTEEN , stage->player.text, SDL->charset);
 		stage->playerInfo.score += score->endTheStage;
 		score->deltaScore = score->endTheStage;
 		score->endTheStage = NULL_POINTS;

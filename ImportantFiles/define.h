@@ -1,6 +1,4 @@
 #pragma once
-//REMEMBER: GET RID OF MAGIC NUMBERS !!!
-//+ 1
 #include "ObjectsDefine.h"
 
 #define SCREEN_WIDTH	720
@@ -36,6 +34,7 @@
 #define ONE 1
 #define TWO 2
 #define THREE 3
+#define FIVE 5
 #define EIGHT 8
 #define FIFTEEN 15
 #define TWENTY 20
@@ -50,7 +49,10 @@
 #define CLIMBING_SPEED 30
 
 #define GAME_TABLE_HEIGHT 80
-#define NAME_LENGTH 15
+#define NAME_TABLE_SIZE 16
+#define NAME_LENGTH NAME_TABLE_SIZE - ONE
+#define TEXT_TABLE_SIZE 128
+#define MESSAGE_TABLE_SIZE 40
 
 
 #define PLAYER_SPAWN_POINT_X 360 

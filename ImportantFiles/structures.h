@@ -57,8 +57,8 @@ struct Animator
 	SDL_Rect barrelsSpriteArray;
 	bool changePlayerAnimation;
 	bool changeBarrelsAnimation;
-	int actualPlayerAnimation[2];
-	int actualBarrelsAnimation[2];
+	int actualPlayerAnimation[TWO];
+	int actualBarrelsAnimation[TWO];
 	Time time = { SHOWING_ANIMATION_TIME };
 };
 
@@ -74,13 +74,13 @@ struct GameInfo
 	double gameTime, deltaTime;
 	bool quit;
 	int err;
-	char text[128];
+	char text[TEXT_TABLE_SIZE];
 };
 
 struct Menu
 {
-	char text[128];
-	char message[40];
+	char text[TEXT_TABLE_SIZE];
+	char message[MESSAGE_TABLE_SIZE];
 	int index = -1;
 	bool showMenu = true;
 	bool showBarrelMenu = false;
@@ -103,7 +103,7 @@ struct Score
 
 struct Scoreboard
 {
-	char name[16];
+	char name[NAME_TABLE_SIZE];
 	int score;
 	int lives;
 };
@@ -113,8 +113,9 @@ struct Player
 	SDL_Rect animation; //sets the look of player
 	Coordinates lowerCoordinates;
 	Speed speed;	
-	char name[16];
-	int realSize[2] = { PLAYER_REAL_SIZE,PLAYER_REAL_SIZE }; //pixels size of Mario
+	char text[TEXT_TABLE_SIZE];
+	char name[NAME_TABLE_SIZE];
+	int realSize[TWO] = { PLAYER_REAL_SIZE,PLAYER_REAL_SIZE }; //pixels size of Mario
 	bool isJumping = false;
 	bool onPlatform = false;
 	bool onLadder = false;
@@ -125,7 +126,6 @@ struct Player
 	bool walkLeft = false;
 	bool climbUp = false;
 	bool climbDown = false;
-	char text[128];
 };
 
 struct Barrel
@@ -133,7 +133,7 @@ struct Barrel
 	SDL_Rect animation; //sets the look of barrels
 	Coordinates lowerRightCoordinates;
 	Speed speed = { BARRELS_BOWLING_SPEED,BARRELS_FALLING_SPEED };
-	int realSize[2] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
+	int realSize[TWO] = { BARRELS_REAL_SIZE,BARRELS_REAL_SIZE }; //pixels size of barrel
 	bool fallDown = false;
 	bool onPlatform = false;
 	bool onGround = false;
@@ -158,14 +158,14 @@ struct Trophy
 {
 	SDL_Rect animation; //sets look of the trophy
 	Coordinates lowerCoordinates;
-	int realSize[2] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
+	int realSize[TWO] = { TROPHIES_REAL_SIZE,TROPHIES_REAL_SIZE };
 };
 
 struct Lives
 {
 	SDL_Rect animation; //sets look of the lives
 	Coordinates lowerCoordinates;
-	int realSize[2] = { LIVES_REAL_SIZE, LIVES_REAL_SIZE };
+	int realSize[TWO] = { LIVES_REAL_SIZE, LIVES_REAL_SIZE };
 };
 
 enum StageSpecifier

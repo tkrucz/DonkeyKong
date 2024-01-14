@@ -64,9 +64,7 @@ int main(int argc, char** argv) {
 * 5. wroc to podpunktu 1
 */
 
-/*
-* 
-* 
+/* 
 * void DrawCreatorWindow() {
 * ......
 * }
@@ -162,6 +160,4 @@ int main(int argc, char** argv) {
 * 
 *	fclose(file);
 * }
-* 
-* 
 */

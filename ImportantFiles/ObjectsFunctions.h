@@ -64,31 +64,31 @@ int loadBMPs(SDLConst* SDL)
 	SDL->barrel = SDL_LoadBMP("./BMP/barrels.bmp");
 	SDL->trophy = SDL_LoadBMP("./BMP/trophy.bmp");
 	SDL->lives = SDL_LoadBMP("./BMP/HP.bmp");
-	if (SDL->charset == 0)
+	if (SDL->charset == NULL)
 	{
 		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
 		SDLFree(SDL);
 		return 1;
 	}
-	else if (SDL->player == 0)
+	else if (SDL->player == NULL)
 	{
 		printf("SDL_LoadBMP(mario.bmp) error: %s\n", SDL_GetError());
 		SDLFree(SDL);
 		return 1;
 	}
-	else if (SDL->barrel == 0)
+	else if (SDL->barrel == NULL)
 	{
 		printf("SDL_LoadBMP(barrels.bmp) error: %s\n", SDL_GetError());
 		SDLFree(SDL);
 		return 1;
 	}
-	else if (SDL->trophy == 0)
+	else if (SDL->trophy == NULL)
 	{
 		printf("SDL_LoadBMP(trophy.bmp) error: %s\n", SDL_GetError());
 		SDLFree(SDL);
 		return 1;
 	}
-	else if (SDL->lives == 0)
+	else if (SDL->lives == NULL)
 	{
 		printf("SDL_LoadBMP(HP.bmp) error: %s\n", SDL_GetError());
 		SDLFree(SDL);
@@ -109,7 +109,7 @@ void initializeColors(SDLConst* SDL, Color* colors)
 void createBarrels(Stage* stage)
 {
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
-	int barrelsParameters[NUMBER_OF_BARRELS][5] = {
+	int barrelsParameters[NUMBER_OF_BARRELS][FIVE] = {
 		{ BARRELS_I_SPAWN_POINT_X, BARRELS_SPAWN_POINT_Y, true, false, false },
 		{ BARRELS_II_SPAWN_POINT_X, BARRELS_SPAWN_POINT_Y, true, false, false },
 		{ BARRELS_III_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false },
@@ -268,6 +268,6 @@ void moveObjects(Stage* stage, SDLConst* SDL, Animator* animator)
 		playerMovement(stage);
 		barrelMovement(stage);
 		collision(stage, SDL);
-		checkAnimaitons(stage, animator);
+		checkAnimations(stage, animator);
 	}
 }

@@ -131,7 +131,7 @@ void approximateOnPlatform(Stage* stage)
 {
 	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
 	{
-		if (stage->player.speed.speedY > 0 && stage->player.lowerCoordinates.y > stage->platforms[i].upperCorner.y &&
+		if (stage->player.speed.speedY > NULL_SPEED && stage->player.lowerCoordinates.y > stage->platforms[i].upperCorner.y &&
 			stage->player.lowerCoordinates.y < stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
 			stage->player.lowerCoordinates.x<stage->platforms[i].upperCorner.x + stage->platforms[i].length &&
 			stage->player.lowerCoordinates.x + stage->player.realSize[0]>stage->platforms[i].upperCorner.x)
@@ -235,7 +235,7 @@ void playerMovement(Stage* stage)
 void loseLive(Stage* stage, SDLConst* SDL)
 {
 	int pom;
-	stage->playerInfo.lives -= 1;
+	stage->playerInfo.lives -= ONE;
 	pom = stage->playerInfo.lives;
 	stage->lives[pom].animation = { 0,0,0,0 };
 	if (stage->playerInfo.lives == 0)
@@ -255,7 +255,7 @@ void isPlayerOutsideTheBorders(Stage* stage)
 
 void isPlayerOnLadder(Stage* stage)
 {
-	int leftLowerCorner[2] = { stage->player.lowerCoordinates.x, stage->player.lowerCoordinates.y };
+	int leftLowerCorner[TWO] = { stage->player.lowerCoordinates.x, stage->player.lowerCoordinates.y };
 	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
 	{
 		if (stage->ladders[i].upperCorner.x <= stage->player.lowerCoordinates.x &&

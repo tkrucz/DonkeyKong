@@ -31,7 +31,7 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 	sortScore(stage, SDL);
 	readScoreKeys(stage, SDL);
 	sprintf(stage->menu.text, "SCOREBOARD");
-	DrawString(SDL->screen, SDL->screen->w / 2 - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_TITLE_ROW, stage->menu.text, SDL->charset);
+	DrawString(SDL->screen, SDL->screen->w / TWO - strlen(stage->menu.text) * EIGHT / TWO, SCOREBOARD_TITLE_ROW, stage->menu.text, SDL->charset);
 	DrawRectangle(SDL->screen, SCOREBOARD_COLUMN, SCOREBOARD_ROW, SCOREBOARD_LENGTH, SCOREBOARD_HEIGHT, colors->white, colors->black);
 	int page = stage->page;
 	int startIndex = page * SCORES_PER_PAGE;
@@ -41,7 +41,7 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 
 	for (int i = startIndex; i < endIndex; i++)
 	{
-		if (stage->scoreboard[i].score >= 0)
+		if (stage->scoreboard[i].score >= NULL_POINTS)
 		{
 			sprintf(stage->menu.text, "Player: %s | Score: %d | Lives: %d ", stage->scoreboard[i].name, stage->scoreboard[i].score, stage->scoreboard[i].lives);
 			DrawString(SDL->screen, SCOREBOARD_PLAYERS_COLUMN, startRow + (i - startIndex) * TWENTY, stage->menu.text, SDL->charset);
@@ -88,8 +88,8 @@ void readScoreKeys(Stage* stage, SDLConst* SDL)
 		else if (keyPressed == SDLK_LEFT)
 		{
 			stage->page--;
-			if (stage->page < 0)
-				stage->page = 0;
+			if (stage->page < NULL)
+				stage->page = NULL;
 		}
 		break;
 	case SDL_KEYUP:
@@ -120,9 +120,9 @@ void loadPlayersScore(Stage* stage)
 	{
 		for (int i = 0; i < stage->numberOfPlayersInFile; i++)
 		{
-			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != 1 ||
-				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != 1 ||
-				fscanf(file, "Lives: %d\n", &stage->scoreboard[i].lives) < 1)
+			if (fscanf(file, "Player Name: %s\n", stage->scoreboard[i].name) != ONE ||
+				fscanf(file, "Score: %d\n", &stage->scoreboard[i].score) != ONE ||
+				fscanf(file, "Lives: %d\n", &stage->scoreboard[i].lives) < ONE)
 			{
 				break;
 			}
@@ -143,7 +143,7 @@ void checkFileRowsNumber(Stage* stage)
 			rowsNumber++;
 		}
 	}
-	stage->numberOfPlayersInFile = rowsNumber/3;
-	stage->scoreboard = new Scoreboard [rowsNumber / 3];
+	stage->numberOfPlayersInFile = rowsNumber / THREE;
+	stage->scoreboard = new Scoreboard[rowsNumber / THREE];
 	fclose(file);
 }
