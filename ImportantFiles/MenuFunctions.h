@@ -32,6 +32,8 @@ void chooseStageFlags(Stage* stage);
 
 void scoreboardFlag(Stage* stage);
 
+void loadStageFromFileFlags(Stage* stage);
+
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL);
 
 void readBarrelMenuKeys(Stage* stage, SDLConst* SDL);
@@ -51,6 +53,8 @@ void noNewGameFlags(Stage* stage);
 void noChooseStageFlag(Stage* stage);
 
 void noScoreboardFlag(Stage* stage);
+
+void noLoadStageFromFileFlags(Stage* stage);
 
 void addingLetterToName(Stage* stage, SDLConst* SDL);
 
@@ -90,6 +94,8 @@ void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* anima
 		displayStagePart(stage, SDL);		
 		sprintf(stage->menu.text, "CHECK THE BEST SCORES - P");
 		DrawString(SDL->screen, SDL->screen->w / TWO - strlen(stage->menu.text) * EIGHT / TWO, MENU_SCORE_KEY_ROW, stage->menu.text, SDL->charset);
+		sprintf(stage->menu.text, "LOAD STAGE FROM FILE - F");
+		DrawString(SDL->screen, SDL->screen->w / TWO - strlen(stage->menu.text) * EIGHT / TWO, MENU_STAGE_FROM_FILE_KEY_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "EXIT THE GAME - ESC");
 		DrawString(SDL->screen, SDL->screen->w / TWO - strlen(stage->menu.text) * EIGHT / TWO, MENU_EXIT_KEY_ROW, stage->menu.text, SDL->charset);
 		sprintf(stage->menu.text, "%s", stage->menu.message);
@@ -161,6 +167,8 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 					chooseStageFlags(stage);
 				else if (keyPressed == SDLK_p)
 					scoreboardFlag(stage);
+				else if (keyPressed == SDLK_f)
+					loadStageFromFileFlags(stage);
 				break;
 			case SDL_QUIT:
 				quit(stage, SDL);
@@ -203,6 +211,12 @@ void chooseStageFlags(Stage* stage)
 void scoreboardFlag(Stage* stage)
 {
 	stage->menu.scoreboard = true;
+}
+
+void loadStageFromFileFlags(Stage* stage)
+{
+	stage->menu.showMenu = false;
+	stage->menu.loadStage = true;
 }
 
 void displayHittedByBarrelMenu(Stage* stage, SDLConst* SDL)
@@ -265,7 +279,7 @@ void writeName(Stage* stage, SDLConst* SDL)
 	{
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_BACKSPACE)
-			deletingLetterFromName(stage);	
+			deletingLetterFromName(stage);
 		else if (keyPressed == SDLK_RETURN)
 			nameConfirmFlags(stage);
 		else if (keyPressed == SDLK_n)
@@ -274,7 +288,7 @@ void writeName(Stage* stage, SDLConst* SDL)
 			addingLetterToName(stage, SDL);
 		}
 		else if (keyPressed == SDLK_w)
-			addingLetterToName(stage, SDL);		
+			addingLetterToName(stage, SDL);
 		else if (keyPressed == SDLK_l)
 		{
 			noChooseStageFlag(stage);
@@ -283,6 +297,11 @@ void writeName(Stage* stage, SDLConst* SDL)
 		else if (keyPressed == SDLK_p)
 		{
 			noScoreboardFlag(stage);
+			addingLetterToName(stage, SDL);
+		}
+		else if (keyPressed == SDLK_f)
+		{
+			noLoadStageFromFileFlags(stage);
 			addingLetterToName(stage, SDL);
 		}
 		else
@@ -319,6 +338,13 @@ void noScoreboardFlag(Stage* stage)
 {
 	stage->menu.scoreboard = false;
 }
+
+void noLoadStageFromFileFlags(Stage* stage)
+{
+	stage->menu.showMenu = true;
+	stage->menu.loadStage = false;
+}
+
 void addingLetterToName(Stage* stage, SDLConst* SDL)
 {
 	int keyPressed = SDL->event.key.keysym.sym;

@@ -92,6 +92,7 @@ struct Menu
 	bool nameEnter = false;
 	bool nameConfirmed = false;
 	bool scoreboard = false;
+	bool loadStage = false;
 };
 
 struct Score
