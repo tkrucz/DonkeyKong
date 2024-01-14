@@ -182,6 +182,7 @@ struct Stage
 	bool canChangePage = false;
 	int numberOfPlayersInFile = NULL;
 	int page = NULL;
+	int numberOfRowsInStageFile = NULL;
 	int numberOfPlatformsInFile = NULL;
 	int numberOfLaddersInFile = NULL;
 	int numberOfBarrelsInFile = NULL;

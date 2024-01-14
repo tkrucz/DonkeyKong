@@ -23,7 +23,7 @@ void savePlayerScore(Stage* stage);
 
 void loadPlayersScore(Stage* stage);
 
-void checkFileRowsNumber(Stage* stage);
+void checkSavesFileRowsNumber(Stage* stage);
 
 void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 {
@@ -51,7 +51,7 @@ void displayScores(Stage* stage, SDLConst* SDL, Color* colors)
 
 void sortScore(Stage* stage, SDLConst* SDL)
 {
-	checkFileRowsNumber(stage);
+	checkSavesFileRowsNumber(stage);
 	loadPlayersScore(stage);
 	for (int j = 0; j < stage->numberOfPlayersInFile; j++)
 	{
@@ -112,7 +112,7 @@ void savePlayerScore(Stage* stage)
 
 void loadPlayersScore(Stage* stage)
 {
-	checkFileRowsNumber(stage);
+	checkSavesFileRowsNumber(stage);
 	char filename[] = "Saves.txt";
 	FILE* file = fopen(filename, "r");
 
@@ -131,7 +131,7 @@ void loadPlayersScore(Stage* stage)
 	}
 }
 
-void checkFileRowsNumber(Stage* stage)
+void checkSavesFileRowsNumber(Stage* stage)
 {
 	int rowsNumber=0;
 	int character;
