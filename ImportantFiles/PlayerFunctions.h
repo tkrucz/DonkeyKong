@@ -9,7 +9,6 @@
 #include "ObjectsFunctions.h"
 #include "PlayerFlags.h"
 
-
 extern "C" {
 #include"../SDL2-2.0.10/include/SDL.h"
 #include"../SDL2-2.0.10/include/SDL_main.h"
@@ -129,7 +128,7 @@ void approximateOnGround(Stage* stage)
 
 void approximateOnPlatform(Stage* stage)
 {
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	for (int i = 0; i < stage->numberOfPlatformsInFile; i++)
 	{
 		if (stage->player.speed.speedY > NULL_SPEED && stage->player.lowerCoordinates.y > stage->platforms[i].upperCorner.y &&
 			stage->player.lowerCoordinates.y < stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
@@ -147,7 +146,7 @@ void approximateOnPlatform(Stage* stage)
 void hitBottomOfThePlatform(Stage* stage) 
 {
 	double upperYCorner = stage->player.lowerCoordinates.y - stage->player.realSize[1]; //"-" beacuse y increases in down direction
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	for (int i = 0; i < stage->numberOfPlatformsInFile; i++)
 	{
 		if (upperYCorner <= stage->platforms[i].upperCorner.y + stage->platforms[i].width &&
 			upperYCorner > stage->platforms[i].upperCorner.y)
@@ -165,7 +164,7 @@ void hitSidesOfThePlatform(Stage* stage)
 	double upperYCorner = stage->player.lowerCoordinates.y - stage->player.realSize[1];
 	double LeftCorner = stage->player.lowerCoordinates.x;
 	double RightCorner = stage->player.lowerCoordinates.x + stage->player.realSize[0];
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	for (int i = 0; i < stage->numberOfPlatformsInFile; i++)
 	{
 		if (LeftCorner <= stage->platforms[i].upperCorner.x + stage->platforms[i].length &&
 			LeftCorner >= stage->platforms[i].upperCorner.x + stage->platforms[i].length - ONE)
@@ -221,7 +220,7 @@ void playerMovement(Stage* stage)
 	}
 	if (stage->player.onLadder)
 	{
-		checkDirection(stage); //if checkClimbDirection(), you can only climb on ladder, no moving in X axis
+		checkClimbDirection(stage); 
 		playerClimb(stage);
 	}
 	if (stage->player.begLadder || stage->player.endLadder)
@@ -255,8 +254,8 @@ void isPlayerOutsideTheBorders(Stage* stage)
 
 void isPlayerOnLadder(Stage* stage)
 {
-	int leftLowerCorner[TWO] = { stage->player.lowerCoordinates.x, stage->player.lowerCoordinates.y };
-	for (int i = 0; i < NUMBER_OF_LADDERS; i++)
+	int leftLowerCorner[TWO] = { (int)stage->player.lowerCoordinates.x, (int)stage->player.lowerCoordinates.y };
+	for (int i = 0; i < stage->numberOfLaddersInFile; i++)
 	{
 		if (stage->ladders[i].upperCorner.x <= stage->player.lowerCoordinates.x &&
 			stage->player.lowerCoordinates.x <= stage->ladders[i].upperCorner.x + stage->ladders[i].width) //x increses in right direciton
@@ -294,7 +293,7 @@ void isPlayerOnLadder(Stage* stage)
 
 void isPlayerOnPlatform(Stage* stage)
 {
-	for (int i = 0; i < NUMBER_OF_PLATFORMS; i++)
+	for (int i = 0; i < stage->numberOfPlatformsInFile; i++)
 	{
 		// is Mario on platform height?
 		if (stage->player.lowerCoordinates.y == stage->platforms[i].upperCorner.y)

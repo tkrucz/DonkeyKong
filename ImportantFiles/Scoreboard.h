@@ -138,10 +138,10 @@ void checkSavesFileRowsNumber(Stage* stage)
 	char filename[] = "Saves.txt";
 	FILE* file = fopen(filename, "r");
 
-	while ((character = fgetc(file)) != EOF) {
-		if (character == '\n') {
+	while ((character = fgetc(file)) != EOF)
+	{
+		if (character == '\n')
 			rowsNumber++;
-		}
 	}
 	stage->numberOfPlayersInFile = rowsNumber / THREE;
 	stage->scoreboard = new Scoreboard[rowsNumber / THREE];

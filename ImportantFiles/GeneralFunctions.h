@@ -86,15 +86,10 @@ void drawScene(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors)
 {
 	drawGround(SDL, colors);
 	drawLives(stage, SDL);
-	if (stage->stageSpecifier != STAGE4)
-	{
-		drawPlatforms(stage, SDL, colors);
-		drawLadders(stage, SDL, colors);
-		drawTrophies(stage, SDL);
-		drawBarrels(stage, SDL);
-	}
-	else
-		initializeGameObjects(stage, SDL, animator, colors);
+	drawPlatforms(stage, SDL, colors);
+	drawLadders(stage, SDL, colors);
+	drawTrophies(stage, SDL);
+	drawBarrels(stage, SDL);
 } 
 
 void displayGame(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors)

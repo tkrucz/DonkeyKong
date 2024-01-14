@@ -27,7 +27,7 @@ void deltaScore(Stage* stage, SDLConst* SDL, Score* score, ShowText* showText);
 
 void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		if (stage->player.isJumping || stage->player.fallDown)
 		{
@@ -53,7 +53,7 @@ void jumpOverBarrel(Stage* stage, Score* score, ShowText* showText)
 
 void getTrophy(Stage* stage, Score* score, ShowText* showText)
 {
-	for (int i = 0; i < NUMBER_OF_TROPHIES; i++)
+	for (int i = 0; i < stage->numberOfLaddersInFile; i++)
 	{
 		if (stage->player.lowerCoordinates.y == stage->trophies[i].lowerCoordinates.y + TROPHIES_DIFFERENCE_IN_Y &&
 			stage->player.lowerCoordinates.x >= stage->trophies[i].lowerCoordinates.x - stage->trophies[i].realSize[0] &&

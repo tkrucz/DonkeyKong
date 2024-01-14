@@ -108,6 +108,11 @@ void initializeColors(SDLConst* SDL, Color* colors)
 
 void createBarrels(Stage* stage)
 {
+	if (stage->numberOfBarrelsInFile > 0)
+		delete[] stage->barrels;
+	stage->numberOfBarrelsInFile = NUMBER_OF_BARRELS;
+	stage->barrels = new Barrel[stage->numberOfBarrelsInFile];
+
 	//barrelsParameters{ X cordinate, Y cordinate, fallDown flag, onPlatform flag, onGround flag }
 	int barrelsParameters[NUMBER_OF_BARRELS][FIVE] = {
 		{ BARRELS_I_SPAWN_POINT_X, BARRELS_SPAWN_POINT_Y, true, false, false },
@@ -120,7 +125,7 @@ void createBarrels(Stage* stage)
 		{ BARRELS_VIII_SPAWN_POINT_X , BARRELS_SPAWN_POINT_Y, true, false, false }
 	};
 
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		stage->barrels[i].lowerRightCoordinates.x = barrelsParameters[i][0];
 		stage->barrels[i].lowerRightCoordinates.y = barrelsParameters[i][1];
@@ -132,7 +137,7 @@ void createBarrels(Stage* stage)
 
 void drawBarrels(Stage* stage, SDLConst* SDL)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
 }
 
@@ -171,10 +176,10 @@ void initializeGameObjects(Stage* stage,SDLConst* SDL, Animator* animator, Color
 
 void barrelsApproximateOnPlatform(Stage* stage)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		stage->barrels[i].onPlatform = false;
-		for (int j = 0; j < NUMBER_OF_PLATFORMS; j++)
+		for (int j = 0; j < stage->numberOfPlatformsInFile; j++)
 		{
 			if (stage->barrels[i].lowerRightCoordinates.y + stage->barrels[i].speed.speedY + BARRELS_DIFFERENCE_IN_Y >= stage->platforms[j].upperCorner.y &&
 				stage->barrels[i].lowerRightCoordinates.y - stage->barrels[i].realSize[1] <= stage->platforms[j].upperCorner.y + stage->platforms[j].width &&
@@ -191,7 +196,7 @@ void barrelsApproximateOnPlatform(Stage* stage)
 
 void areBarrelsOnGround(Stage* stage)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		if (stage->barrels[i].lowerRightCoordinates.y + stage->barrels[i].speed.speedY >= GROUND_HEIGHT)
 			stage->barrels[i].onGround = true;
@@ -217,7 +222,7 @@ void whereAreBarrels(Stage* stage)
 
 void barrelBowling(Stage* stage)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		if (stage->barrels[i].onPlatform)
 			stage->barrels[i].lowerRightCoordinates.x += stage->barrels[i].speed.speedX * stage->gameInfo.deltaTime;
@@ -228,7 +233,7 @@ void barrelBowling(Stage* stage)
 
 void barrelFalling(Stage* stage)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		if (!stage->barrels[i].onPlatform && !stage->barrels[i].onGround)
 			stage->barrels[i].fallDown = true;
@@ -245,7 +250,7 @@ void barrelMovement(Stage* stage)
 
 void collision(Stage* stage, SDLConst* SDL)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		if (stage->barrels[i].lowerRightCoordinates.y + BARRELS_DIFFERENCE_IN_Y >= stage->player.lowerCoordinates.y - stage->player.realSize[1] &&
 			stage->barrels[i].lowerRightCoordinates.y - BARRELS_HITBOX_SIZE <= stage->player.lowerCoordinates.y &&

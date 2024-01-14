@@ -191,10 +191,10 @@ struct Stage
 	Menu menu;
 	Scoreboard* scoreboard;
 	Player player;
-	Platform platforms[NUMBER_OF_PLATFORMS];
-	Ladder ladders[NUMBER_OF_LADDERS];
-	Barrel barrels[NUMBER_OF_BARRELS];
-	Trophy trophies[NUMBER_OF_TROPHIES];
+	Platform *platforms;
+	Ladder *ladders;
+	Barrel *barrels;
+	Trophy *trophies;
 	Lives lives[PLAYER_DEFAULT_LIVES];
 	PlayerInfo playerInfo;
 	GameInfo gameInfo;

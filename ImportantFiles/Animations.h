@@ -8,7 +8,6 @@
 #include "ObjectsFunctions.h"
 #include "PlayerFlags.h"
 
-
 extern "C" {
 #include"../SDL2-2.0.10/include/SDL.h"
 #include"../SDL2-2.0.10/include/SDL_main.h"
@@ -63,7 +62,7 @@ void initializePlayerAnimator(Stage* stage, Animator* animator)
 
 void initializeBarrelsAnimator(Stage* stage, Animator* animator)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 		animator->barrelsSpriteArray = { BARRELS_WIDTH , BARRELS_REAL_SIZE * animator->actualBarrelsAnimation[1] ,
 		stage->barrels[i].realSize[0], stage->barrels[i].realSize[1] };
 }
@@ -192,13 +191,13 @@ void playerAnimations(Stage* stage, Animator* animator)
 void chceckBarrelAnimation(Stage* stage, Animator* animator)
 {
 	barrelBowlingAnimation(stage, animator);
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 		stage->barrels[i].animation = animator->barrelsSpriteArray;
 }
 
 void barrelBowlingAnimation(Stage* stage, Animator* animator)
 {
-	for (int i = 0; i < NUMBER_OF_BARRELS; i++)
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
 	{
 		if (stage->barrels[i].onPlatform)
 		{

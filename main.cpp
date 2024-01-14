@@ -29,7 +29,6 @@ int main(int argc, char** argv) {
 	initializeColors(&SDL, &colors);
 	validation(&SDL);
 	defaultSettings(&stage, &SDL);
-	initializeGameObjects(&stage, &SDL, &animator, &colors);
 
 	stage.gameInfo.t1 = SDL_GetTicks();
 
@@ -43,9 +42,11 @@ int main(int argc, char** argv) {
 		
 		readKeys(&stage, &SDL, &animator, &colors, &score);
 
-		gravityApply(&stage);
-		whereAreObjects(&stage, &SDL, &score, &showText);
-		moveObjects(&stage, &SDL, &animator);
+		if (!stage.menu.showMenu) {
+			gravityApply(&stage);
+			whereAreObjects(&stage, &SDL, &score, &showText);
+			moveObjects(&stage, &SDL, &animator);
+		}
 	}
 	return 0;
 }
