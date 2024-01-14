@@ -162,7 +162,7 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 				if (keyPressed == SDLK_ESCAPE)
 					quit(stage, SDL);
 				else if (keyPressed == SDLK_n)
-					if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3)
+					if (stage->stageSpecifier == STAGE1 || stage->stageSpecifier == STAGE2 || stage->stageSpecifier == STAGE3 || stage->stageSpecifier == STAGE4)
 						noMainMenuFlag(stage);
 					else
 					{
