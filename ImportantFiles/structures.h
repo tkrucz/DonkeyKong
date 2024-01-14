@@ -173,7 +173,8 @@ enum StageSpecifier
 {
 	STAGE1,
 	STAGE2,
-	STAGE3
+	STAGE3,
+	STAGE4
 };
 
 struct Stage 
@@ -181,6 +182,10 @@ struct Stage
 	bool canChangePage = false;
 	int numberOfPlayersInFile = NULL;
 	int page = NULL;
+	int numberOfPlatformsInFile = NULL;
+	int numberOfLaddersInFile = NULL;
+	int numberOfBarrelsInFile = NULL;
+	int numberOfTrohpiesInFile = NULL;
 	StageSpecifier stageSpecifier;
 	Menu menu;
 	Scoreboard* scoreboard;

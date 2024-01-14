@@ -42,6 +42,14 @@ void createLives(Stage* stage);
 
 void drawLives(Stage* stage, SDLConst* SDL);
 
+void createPlatformsFromFile(Stage* stage);
+
+void createLaddersFromFile(Stage* stage);
+
+void createBarrelsFromFile(Stage* stage);
+
+void createTrohpiesFromFile(Stage* stage);
+
 
 void drawGround(SDLConst* SDL, Color* colors)
 {
@@ -222,4 +230,24 @@ void  drawLives(Stage* stage, SDLConst* SDL)
 {
 	for (int i = 0; i < PLAYER_DEFAULT_LIVES; i++)
 		DrawSurface(SDL->screen, SDL->lives, stage->lives[i].lowerCoordinates.x, stage->lives[i].lowerCoordinates.y, &stage->lives[i].animation);
+}
+
+void createPlatformsFromFile(Stage* stage)
+{
+
+}
+
+void createLaddersFromFile(Stage* stage)
+{
+
+}
+
+void createBarrelsFromFile(Stage* stage)
+{
+
+}
+
+void createTrohpiesFromFile(Stage* stage)
+{
+
 }

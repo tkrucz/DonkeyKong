@@ -160,6 +160,13 @@ void initializeGameObjects(Stage* stage, Animator* animator)
 		createBarrels(stage);
 		createTrophies3(stage);
 	}
+	else if (stage->stageSpecifier == STAGE4)
+	{
+		createPlatformsFromFile(stage);
+		createLaddersFromFile(stage);
+		createBarrelsFromFile(stage);
+		createTrohpiesFromFile(stage);
+	}
 }
 
 void barrelsApproximateOnPlatform(Stage* stage)

@@ -146,4 +146,5 @@ void checkFileRowsNumber(Stage* stage)
 	stage->numberOfPlayersInFile = rowsNumber / THREE;
 	stage->scoreboard = new Scoreboard[rowsNumber / THREE];
 	fclose(file);
+	delete[]stage->scoreboard;
 }

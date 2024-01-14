@@ -1,6 +1,11 @@
 #pragma once
 #include "Define.h"
 
+#define NUMBER_OF_PLATFORMS_IN_FILE 40
+#define NUMBER_OF_LADDERS_IN_FILE 10
+#define NUMBER_OF_BARRELS_IN_FILE 8
+#define NUMBER_OF_TROPHIES_IN_FILE 5
+
 #define NUMBER_OF_PLATFORMS 10
 #define PLATFORM_WIDTH 20
 

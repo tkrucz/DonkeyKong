@@ -74,11 +74,17 @@ void printMessage(Stage* stage, SDLConst* SDL);
 
 void setMessage(Stage* stage, SDLConst* SDL);
 
+void loadStageFromFile(Stage* stage);
+
+void loadStageObjects(Stage* stage, Color* colors, Animator* animator);
+
 void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
 
 void quit(Stage* stage, SDLConst* SDL);
 
 void initializePlayer(Stage* stage);
+
+void initializeGameObjects(Stage* stage, Animator* animator);
 
 
 void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
@@ -472,4 +478,120 @@ void setMessage(Stage* stage, SDLConst* SDL)
 		for (int i = 0; i < NEW_GAME_MESSAGE_LENGTH; i++)
 			stage->menu.message[i] = message[i];
 	}
+}
+
+void loadStageFromFile(Stage* stage)
+{
+	Platform* platforms = new Platform[NUMBER_OF_PLATFORMS_IN_FILE];
+	int platformCounter = 0;
+	int maxPlatformsNumber = NUMBER_OF_PLATFORMS_IN_FILE;	
+
+	Ladder* ladders = new Ladder[NUMBER_OF_LADDERS_IN_FILE];
+	int laddersCounter = 0;
+	int maxLadderNumber = NUMBER_OF_LADDERS_IN_FILE;
+
+	Barrel* barrels = new Barrel[NUMBER_OF_BARRELS_IN_FILE];
+	int barrelsCounter = 0;
+	int maxBarrelNumber = NUMBER_OF_BARRELS_IN_FILE;
+
+	Trophy* trophies = new Trophy[NUMBER_OF_TROPHIES_IN_FILE];
+	int trophiesCounter = 0;
+	int maxTrohpiesNumber = NUMBER_OF_TROPHIES_IN_FILE;
+
+	char filename[] = "Stage.txt";
+	FILE* file = fopen(filename, "r");
+
+	char objectType;
+	double x, y, w, z;
+
+	while (fscanf(file, " %c,%f,%f,%f,%f\n", &objectType, &x, &y, &w, &z) == 5)
+	{
+		switch (objectType)
+		{
+		case 'P':
+			if (platformCounter < maxPlatformsNumber)
+			{
+				platforms[platformCounter] = { x, y, w, z };
+				platformCounter++;
+			}
+			else
+			{
+				maxPlatformsNumber = maxPlatformsNumber * TWO;
+				Platform* platforms = new Platform[maxPlatformsNumber];
+			}
+			break;
+		case 'L':
+			if (laddersCounter < maxLadderNumber)
+			{
+				ladders[laddersCounter] = { x, y, w };
+				laddersCounter++;
+			}
+			else
+			{
+				maxLadderNumber = maxLadderNumber * TWO;
+				Ladder* ladders = new Ladder[maxLadderNumber];
+			}
+			break;
+		case 'B':
+			if (barrelsCounter < maxBarrelNumber)
+			{
+				barrels[barrelsCounter] = { int(x), int(y) };
+				barrelsCounter++;
+			}
+			else
+			{
+				maxBarrelNumber = maxBarrelNumber * TWO;
+				Barrel* barrels = new Barrel[maxBarrelNumber];
+			}
+			break;
+		case 'T':
+			if (trophiesCounter < maxTrohpiesNumber)
+			{
+				trophies[trophiesCounter] = { int(x), int(y) };
+				trophiesCounter++;
+			}
+			else
+			{
+				maxTrohpiesNumber = maxTrohpiesNumber * TWO;
+				Trophy* trophies = new Trophy[maxTrohpiesNumber];
+			}
+			break;
+		case '*':
+			break;
+		}
+		stage->numberOfPlatformsInFile = maxPlatformsNumber;
+		stage->numberOfLaddersInFile = maxLadderNumber;
+		stage->numberOfBarrelsInFile = maxBarrelNumber;
+		stage->numberOfTrohpiesInFile = maxTrohpiesNumber;
+
+		for (int i = 0; i < platformCounter; i++)
+		{
+			stage->platforms[i] = platforms[i];
+		}
+		for (int i = 0; i < laddersCounter; i++)
+		{
+			stage->ladders[i] = ladders[i];
+		}
+		for (int i = 0; i < barrelsCounter; i++)
+		{
+			stage->barrels[i] = barrels[i];
+		}
+		for (int i = 0; i < trophiesCounter; i++)
+		{
+			stage->trophies[i] = trophies[i];
+		}
+	}
+		fclose(file);
+		delete[] platforms;
+		delete[] ladders;
+		delete[] barrels;
+		delete[] trophies;
+}
+
+void loadStageObjects(Stage* stage, Color* colors, Animator* animator)
+{
+	stage->stageSpecifier = STAGE4;
+	colors->platformColor = colors->pink;
+	stage->platformColor.platformColor = colors->platformColor;
+	initializeGameObjects(stage, animator);
 }
