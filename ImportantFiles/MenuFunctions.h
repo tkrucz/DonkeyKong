@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 #include "Define.h"
 #include "Structures.h"
@@ -512,7 +513,6 @@ void loadStageFromFile(Stage* stage, SDLConst* SDL, Animator* animator, Color* c
 	for (int j = 0; j < stage->numberOfRowsInStageFile ; j++)
 	{
 		fscanf(file, " %c,%lf,%lf,%lf,%lf\n", &objectType, &x, &y, &w, &z);
-		{
 			switch (objectType)
 			{
 			case 'P':
@@ -587,7 +587,6 @@ void loadStageFromFile(Stage* stage, SDLConst* SDL, Animator* animator, Color* c
 			{
 				stage->trophies[i] = trophies[i];
 			}
-		}
 	}
 		fclose(file);
 		loadStageObjects(stage, SDL, animator, colors);
