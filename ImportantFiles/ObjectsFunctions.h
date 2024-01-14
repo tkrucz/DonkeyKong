@@ -27,7 +27,7 @@ void createBarrels(Stage* stage);
 
 void drawBarrels(Stage* stage, SDLConst* SDL);
 
-void initializeGameObjects(Stage* stage, Animator* animator);
+void initializeGameObjects(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors);
 
 void barrelsApproximateOnPlatform(Stage* stage);
 
@@ -136,7 +136,7 @@ void drawBarrels(Stage* stage, SDLConst* SDL)
 		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
 }
 
-void initializeGameObjects(Stage* stage, Animator* animator)
+void initializeGameObjects(Stage* stage,SDLConst* SDL, Animator* animator, Color* colors)
 {
 	createLives(stage);
 	if (stage->stageSpecifier == STAGE1)
@@ -162,10 +162,10 @@ void initializeGameObjects(Stage* stage, Animator* animator)
 	}
 	else if (stage->stageSpecifier == STAGE4)
 	{
-		createPlatformsFromFile(stage);
-		createLaddersFromFile(stage);
-		createBarrelsFromFile(stage);
-		createTrohpiesFromFile(stage);
+		drawPlatformsFromFile(stage, SDL, colors);
+		drawLaddersFromFile(stage, SDL, colors);
+		drawBarrelsFromFile(stage, SDL, colors);
+		drawTrohpiesFromFile(stage, SDL, colors);
 	}
 }
 

@@ -58,7 +58,7 @@ void noLoadStageFromFileFlags(Stage* stage);
 
 void addingLetterToName(Stage* stage, SDLConst* SDL);
 
-void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score);
+void chooseStage(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors, Score* score);
 
 void changeStageFlags(Stage* stage);
 
@@ -76,15 +76,15 @@ void setMessage(Stage* stage, SDLConst* SDL);
 
 void loadStageFromFile(Stage* stage);
 
-void loadStageObjects(Stage* stage, Color* colors, Animator* animator);
+void loadStageObjects(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors);
 
-void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Score* score);
+void stageSpecifierKeyHandle(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors, Score* score);
 
 void quit(Stage* stage, SDLConst* SDL);
 
 void initializePlayer(Stage* stage);
 
-void initializeGameObjects(Stage* stage, Animator* animator);
+void initializeGameObjects(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors);
 
 
 void displayMainMenu(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
@@ -183,7 +183,7 @@ void readMainMenuKeys(Stage* stage, SDLConst* SDL, Color* colors, Animator* anim
 			if (stage->menu.nameEnter)
 				writeName(stage, SDL);
 			else if (stage->menu.stageChoose)
-				chooseStage(stage, SDL, colors, animator, score);
+				chooseStage(stage, SDL, animator, colors, score);
 			else if (stage->menu.scoreboard)
 				displayScores(stage, SDL, colors);
 		}
@@ -358,7 +358,7 @@ void addingLetterToName(Stage* stage, SDLConst* SDL)
 	stage->menu.index++;
 }
 
-void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator, Score* score)
+void chooseStage(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors, Score* score)
 {
 	int keyPressed = SDL->event.key.keysym.sym;
 	switch (SDL->event.type)
@@ -366,17 +366,17 @@ void chooseStage(Stage* stage, SDLConst* SDL, Color* colors, Animator* animator,
 	case SDL_KEYDOWN:
 		if (keyPressed == SDLK_1)
 		{
-			stageSpecifierKeyHandle(stage, SDL, animator, score);
+			stageSpecifierKeyHandle(stage, SDL, animator, colors, score);
 			changeStageFlags(stage);
 		}
 		else if (keyPressed == SDLK_2)
 		{
-			stageSpecifierKeyHandle(stage, SDL, animator, score);
+			stageSpecifierKeyHandle(stage, SDL, animator, colors, score);
 			changeStageFlags(stage);
 		}
 		else if (keyPressed == SDLK_3)
 		{
-			stageSpecifierKeyHandle(stage, SDL, animator, score);
+			stageSpecifierKeyHandle(stage, SDL, animator, colors, score);
 			changeStageFlags(stage);
 		}
 		else if (keyPressed != SDLK_1 && keyPressed != SDLK_2 && keyPressed != SDLK_3)
@@ -588,10 +588,10 @@ void loadStageFromFile(Stage* stage)
 		delete[] trophies;
 }
 
-void loadStageObjects(Stage* stage, Color* colors, Animator* animator)
+void loadStageObjects(Stage* stage, SDLConst* SDL, Animator* animator, Color* colors)
 {
 	stage->stageSpecifier = STAGE4;
 	colors->platformColor = colors->pink;
 	stage->platformColor.platformColor = colors->platformColor;
-	initializeGameObjects(stage, animator);
+	initializeGameObjects(stage, SDL, animator, colors);
 }

@@ -42,13 +42,13 @@ void createLives(Stage* stage);
 
 void drawLives(Stage* stage, SDLConst* SDL);
 
-void createPlatformsFromFile(Stage* stage);
+void drawPlatformsFromFile(Stage* stage, SDLConst* SDL, Color* colors);
 
-void createLaddersFromFile(Stage* stage);
+void drawLaddersFromFile(Stage* stage, SDLConst* SDL, Color* colors);
 
-void createBarrelsFromFile(Stage* stage);
+void drawBarrelsFromFile(Stage* stage, SDLConst* SDL, Color* colors);
 
-void createTrohpiesFromFile(Stage* stage);
+void drawTrohpiesFromFile(Stage* stage, SDLConst* SDL, Color* colors);
 
 
 void drawGround(SDLConst* SDL, Color* colors)
@@ -232,22 +232,26 @@ void  drawLives(Stage* stage, SDLConst* SDL)
 		DrawSurface(SDL->screen, SDL->lives, stage->lives[i].lowerCoordinates.x, stage->lives[i].lowerCoordinates.y, &stage->lives[i].animation);
 }
 
-void createPlatformsFromFile(Stage* stage)
+void drawPlatformsFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
-
+	for (int i = 0; i < stage->numberOfPlatformsInFile; i++)
+		DrawRectangle(SDL->screen, stage->platforms[i].upperCorner.x, stage->platforms[i].upperCorner.y, stage->platforms[i].length, stage->platforms[i].width, colors->black, stage->platformColor.platformColor);
 }
 
-void createLaddersFromFile(Stage* stage)
+void drawLaddersFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
-
+	for (int i = 0; i < stage->numberOfLaddersInFile; i++)
+		DrawRectangle(SDL->screen, stage->ladders[i].upperCorner.x, stage->ladders[i].upperCorner.y, stage->ladders[i].width, stage->ladders[i].height, colors->black, colors->grey);
 }
 
-void createBarrelsFromFile(Stage* stage)
+void drawBarrelsFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
-
+	for (int i = 0; i < stage->numberOfBarrelsInFile; i++)
+		DrawSurface(SDL->screen, SDL->barrel, stage->barrels[i].lowerRightCoordinates.x, stage->barrels[i].lowerRightCoordinates.y, &stage->barrels[i].animation);
 }
 
-void createTrohpiesFromFile(Stage* stage)
+void drawTrohpiesFromFile(Stage* stage, SDLConst* SDL, Color* colors)
 {
-
+	for (int i = 0; i < stage->numberOfTrohpiesInFile; i++)
+		DrawSurface(SDL->screen, SDL->trophy, stage->trophies[i].lowerCoordinates.x, stage->trophies[i].lowerCoordinates.y, &stage->trophies[i].animation);
 }
